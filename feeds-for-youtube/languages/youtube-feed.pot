@@ -1,0 +1,3592 @@
+# Copyright (C) 2023 Smash Balloon
+# This file is distributed under the same license as the Feeds for YouTube Pro Personal plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Feeds for YouTube Pro Personal 2.2.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/youtube-feed-pro\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-10-30T20:40:17+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.0\n"
+"X-Domain: feeds-for-youtube\n"
+
+#. Plugin Name of the plugin
+msgid "Feeds for YouTube Pro Personal"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://smashballoon.com/youtube-feed"
+msgstr ""
+
+#. Description of the plugin
+msgid "Feeds for YouTube allows you to display completely customizable YouTube feeds from any channel."
+msgstr ""
+
+#. Author of the plugin
+msgid "Smash Balloon"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://smashballoon.com/"
+msgstr ""
+
+#: inc/Admin/SBY_Admin_Notice.php:42
+msgid "You're using YouTube Feed Lite. To unlock more features consider"
+msgstr ""
+
+#: inc/Admin/SBY_Admin_Notice.php:44
+msgid "upgrading to Pro"
+msgstr ""
+
+#: inc/Admin/SBY_Admin_Notice.php:49
+#: inc/Admin/SBY_Notifications.php:698
+msgid "Dismiss this message"
+msgstr ""
+
+#: inc/Admin/SBY_New_User.php:318
+msgid "Are you enjoying the YouTube Feed Plugin?"
+msgstr ""
+
+#: inc/Admin/SBY_New_User.php:324
+#: inc/Admin/SBY_Notifications.php:610
+#: frontend/src/components/Settings/Feeds/GDPRSection.js:39
+#: frontend/src/components/Settings/SingleVideosSettings.js:133
+msgid "Yes"
+msgstr ""
+
+#: inc/Admin/SBY_New_User.php:330
+#: inc/Admin/SBY_Notifications.php:615
+#: frontend/src/components/Settings/Feeds/GDPRSection.js:40
+msgid "No"
+msgstr ""
+
+#: inc/Admin/SBY_New_User.php:430
+#: inc/Admin/SBY_Notifications.php:643
+#: inc/Admin/SBY_Notifications.php:735
+msgid "Glad to hear you are enjoying it. Would you consider leaving a positive review?"
+msgstr ""
+
+#: inc/Admin/SBY_New_User.php:432
+#: inc/Admin/SBY_Notifications.php:737
+msgid "Exclusive Offer! 60% OFF"
+msgstr ""
+
+#: inc/Admin/SBY_New_User.php:456
+#: inc/Admin/SBY_Notifications.php:644
+#: inc/Admin/SBY_Notifications.php:761
+msgid "It really helps to support the plugin and help others to discover it too!"
+msgstr ""
+
+#: inc/Admin/SBY_New_User.php:458
+#: inc/Admin/SBY_Notifications.php:763
+msgid "We don’t run promotions very often, but for a limited time we’re offering 60% Off our Pro version to all users of our free YouTube Feed."
+msgstr ""
+
+#: inc/Admin/SBY_Notifications.php:622
+msgid "Are you enjoying the YouTube Feeds Plugin?"
+msgstr ""
+
+#: inc/Admin/SBY_Notifications.php:708
+msgid "Previous message"
+msgstr ""
+
+#: inc/Admin/SBY_Notifications.php:709
+msgid "Next message"
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:19
+msgid "Feed Finder Summary"
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:20
+msgid "The table below shows a record of all feeds found on your site. A feed may not show up here immediately after being created."
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:31
+#: inc/Customizer/Tabs/Styling_Tab.php:327
+msgid "Type"
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:32
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:32
+msgid "Sources"
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:33
+#: inc/Builder/SBY_Feed_Builder.php:379
+#: inc/Builder/SBY_Feed_Builder.php:407
+msgid "Shortcode"
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:34
+#: inc/Builder/SBY_Feed_Builder.php:387
+msgid "Location"
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:71
+msgid "Show"
+msgstr ""
+
+#: inc/Admin/templates/allfeeds.php:86
+msgid "Locations of your feeds are currently being detected. You'll see more information posted here soon!"
+msgstr ""
+
+#: inc/Blocks/SBY_Blocks.php:193
+#: inc/Blocks/SBY_Blocks.php:307
+msgid "Your license has expired! Renew it to reactivate Pro features."
+msgstr ""
+
+#: inc/Blocks/SBY_Blocks.php:195
+#: inc/Blocks/SBY_Blocks.php:305
+msgid "Your license key is inactive. Activate it to enable Pro features."
+msgstr ""
+
+#: inc/Blocks/SBY_Blocks.php:299
+msgid "Only Visible to WordPress Admins"
+msgstr ""
+
+#: inc/Blocks/SBY_Blocks.php:311
+msgid "Resolve Now"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:135
+#: inc/Builder/SBY_Feed_Builder.php:1248
+msgid "All Feeds"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:136
+msgid "Create your Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:137
+msgid "Connect your Instagram account and choose a feed type"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:138
+msgid "Customize your feed type"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:139
+msgid "Choose layouts, color schemes, filters and more"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:140
+msgid "Embed your feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:141
+msgid "Easily add the feed anywhere on your website"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:348
+#: inc/Builder/Tooltip_Wizard.php:111
+msgid "Done"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:349
+#: inc/Builder/SBY_Feed_Builder.php:361
+#: inc/Builder/SBY_Feed_Builder.php:974
+#: inc/Builder/SBY_Feed_Builder.php:1015
+#: inc/Builder/SBY_Feed_Builder.php:1249
+#: inc/Builder/Tabs/SBY_Builder_Customizer_Tab.php:35
+#: inc/Customizer/Tabs/Settings_Tab.php:19
+#: inc/Customizer/Tabs/Styling_Tab.php:347
+#: inc/Services/Admin/Settings/SettingsPage.php:28
+#: inc/Services/Admin/Settings/SettingsPage.php:29
+#: frontend/src/components/Settings.js:87
+#: frontend/src/components/Settings.js:90
+msgid "Settings"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:350
+msgid "Dashboard"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:351
+msgid "Add New"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:352
+#: inc/Builder/SBY_Feed_Builder.php:588
+#: frontend/src/components/Settings/General/SourcesSection.js:240
+msgid "Add Source"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:353
+msgid "Add another Source"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:354
+msgid "Add Another Source Type"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:355
+msgid "Previous"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:356
+msgid "Next"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:357
+msgid "Finish"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:358
+msgid "New"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:359
+#: frontend/src/components/Settings/General/SourcesSection.js:201
+msgid "Update"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:360
+#: inc/Services/Admin/LicenseService.php:552
+#: frontend/src/components/Settings/General/LicenseSection.js:243
+msgid "Upgrade"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:362
+msgid "Back"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:363
+msgid "Back to all feeds"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:364
+msgid "Create Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:365
+#: frontend/src/components/Settings/General/SourcesSection.js:203
+msgid "Add"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:366
+msgid "Change"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:367
+msgid "Get Extension"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:368
+msgid "View Demo"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:369
+msgid "Includes"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:370
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:139
+msgid "Photos"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:371
+msgid "Photo"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:372
+#: frontend/src/components/SingleVideos/VideosTable.js:168
+msgid "Apply"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:373
+#: frontend/src/components/Support/index.js:180
+msgid "Copy"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:374
+#: inc/Builder/SBY_Feed_Builder.php:1094
+msgid "Edit"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:375
+msgid "Duplicate"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:376
+msgid "Delete"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:377
+msgid "Remove"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:378
+msgid "Remove Source"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:380
+msgid "Click to view Instances"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:381
+msgid "Used in"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:382
+msgid "place"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:383
+msgid "places"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:384
+msgid "Item"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:385
+msgid "Items"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:386
+#: inc/Builder/SBY_Feed_Saver.php:571
+#: inc/Builder/Tooltip_Wizard.php:109
+#: inc/SBY_Settings.php:344
+#: youtube-feed-pro.php:594
+#: youtube-feed.php:510
+#: frontend/src/components/common/LicenseNotice.js:119
+msgid "Learn More"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:388
+msgid "Page"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:389
+#: frontend/src/components/Settings/General/SourcesSection.js:93
+#: frontend/src/components/Support/index.js:171
+msgid "Copied to Clipboard"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:390
+msgid "Feed imported successfully"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:391
+msgid "Failed to import feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:392
+msgid "Timeline"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:393
+#: inc/Builder/SBY_Feed_Builder.php:995
+#: frontend/src/components/Settings/Header.js:34
+msgid "Help"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:394
+msgid "Admin"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:395
+msgid "Member"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:396
+msgid "Reset"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:397
+#: inc/Builder/SBY_Feed_Builder.php:994
+msgid "Preview"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:398
+#: inc/Builder/SBY_Feed_Builder.php:1093
+msgid "Name"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:399
+#: frontend/src/components/Settings/General/SourcesSection.js:83
+msgid "ID"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:400
+msgid "Token"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:401
+#: frontend/src/components/Settings/Sources/SourceRedirectPopup.js:83
+msgid "Confirm"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:402
+#: frontend/src/components/Settings/Sources/SourceRedirectPopup.js:92
+msgid "Cancel"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:403
+msgid "Clear"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:404
+msgid "Clear Feed Cache"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:405
+#: frontend/src/components/Settings/SaveSettingsButton.js:16
+msgid "Save Changes"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:406
+msgid "Feed Name"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:408
+#: frontend/src/components/Settings/Tabs.js:13
+msgid "General"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:409
+#: frontend/src/components/Settings/Tabs.js:14
+msgid "Feeds"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:410
+#: frontend/src/components/Settings/Tabs.js:21
+msgid "Translation"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:411
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:58
+#: inc/Customizer/Tabs/Customize_Tab.php:746
+#: inc/Customizer/Tabs/Customize_Tab.php:950
+#: inc/Customizer/Tabs/Settings_Tab.php:53
+#: frontend/src/components/Settings/Tabs.js:27
+msgid "Advanced"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:412
+msgid "Error:"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:413
+msgid "There was an error when trying to connect to Instagram."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:414
+msgid "Directions on How to Resolve This Issue"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:415
+msgid "Source Invalid"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:416
+msgid "Encryption Error"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:417
+msgid "Invalid"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:418
+msgid "Reconnect"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:419
+msgid "feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:420
+msgid "Source is not used yet"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:421
+msgid "Add Image"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:422
+msgid "Business Account required"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:423
+msgid "Selected Post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:424
+msgid "Product Link"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:425
+msgid "Add your product URL here"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:426
+msgid "Edit Sources"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:427
+msgid "Moderate your feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:428
+msgid "Save and Exit"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:429
+msgid "Moderation Mode"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:430
+msgid "Or Enter Post IDs to hide manually"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:431
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:124
+msgid "Add words here to hide any posts containing these words"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:432
+msgid "Filters & Moderation"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:433
+msgid "Top Rated"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:434
+msgid "Most recent"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:435
+msgid "Moderation Mode Preview"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:436
+msgid "Shoppable Feed Preview"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:441
+msgid "Feed saved successfully"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:445
+msgid "Error saving Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:449
+msgid "Preview updated successfully"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:453
+msgid "Carousel updated successfully"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:457
+msgid "Unknown error occurred"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:461
+msgid "Feed cache cleared"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:465
+msgid "Please select a source for your feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:469
+msgid "Comment cache cleared"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:472
+#: frontend/src/components/About/index.js:103
+msgid "Install"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:473
+#: frontend/src/components/About/index.js:111
+msgid "Installed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:474
+#: frontend/src/components/About/index.js:137
+#: frontend/src/components/common/LicenseInactiveNotice.js:74
+#: frontend/src/components/common/LicenseNotice.js:70
+#: frontend/src/components/Settings/General/LicenseSection.js:106
+msgid "Activate"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:475
+msgid "Installed & Activated"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:476
+msgid "Free"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:477
+msgid "Invalid license key"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:478
+msgid "License activated"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:479
+msgid "License Deactivated"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:482
+msgid "Carousel Layout updated"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:484
+msgid "Lite Feed Users get 50% OFF"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:485
+#: frontend/src/components/Settings/SettingsFooter.js:98
+msgid "Try Demo"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:486
+msgid "Display images and videos in posts"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:487
+msgid "View likes, shares and comments"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:488
+msgid "All Feed Types: Photos, Albums, Events and more"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:489
+msgid "Ability to “Load More” posts"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:490
+#: frontend/src/components/Settings/SettingsFooter.js:78
+msgid "And Much More!"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:492
+msgid "Filter posts"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:493
+msgid "Popup photo/video lighbox"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:494
+#: frontend/src/components/Settings/SettingsFooter.js:88
+msgid "30 day money back guarantee"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:495
+msgid "Multiple post layout options"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:496
+msgid "Video player (HD, 360, Live)"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:497
+msgid "Fast, friendly and effective support"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:499
+msgid "Show Features"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:500
+msgid "Hide Features"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:502
+#: frontend/src/components/Settings/Sources/SourceRedirectPopup.js:45
+msgid "Redirecting to connect.smashballoon.com"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:503
+#: frontend/src/components/Settings/Sources/SourceRedirectPopup.js:48
+msgid "You will be redirected to our app so you can connect your account in 5 seconds"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:517
+msgid "Select one or more sources"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:518
+msgid "Sources are Instagram accounts your feed will display content from"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:519
+msgid "Looks like you have not added any source.<br/>Use “Add Source” to add a new one."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:520
+msgid "Enter Public Hashtags"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:521
+msgid "Add one or more hashtags separated by comma"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:522
+msgid "Fetch posts that are"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:526
+msgid "Add a source for Timeline"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:527
+msgid "Select or add an account you want to display the timeline for"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:530
+msgid "Add a source for Mentions"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:531
+msgid "Select or add an account you want to display the mentions for"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:544
+msgid "Update Source"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:545
+msgid "Select a source from your connected Facebook Pages and Groups. Or, use \"Add New\" to connect a new one."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:546
+msgid "Please add a source in order to display a feed. Go to the \"Settings\" tab -> \"Sources\" section -> Click \"Add New\" to connect a source."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:550
+#: inc/Builder/SBY_Feed_Builder.php:1621
+msgid "User Timeline"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:552
+msgid "Connect an account to show posts for it."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:556
+msgid "Hashtag"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:558
+msgid "Add one or more hashtags separated by comma."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:563
+msgid "Tagged"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:565
+msgid "Connect an account to show tagged posts. This does not give us any permission to manage your Instagram account."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:572
+msgid "Connect your Instagram Account"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:573
+msgid "Select Account Type"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:574
+msgid "Connect an Instagram Account"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:575
+msgid "This does not give us permission to manage your Instagram account, it simply allows the plugin to see a list of them and retrieve their public content from the API."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:576
+msgid "Connect"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:577
+msgid "Enter Events Access Token"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:578
+msgid "Due to restrictions by Facebook, you need to create a Facebook app and then paste that app Access Token here. We have a guide to help you with just that, which you can read %1$shere%2$s"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:579
+msgid "Already have a API Token and Access Key for your account?"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:580
+msgid "Add Account Manually"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:581
+msgid "Select an Instagram Account"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:582
+msgid "Showing"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:583
+#: inc/Builder/SBY_Feed_Builder.php:782
+msgid "Facebook"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:584
+msgid "Businesses"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:585
+msgid "Groups"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:586
+msgid "connected to"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:587
+msgid "Add a Source Manually"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:589
+msgid "Source Type"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:590
+#: inc/Builder/SBY_Feed_Builder.php:591
+msgid "Instagram Account ID"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:592
+msgid "Event Access Token"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:593
+msgid "Enter ID"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:594
+msgid "Instagram Access Token"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:595
+msgid "Enter Token"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:596
+msgid "Add Instagram App to your group"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:597
+msgid "To get posts from your group, Instagram requires the \"Smash Balloon Plugin\" app to be added in your group settings. Just follow the directions here:"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:599
+msgid "Go to your group settings page by "
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:600
+msgid "Search for \"Smash Balloon\" and select our app %1$s(see screenshot)%2$s"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:601
+msgid "Click \"Add\" and you are done."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:603
+msgid "Account already exists"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:604
+msgid "The Instagram account you added is already connected as a “Business” account. Would you like to replace it with a “Personal“ account? (Note: Personal accounts cannot be used to display Mentions or Hashtag feeds.)"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:605
+msgid "Replace with Personal"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:606
+msgid "For groups you are not an administrator of"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:607
+msgid "Due to Instagram’s limitations, you need to connect a business account to display a Mentions timeline"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:608
+msgid "Due to Instagram’s limitations, you need to connect a business account to display a Hashtag feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:609
+msgid "Select \"Personal\" if displaying a regular feed of posts, as this can display feeds from either a Personal or Business account. For displaying a Hashtag or Tagged feed, you must have an Instagram Business account. If needed, you can convert a Personal account into a Business account by following the directions {link}here{link}."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:612
+msgid "Add feeds for popular social platforms with <span>our other plugins</span>"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:614
+msgid "Personal"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:615
+msgid "Business"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:616
+msgid "I'm not sure"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:783
+#: inc/Builder/SBY_Feed_Builder.php:848
+#: inc/Services/Admin/MenuService.php:69
+#: inc/Services/Admin/MenuService.php:70
+msgid "Facebook Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:784
+#: inc/Builder/SBY_Feed_Builder.php:796
+#: inc/Builder/SBY_Feed_Builder.php:808
+msgid "By Smash Balloon"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:785
+msgid "To display a Facebook feed, our Facebook plugin is required. </br> It provides a clean and beautiful way to add your Facebook posts to your website. Grab your visitors attention and keep them engaged with your site longer."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:794
+msgid "Twitter"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:795
+#: inc/Builder/SBY_Feed_Builder.php:853
+#: inc/Services/Admin/MenuService.php:91
+#: inc/Services/Admin/MenuService.php:92
+msgid "Twitter Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:797
+msgid "Custom Twitter Feeds is a highly customizable way to display tweets from your Twitter account. Promote your latest content and update your site content automatically."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:806
+msgid "YouTube"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:807
+#: inc/Services/Admin/Settings/AboutPage.php:199
+msgid "Feeds for YouTube"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:809
+msgid "To display a YouTube feed, our YouTube plugin is required. It provides a simple yet powerful way to display videos from YouTube on your website, Increasing engagement with your channel while keeping visitors on your website."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:842
+#: inc/Services/Admin/MenuService.php:58
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:858
+msgid "YouTube Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:863
+msgid "Social Wall Plugin"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:905
+msgid "Legacy Feed Settings"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:906
+msgid "These settings will impact %1$s legacy feeds on your site. You can learn more about what legacy feeds are and how they differ from new feeds %2$shere%3$s."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:908
+msgid "You can now create and customize feeds individually. Click \"Add New\" to get started."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:915
+#: inc/Builder/SBY_Feed_Builder.php:930
+msgid "How you create a feed has changed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:916
+#: inc/Builder/SBY_Feed_Builder.php:931
+msgid "You can now create and customize feeds individually without using shortcode options."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:916
+#: inc/Builder/SBY_Feed_Builder.php:931
+msgid "Click \"Add New\" to get started."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:921
+msgid "Your existing feed is here"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:922
+msgid "You can edit your existing feed from here, and all changes will only apply to this feed."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:936
+msgid "Your existing feeds are under \"Legacy\" feeds"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:937
+msgid "You can edit the settings for any existing \"legacy\" feed (i.e. any feed created prior to this update) here."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:937
+msgid "This works just like the old settings page and affects all legacy feeds on your site."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:941
+msgid "Existing feeds work as normal"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:942
+msgid "You don't need to update or change any of your existing feeds. They will continue to work as usual."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:942
+msgid "This update only affects how new feeds are created and customized."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:962
+msgid "Embedding a Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:963
+msgid "After you are done customizing the feed, click here to add it to a page or a widget."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:968
+#: inc/Builder/SBY_Feed_Builder.php:1014
+#: inc/Builder/Tabs/SBY_Builder_Customizer_Tab.php:30
+#: inc/Customizer/Tabs/Customize_Tab.php:22
+msgid "Customize"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:969
+msgid "Change your feed layout, color scheme, or customize individual feed sections here."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:975
+msgid "Update your feed source, filter your posts, or change advanced settings here."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:996
+msgid "Embed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:997
+msgid "Save"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:998
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:48
+#: inc/Customizer/Tabs/Customize_Tab.php:57
+msgid "Sections"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:999
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:474
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:754
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:846
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:977
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1096
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1176
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:77
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:242
+#: inc/Customizer/Tabs/Customize_Tab.php:493
+#: inc/Customizer/Tabs/Customize_Tab.php:1123
+#: inc/Customizer/Tabs/Customize_Tab.php:1202
+msgid "Enable"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1000
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:397
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:917
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1017
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1136
+#: inc/Customizer/Tabs/Customize_Tab.php:374
+#: inc/Customizer/Tabs/Customize_Tab.php:1063
+#: inc/Customizer/Tabs/Customize_Tab.php:1163
+#: inc/Customizer/Tabs/Customize_Tab.php:1239
+#: inc/Customizer/Tabs/Customize_Tab.php:1334
+msgid "Background"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1001
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:408
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:537
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:802
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:927
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:997
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1039
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1116
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1158
+#: inc/Customizer/Tabs/Customize_Tab.php:385
+#: inc/Customizer/Tabs/Customize_Tab.php:519
+#: inc/Customizer/Tabs/Customize_Tab.php:567
+#: inc/Customizer/Tabs/Customize_Tab.php:1073
+#: inc/Customizer/Tabs/Customize_Tab.php:1143
+#: inc/Customizer/Tabs/Customize_Tab.php:1185
+#: inc/Customizer/Tabs/Customize_Tab.php:1219
+#: inc/Customizer/Tabs/Customize_Tab.php:1261
+#: inc/Customizer/Tabs/Styling_Tab.php:39
+#: inc/Customizer/Tabs/Styling_Tab.php:67
+#: inc/Customizer/Tabs/Styling_Tab.php:95
+#: inc/Customizer/Tabs/Styling_Tab.php:123
+#: inc/Customizer/Tabs/Styling_Tab.php:151
+#: inc/Customizer/Tabs/Styling_Tab.php:179
+#: inc/Customizer/Tabs/Styling_Tab.php:279
+msgid "Text"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1002
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:363
+#: inc/Customizer/Tabs/Customize_Tab.php:340
+msgid "Inherit from Theme"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1003
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:813
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:883
+#: inc/Customizer/Tabs/Customize_Tab.php:587
+msgid "Size"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1004
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:547
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:828
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:897
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1007
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1126
+#: inc/Customizer/Tabs/Customize_Tab.php:601
+#: inc/Customizer/Tabs/Customize_Tab.php:1153
+#: inc/Customizer/Tabs/Customize_Tab.php:1229
+#: inc/Customizer/Tabs/Styling_Tab.php:46
+#: inc/Customizer/Tabs/Styling_Tab.php:74
+#: inc/Customizer/Tabs/Styling_Tab.php:102
+#: inc/Customizer/Tabs/Styling_Tab.php:130
+#: inc/Customizer/Tabs/Styling_Tab.php:158
+#: inc/Customizer/Tabs/Styling_Tab.php:186
+#: inc/Customizer/Tabs/Styling_Tab.php:305
+msgid "Color"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1005
+msgid "Height"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1006
+msgid "Placeholder"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1007
+msgid "Select"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1008
+msgid "Enter Text"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1009
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:86
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1028
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1147
+#: inc/Customizer/Tabs/Customize_Tab.php:308
+#: inc/Customizer/Tabs/Customize_Tab.php:1174
+#: inc/Customizer/Tabs/Customize_Tab.php:1250
+msgid "Hover State"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1010
+msgid "Combine sources from multiple platforms using our Social Wall plugin"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1018
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:38
+#: inc/Customizer/Tabs/Customize_Tab.php:47
+msgid "Feed Layout"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1019
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:43
+#: inc/Customizer/Tabs/Customize_Tab.php:52
+msgid "Color Scheme"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1020
+#: inc/Builder/SBY_Feed_Builder.php:1300
+#: inc/Builder/SBY_Feed_Builder.php:1416
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:52
+#: inc/Customizer/Tabs/Customize_Tab.php:61
+#: inc/Feed_Locator.php:378
+msgid "Header"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1021
+msgid "Posts"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1022
+msgid "Like Box"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1023
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:96
+#: inc/Customizer/Tabs/Customize_Tab.php:74
+msgid "Load More Button"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1026
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:124
+#: inc/Customizer/Tabs/Customize_Tab.php:112
+#: inc/Customizer/Tabs/Customize_Tab.php:648
+msgid "Layout"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1027
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:140
+#: inc/Customizer/Tabs/Customize_Tab.php:128
+msgid "List"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1028
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:130
+#: inc/Customizer/Tabs/Customize_Tab.php:118
+msgid "Grid"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1029
+msgid "Masonry"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1030
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:145
+#: inc/Customizer/Tabs/Customize_Tab.php:134
+msgid "Carousel"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1031
+msgid "Feed Height"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1032
+msgid "Number of Posts"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1033
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:280
+#: inc/Customizer/Tabs/Customize_Tab.php:229
+msgid "Columns"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1034
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:261
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:290
+#: inc/Customizer/Tabs/Customize_Tab.php:243
+msgid "Desktop"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1035
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:314
+msgid "Tablet"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1036
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:270
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:336
+#: inc/Customizer/Tabs/Customize_Tab.php:254
+msgid "Mobile"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1038
+msgid "Tweak Post Styles"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1039
+msgid "Change post background, border radius, shadow etc."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1043
+msgid "Scheme"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1044
+#: inc/Builder/SBY_Feed_Builder.php:1131
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:368
+#: inc/Customizer/Tabs/Customize_Tab.php:345
+msgid "Light"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1045
+#: inc/Builder/SBY_Feed_Builder.php:1132
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:373
+#: inc/Customizer/Tabs/Customize_Tab.php:350
+msgid "Dark"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1046
+#: inc/Builder/SBY_Feed_Builder.php:1111
+#: inc/Builder/Tabs/SBY_Builder_Customizer_Tab.php:140
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:378
+#: inc/Customizer/Tabs/Customize_Tab.php:355
+#: inc/Customizer/Tabs/Styling_Tab.php:228
+msgid "Custom"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1047
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:388
+#: inc/Customizer/Tabs/Customize_Tab.php:365
+msgid "Custom Palette"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1048
+msgid "Background 2"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1049
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:419
+#: inc/Customizer/Tabs/Customize_Tab.php:396
+msgid "Text 2"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1050
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:430
+#: inc/Customizer/Tabs/Customize_Tab.php:407
+msgid "Link"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1052
+#: inc/Customizer/Tabs/Customize_Tab.php:475
+msgid "Overrides"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1053
+msgid "Colors that have been overridden from individual post element settings will not change. To change them, you will have to reset overrides."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1054
+msgid "Reset Overrides."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1058
+msgid "Header Type"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1059
+msgid "Visual"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1060
+#: inc/Builder/SBY_Feed_Builder.php:1073
+msgid "Cover Photo"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1061
+msgid "Name and avatar"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1062
+msgid "About (bio and Likes)"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1063
+#: inc/Builder/SBY_Feed_Builder.php:1081
+msgid "Display outside scrollable area"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1064
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:871
+msgid "Icon"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1065
+msgid "Icon Image"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1066
+msgid "Icon Color"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1071
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:517
+#: inc/Customizer/Tabs/Customize_Tab.php:589
+msgid "Small"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1072
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:519
+#: inc/Customizer/Tabs/Customize_Tab.php:591
+msgid "Large"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1074
+msgid "Custom Width"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1075
+msgid "By default, it is set to auto"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1076
+msgid "Width"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1077
+msgid "Custom CTA"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1078
+msgid "This toggles the custom CTA like \"Show now\" and \"Contact\""
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1079
+msgid "Show Fans"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1080
+msgid "Show visitors which of their friends follow your page"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1082
+msgid "Make the like box fixed by moving it outside the scrollable area"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1085
+msgid "Thumbnail"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1086
+msgid "Half width"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1087
+msgid "Full width"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1088
+msgid "Use full width layout when post width is less than 500px"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1089
+msgid "Post Style"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1090
+#: inc/Customizer/Tabs/Customize_Tab.php:301
+msgid "Edit Individual Elements"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1092
+msgid "Hide or show individual elements of a post or edit their options"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1095
+msgid "Post Author"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1096
+msgid "Post Text"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1097
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:945
+#: inc/Customizer/Tabs/Customize_Tab.php:834
+#: inc/Customizer/Tabs/Customize_Tab.php:844
+#: inc/Customizer/Tabs/Customize_Tab.php:1000
+#: inc/Customizer/Tabs/Customize_Tab.php:1091
+#: frontend/src/components/Settings/SingleVideosSettings.js:87
+msgid "Date"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1098
+msgid "Photos/Videos"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1099
+msgid "Likes, Shares and Comments"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1100
+msgid "Event Title"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1101
+msgid "Event Details"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1102
+msgid "Post Action Links"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1103
+msgid "Shared Post Text"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1104
+msgid "Shared Link Box"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1105
+msgid "The main text of the Instagram post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1106
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:783
+#: inc/Customizer/Tabs/Styling_Tab.php:274
+msgid "Maximum Text Length"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1107
+msgid "Characters"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1108
+msgid "Link text to Instagram post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1109
+msgid "The date of the post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1110
+#: inc/Customizer/Tabs/Styling_Tab.php:208
+msgid "Format"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1112
+msgid "Learn more about custom formats"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1113
+msgid "Add text before date"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1114
+msgid "E.g. Posted"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1115
+msgid "Add text after date"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1116
+msgid "E.g. - posted date"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1117
+msgid "Timezone"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1118
+msgid "Timezone settings are global across all feeds. To update it use the global settings."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1119
+msgid "Go to Global Settings"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1120
+msgid "Any photos or videos in your posts"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1121
+msgid "Use only one image per post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1122
+msgid "The \"View on Instagram\" and \"Share\" links at the bottom of each post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1123
+msgid "View on Instagram link"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1124
+msgid "Toggle \"View on Instagram\" link below each post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1125
+msgid "Customize Text"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1126
+msgid "Share Link"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1127
+msgid "Toggle \"Share\" link below each post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1128
+msgid "The comments box displayed at the bottom of each timeline post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1129
+msgid "Icon Theme"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1130
+msgid "Auto"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1133
+msgid "Expand comments box by default"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1134
+msgid "Hide comment avatars"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1135
+msgid "Show comments in lightbox"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1136
+msgid "The title of an event"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1137
+msgid "The information associated with an event"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1138
+msgid "Text Size"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1139
+msgid "Text Color"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1140
+msgid "The link info box that's created when a link is shared in a Instagram post"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1141
+msgid "Box Style"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1142
+msgid "Remove background/border"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1143
+msgid "Link Title"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1144
+msgid "Link URL"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1145
+msgid "Link Description"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1146
+msgid "chars"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1147
+msgid "The description text associated with shared photos, videos, or links"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1149
+msgid "Post Type"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1150
+msgid "boxed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1151
+#: inc/Customizer/Tabs/Customize_Tab.php:641
+msgid "Regular"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1152
+msgid "Indvidual Properties"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1153
+#: inc/Customizer/Tabs/Customize_Tab.php:677
+msgid "Background Color"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1154
+#: inc/Customizer/Tabs/Customize_Tab.php:689
+msgid "Border Radius"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1155
+#: inc/Customizer/Tabs/Customize_Tab.php:709
+msgid "Box Shadow"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1158
+msgid "Make your Instagram Feed Shoppable"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1159
+msgid "This feature links the post to the one specificed in your caption.<br/><br/>Don’t want to add links to the caption? You can add links manually to each post.<br/><br/>Enable it to get started."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1160
+msgid "Tap “Add” or “Update” on an<br/>image to add/update it’s URL"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1250
+msgid "oEmbeds"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1251
+msgid "Extensions"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1252
+#: frontend/src/components/About/index.js:157
+msgid "About Us"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1253
+#: frontend/src/components/Support/index.js:325
+#: frontend/src/components/Support/index.js:328
+msgid "Support"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1302
+#: inc/Builder/SBY_Feed_Builder.php:1418
+#: inc/Feed_Locator.php:388
+msgid "Footer"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1304
+#: inc/Builder/SBY_Feed_Builder.php:1420
+#: inc/Feed_Locator.php:383
+msgid "Sidebar"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1306
+#: inc/Builder/SBY_Feed_Builder.php:1422
+#: inc/Feed_Locator.php:374
+msgid "Content"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1514
+#: inc/Builder/SBY_Feed_Builder.php:1515
+msgid "Legacy Feed"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1514
+#: inc/Builder/SBY_Feed_Builder.php:1515
+msgid "(unknown location)"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1622
+msgid "Fetch posts from your Instagram profile"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1627
+msgid "Public Hashtag"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1628
+msgid "Fetch posts from a public Instagram hashtag"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1629
+msgid "Hashtag feeds require a connected Instagram business account"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1635
+msgid "Tagged Posts"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1636
+msgid "Display posts your Instagram account has been tagged in"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1637
+msgid "Tagged posts feeds require a connected Instagram business account"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1643
+#: inc/Services/Admin/Settings/AboutPage.php:208
+msgid "Social Wall"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Builder.php:1644
+msgid "Create a feed with sources from different social platforms"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:314
+#: inc/Builder/SBY_Feed_Saver.php:315
+msgid "Legacy Feeds"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:509
+#: inc/SBY_Settings.php:285
+#: youtube-feed-pro.php:535
+#: youtube-feed.php:451
+msgid "Load More..."
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:510
+#: inc/SBY_Settings.php:286
+#: youtube-feed-pro.php:536
+#: youtube-feed.php:452
+msgid "Subscribe"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:558
+#: inc/SBY_Settings.php:331
+#: inc/Services/ShortcodeService.php:185
+#: youtube-feed-pro.php:581
+#: youtube-feed.php:497
+msgid "subscribers"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:559
+#: inc/SBY_Settings.php:332
+#: youtube-feed-pro.php:582
+#: youtube-feed.php:498
+msgid "views"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:560
+#: inc/SBY_Settings.php:333
+#: youtube-feed-pro.php:583
+#: youtube-feed.php:499
+msgid "ago"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:561
+#: inc/SBY_Settings.php:334
+#: youtube-feed-pro.php:584
+#: youtube-feed.php:500
+#: frontend/src/components/Settings/TranslationSettings.js:26
+msgid "Streaming live"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:562
+#: inc/SBY_Settings.php:335
+#: youtube-feed-pro.php:585
+#: youtube-feed.php:501
+#: frontend/src/components/Settings/TranslationSettings.js:34
+msgid "Streaming live in"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:563
+#: inc/SBY_Settings.php:336
+#: youtube-feed-pro.php:586
+#: youtube-feed.php:502
+msgid "minute"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:564
+#: inc/SBY_Settings.php:337
+#: youtube-feed-pro.php:587
+#: youtube-feed.php:503
+msgid "minutes"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:565
+#: inc/SBY_Settings.php:338
+#: youtube-feed-pro.php:588
+#: youtube-feed.php:504
+msgid "hours"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:566
+#: inc/SBY_Settings.php:339
+#: youtube-feed-pro.php:589
+#: youtube-feed.php:505
+msgid "K"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:567
+#: inc/SBY_Settings.php:340
+#: youtube-feed-pro.php:590
+#: youtube-feed.php:506
+msgid "M"
+msgstr ""
+
+#: inc/Builder/SBY_Feed_Saver.php:568
+#: inc/SBY_Settings.php:341
+#: youtube-feed-pro.php:591
+#: youtube-feed.php:507
+#: frontend/src/components/Settings/TranslationSettings.js:58
+msgid "Watch Now"
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:88
+msgid "Error connecting to %s."
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:96
+msgid "Directions on how to resolve this issue"
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:102
+msgid "Connection Error: %s "
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:323
+msgid "The Instagram account you are logged into is already connected as a \"business\" account. Remove the business account if you'd like to connect as a basic account instead (not recommended)."
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:378
+msgid "Your server could not complete a remote request to Facebook's API. Your host may be blocking access or there may be a problem with your server."
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:389
+#: inc/Builder/SBY_Source.php:460
+msgid "Couldn't find Business Profile"
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:390
+msgid "Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile."
+msgstr ""
+
+#: inc/Builder/SBY_Source.php:461
+msgid "Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile. If you are, in fact, logged-in to the correct account please make sure you have Instagram accounts connected with your Facebook account by following %3$sthis FAQ%4$s"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Builder_Customizer_Tab.php:53
+#: inc/Customizer/Tabs/Customize_Tab.php:1405
+msgid "Inherit"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Builder_Customizer_Tab.php:120
+msgid "2 days ago"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:33
+msgid "Feed Template"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:58
+#: inc/Customizer/Tabs/Customize_Tab.php:67
+#: inc/Services/ShortcodeService.php:186
+msgid "Videos"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:63
+msgid "Images and Videos"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:70
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:953
+#: inc/Customizer/Tabs/Customize_Tab.php:1099
+msgid "Caption"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:71
+msgid "Customize caption text for your posts<br/><br/>"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:78
+msgid "Like and Comment Summary"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:79
+msgid "The like and comment icons below each post<br/><br/>"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:87
+msgid "What's displayed when hovering over a post<br/><br/>"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:103
+#: inc/Customizer/Tabs/Customize_Tab.php:80
+msgid "Subscribe Button"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:135
+#: inc/Customizer/Tabs/Customize_Tab.php:123
+msgid "Gallery"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:153
+#: inc/Customizer/Tabs/Customize_Tab.php:142
+msgid "Carousel Settings"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:166
+#: inc/Customizer/Tabs/Customize_Tab.php:155
+msgid "Rows"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:180
+#: inc/Customizer/Tabs/Customize_Tab.php:169
+msgid "Loop Type"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:183
+#: inc/Customizer/Tabs/Customize_Tab.php:172
+msgid "Rewind"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:184
+#: inc/Customizer/Tabs/Customize_Tab.php:173
+msgid "Infinity"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:195
+#: inc/Customizer/Tabs/Customize_Tab.php:184
+msgid "Interval Time"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:202
+#: inc/Customizer/Tabs/Customize_Tab.php:191
+msgid "Navigation Arrows"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:215
+#: inc/Customizer/Tabs/Customize_Tab.php:204
+msgid "Pagination Dots"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:228
+#: inc/Customizer/Tabs/Customize_Tab.php:217
+msgid "Autoplay"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:243
+#: inc/Customizer/Tabs/Customize_Tab.php:267
+msgid "Number of Videos to show initially"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:251
+#: inc/Customizer/Tabs/Customize_Tab.php:275
+msgid "Spacing between videos"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:441
+#: inc/Customizer/Tabs/Customize_Tab.php:418
+msgid "Button 1"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:452
+#: inc/Customizer/Tabs/Customize_Tab.php:429
+msgid "Button 2"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:492
+#: inc/Customizer/Tabs/Customize_Tab.php:511
+msgid "Header Style"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:496
+#: inc/Customizer/Tabs/Customize_Tab.php:515
+msgid "Standard"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:500
+#: inc/Customizer/Tabs/Customize_Tab.php:636
+msgid "Boxed"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:504
+msgid "Centered"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:515
+msgid "Header Size"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:518
+#: inc/Customizer/Tabs/Customize_Tab.php:590
+msgid "Medium"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:530
+msgid "Use Custom Avatar"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:531
+msgid "Upload your own custom image to use for the avatar. This is automatically retrieved from Instagram for Business accounts, but is not available for Personal accounts."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:532
+msgid "No Image Added"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:561
+msgid "Primary Color"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:578
+msgid "Secondary Color"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:593
+msgid "Show number of followers"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:612
+msgid "Show Bio Text"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:613
+msgid ""
+"Use your own custom bio text in the feed header. This is automatically retrieved from Instagram for Business accounts, but it not available for Personal accounts.\n"
+""
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:625
+#: inc/Customizer/Tabs/Customize_Tab.php:574
+msgid "Add Custom bio"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:645
+msgid "Show outside scrollable area"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:665
+msgid "Include Stories"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:666
+msgid "You can view active stories by clicking the profile picture in the header. Instagram Business accounts only.<br/><br/>"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:668
+msgid "Add Instagram Stories"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:669
+msgid "Show your active stories from Instagram on your website."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:670
+msgid "Note: "
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:671
+msgid "You need to have a business account with an active story."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:697
+msgid "Change Interval"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:698
+msgid "This is the time a story displays for, before displaying the next one. Videos always change when the video is finished."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:732
+msgid "Resolution"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:733
+msgid "By default we auto-detect image width and fetch a optimal resolution."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:735
+msgid "Auto-detect (recommended)"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:736
+msgid "Thumbnail (150x150)"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:737
+msgid "Medium (320x320)"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:738
+msgid "Full size (640x640)"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:784
+msgid "Caption will truncate after reaching the length"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:933
+#: inc/Customizer/Tabs/Customize_Tab.php:1079
+msgid "Information to display"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:941
+#: inc/Customizer/Tabs/Customize_Tab.php:792
+#: inc/Customizer/Tabs/Customize_Tab.php:802
+#: inc/Customizer/Tabs/Customize_Tab.php:961
+#: inc/Customizer/Tabs/Customize_Tab.php:1087
+msgid "Username"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:949
+#: inc/Customizer/Tabs/Customize_Tab.php:1095
+msgid "Instagram Icon"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:957
+#: inc/Customizer/Tabs/Customize_Tab.php:1103
+msgid "Like/Comment Icons<br/>(Business account only)"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1055
+msgid "Infinite Scroll"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1056
+msgid "This will load more posts automatically when the users reach the end of the feed"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1080
+msgid "Trigger Distance"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1196
+msgid "Comments"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1197
+msgid "Display comments for your posts inside the lightbox. Comments are only available for User feeds from Business accounts."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1221
+msgid "No. of Comments"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Customize_Tab.php:1222
+msgid "Clearing cache will remove all the saved comments in the database"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:37
+#: inc/Customizer/Tabs/Settings_Tab.php:43
+msgid "Filters and Moderation"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:43
+msgid "Sort"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:48
+msgid "Shoppable Feed"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:88
+msgid "Allow List"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:89
+msgid "Hides post by default so you can select the ones you want to show"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:92
+msgid "Block List"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:93
+msgid "Show all posts by default so you can select the ones you want to hide"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:106
+msgid "Filters"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:112
+msgid "Only show posts containing"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:113
+msgid "Only show posts which contain certain words or hashtags in the caption. For example, adding \"sheep, cow, dog\" will show any photos which contain either the word sheep, cow, or dog. You can separate multiple words or hashtags using commas."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:114
+msgid "Add words here to only show posts containing these words"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:122
+msgid "Do not show posts containing"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:123
+msgid "Remove any posts containing these text strings, separating multiple strings using commas."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:132
+msgid "Show specific types of posts"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:153
+msgid "Feed Videos"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:166
+msgid "IGTV Videos"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:191
+msgid "Post Offset"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:192
+msgid "This will skip the specified number of posts from displaying in the feed"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:210
+msgid "Sort Posts by"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:216
+msgid "Newest"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:220
+msgid "Likes"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:224
+msgid "Random"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:284
+msgid "Max Concurrent API Requests"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:285
+msgid "Change the number of maximum concurrent API requests. Not recommended unless directed by the support team."
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:290
+#: frontend/src/components/Settings/AdvancedSettings.js:41
+msgid "Custom Templates"
+msgstr ""
+
+#: inc/Builder/Tabs/SBY_Settings_Tab.php:291
+msgid "The default HTML for the feed can be replaced with custom templates added to your theme's folder. Enable this setting to use these templates. Custom templates are not used in the feed editor. %1$sLearn More%2$s"
+msgstr ""
+
+#: inc/Builder/Tooltip_Wizard.php:107
+msgid "Add a Block"
+msgstr ""
+
+#: inc/Builder/Tooltip_Wizard.php:108
+msgid "Click the plus button, search for Feeds for YouTube"
+msgstr ""
+
+#: inc/Builder/Tooltip_Wizard.php:109
+msgid "Feed, and click the block to embed it."
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:42
+msgid "Template"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:68
+msgid "Tweak how a single video looks by default, on hover and when it is opened in a lightbox"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:292
+msgid "Video Style"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:315
+msgid "Video Player Experience"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:316
+msgid "Tweak and tinker with the experience of when a user plays a video"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:476
+msgid "These colors have been set from the individual element properties and are overriding the global color scheme"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:534
+msgid "Channel Descriptions"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:554
+msgid "Subscribers"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:630
+msgid "Card Type"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:654
+msgid "Vertical"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:659
+msgid "Horizontal"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:665
+msgid "Individual Properties"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:734
+msgid "Play Icon"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:747
+#: inc/Customizer/Tabs/Customize_Tab.php:951
+msgid "These properties are available in the PRO version. <a href=\"#\">Learn More</a>"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:757
+#: inc/Customizer/Tabs/Customize_Tab.php:767
+#: inc/Customizer/Tabs/Customize_Tab.php:938
+msgid "Video Title"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:768
+msgid "The video title that's shown at the bottom of each video thumbnails"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:778
+msgid "Video Duration"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:803
+msgid "The username that's shown at the bottom of each video thumbnails"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:813
+#: inc/Customizer/Tabs/Customize_Tab.php:974
+#: frontend/src/components/Settings/SingleVideosSettings.js:98
+msgid "Live Stream Countdown (when applicable)"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:823
+msgid "Live Stream Countdown"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:824
+msgid "The live stream countdown that's shown when applicable"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:845
+msgid "The video date that's shown below the video username"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:855
+#: inc/Customizer/Tabs/Customize_Tab.php:865
+#: inc/Customizer/Tabs/Customize_Tab.php:987
+msgid "Description"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:866
+msgid "Edit length and size of the video description"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:874
+#: inc/Customizer/Tabs/Customize_Tab.php:1012
+msgid "API Key Required"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:875
+#: inc/Customizer/Tabs/Customize_Tab.php:1013
+msgid "To access or enable these elements you will need to connect an API Key. Learn More"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:885
+#: inc/Customizer/Tabs/Customize_Tab.php:892
+msgid "Views Actions"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:893
+msgid "Video views that's shown below the video thumbnails"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:903
+#: inc/Customizer/Tabs/Customize_Tab.php:914
+#: inc/Customizer/Tabs/Customize_Tab.php:1038
+msgid "Likes and Comments Summary"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:915
+msgid "The likes and comments summary text"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1024
+#: inc/Services/ShortcodeService.php:184
+#: frontend/src/components/Settings/SingleVideosSettings.js:77
+#: frontend/src/components/Settings/TranslationSettings.js:10
+msgid "Views"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1279
+msgid "Player Size Ratio"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1296
+msgid "When does video play?"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1317
+msgid "Subscribe Link"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1318
+msgid "Shows a subscribe link below the video"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1344
+msgid "Text Primary"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1353
+msgid "Text Secondary"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1362
+msgid "Button"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1378
+#: inc/Customizer/Tabs/Customize_Tab.php:1385
+msgid "Call to Action"
+msgstr ""
+
+#: inc/Customizer/Tabs/Customize_Tab.php:1386
+msgid "Add a call to action when a user pauses a video or if the video finishes"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:38
+msgid "Feed Type"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:44
+msgid "Hide one or more videos individually or with the help of Pro features. <a href=\"%s\" target=\"_blank\">Learn More</a>"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:75
+msgid "Show Past Live Streams"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:99
+msgid "Allowed Words or Hashtags"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:102
+msgid "Show videos containing these words or hashtags. Separate multiple words with comma, and include “#” for hashtags."
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:108
+msgid "Blocked Words or Hashtags"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:109
+msgid "Hide videos containing these words or hashtags. Separate multiple words with comma, and include “#” for hashtags."
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:118
+msgid "Hide specific Videos"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:120
+msgid "Enter video IDs. Separate multiple IDs with comma"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:138
+msgid "Local Storage Process"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:148
+msgid "Load Initial Posts with AJAX"
+msgstr ""
+
+#: inc/Customizer/Tabs/Settings_Tab.php:159
+msgid "Load iFrames on Page Load"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:215
+msgid "WordPress Default (%s)"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:216
+msgid "July 25th, 5:30 pm"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:217
+msgid "July 25th"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:218
+msgid "Mon July 25th"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:219
+msgid "Monday July 25th"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:220
+msgid "Mon Jul 25th, 2020"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:221
+msgid "Monday July 25th, 2020 - 5:30 pm"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:222
+msgid "07.25.20"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:223
+msgid "07.25.20 - 17:30"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:224
+msgid "07/25/20"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:225
+msgid "25.07.20"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:226
+msgid "25/07/20"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:227
+msgid "25th July 2020, 17:30"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:246
+msgid "Use relative time (for example: 5 hours ago) when the video is less than 2 days old"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:275
+msgid "Description will truncate after reaching the length"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:284
+msgid "Description Text Size"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:328
+msgid "What the user sees when a video pauses or ends"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:359
+msgid "Button Text"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:368
+msgid "Button Background"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:379
+msgid "Button Text Color"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:386
+msgid "Open link in"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:401
+msgid "Default Link"
+msgstr ""
+
+#: inc/Customizer/Tabs/Styling_Tab.php:402
+msgid "https://"
+msgstr ""
+
+#: inc/Pro/SBY_Feed_Pro.php:135
+#: inc/SBY_API_Connect.php:107
+#: inc/SBY_Feed.php:513
+#: inc/SBY_Feed.php:1086
+#: inc/SBY_Feed.php:1151
+msgid "Reconnect to YouTube to show this feed."
+msgstr ""
+
+#: inc/Pro/SBY_Settings_Pro.php:57
+msgid "Important: No API Key Entered."
+msgstr ""
+
+#: inc/Pro/SBY_Settings_Pro.php:58
+msgid "Many features are not available without adding an API Key. Please go to the YouTube Feed settings page to add an API key after following <a href=\"https://smashballoon.com/youtube-api-key/\" target=\"_blank\" rel=\"noopener\">these instructions.</a>"
+msgstr ""
+
+#: inc/SBY_API_Connect.php:122
+msgid "Error %s: %s."
+msgstr ""
+
+#: inc/SBY_Feed.php:1368
+msgid "Error: No videos found."
+msgstr ""
+
+#: inc/SBY_Feed.php:1369
+msgid "Make sure this is a valid channel ID and that the channel has videos available on youtube.com."
+msgstr ""
+
+#: inc/SBY_Feed.php:1372
+msgid "Error: No feed found with the ID %s."
+msgstr ""
+
+#: inc/SBY_Feed.php:1374
+msgid "Go to the All Feeds page and select an ID from an existing feed."
+msgstr ""
+
+#: inc/SBY_Settings.php:277
+#: youtube-feed-pro.php:527
+#: youtube-feed.php:443
+msgid "We are on YouTube"
+msgstr ""
+
+#: inc/Services/Admin/ImporterService.php:30
+msgid "Unsupported file type."
+msgstr ""
+
+#: inc/Services/Admin/ImporterService.php:36
+msgid "Could not parse file contents."
+msgstr ""
+
+#: inc/Services/Admin/LicenseService.php:544
+msgid "You have reached the maximum number of sites available in your plan"
+msgstr ""
+
+#: inc/Services/Admin/LicenseService.php:547
+msgid "Learn more about it"
+msgstr ""
+
+#: inc/Services/Admin/LicenseService.php:550
+msgid "or upgrade your plan."
+msgstr ""
+
+#: inc/Services/Admin/LicenseService.php:565
+msgid "The license expired on "
+msgstr ""
+
+#: inc/Services/Admin/LicenseService.php:567
+msgid "Please renew it and try again."
+msgstr ""
+
+#: inc/Services/Admin/LicenseService.php:569
+msgid "Renew"
+msgstr ""
+
+#: inc/Services/Admin/MenuService.php:59
+msgid "<span class=\"sby_get_pro\">Try the Pro Demo</span>"
+msgstr ""
+
+#: inc/Services/Admin/MenuService.php:80
+#: inc/Services/Admin/MenuService.php:81
+#: inc/Services/Admin/Settings/AboutPage.php:172
+msgid "Instagram Feed"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:47
+msgid "Plugin activated."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:49
+msgid "Addon activated."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:54
+msgid "Could not activate addon. Please activate from the Plugins page."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:67
+msgid "Could not install addon. Please download from wpforms.com and install manually."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:143
+msgid "Plugin installed & activated."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:143
+msgid "Addon installed & activated."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:151
+msgid "Plugin installed."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:151
+msgid "Addon installed."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:173
+msgid "A quick and elegant way to add your Instagram posts to your website. "
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:181
+msgid "Custom Facebook Feed"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:182
+msgid "Add Facebook posts from your timeline, albums and much more."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:190
+msgid "Custom Twitter Feeds"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:191
+msgid "A customizable way to display tweets from your Twitter account. "
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:200
+msgid "A simple yet powerful way to display videos from YouTube. "
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:209
+msgid "Combine feeds from all of our plugins into a single wall"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:219
+msgid "WPForms"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:220
+msgid "The most beginner friendly drag & drop WordPress forms plugin allowing you to create beautiful contact forms, subscription forms, payment forms, and more in minutes, not hours!"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:228
+msgid "MonsterInsights"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:229
+msgid "MonsterInsights makes it “effortless” to properly connect your WordPress site with Google Analytics, so you can start making data-driven decisions to grow your business."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:237
+msgid "OptinMonster"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:238
+msgid "Our high-converting optin forms like Exit-Intent® popups, Fullscreen Welcome Mats, and Scroll boxes help you dramatically boost conversions and get more email subscribers."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:246
+msgid "WP Mail SMTP"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:247
+msgid "Make sure your website's emails reach the inbox. Our goal is to make email deliverability easy and reliable. Trusted by over 1 million websites."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:255
+msgid "RafflePress"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:256
+msgid "Turn your visitors into brand ambassadors! Easily grow your email list, website traffic, and social media followers with powerful viral giveaways & contests."
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:264
+msgid "All in One SEO Pack"
+msgstr ""
+
+#: inc/Services/Admin/Settings/AboutPage.php:265
+msgid "Out-of-the-box SEO for WordPress. Features like XML Sitemaps, SEO for custom post types, SEO for blogs, business sites, or ecommerce sites, and much more."
+msgstr ""
+
+#: inc/Services/Admin/Settings/HelpPage.php:170
+msgid "every 30 minutes"
+msgstr ""
+
+#: inc/Services/Admin/Settings/HelpPage.php:173
+msgid "every 12 hours"
+msgstr ""
+
+#: inc/Services/Admin/Settings/HelpPage.php:176
+msgid "Next check"
+msgstr ""
+
+#: inc/Services/Admin/Settings/SettingsPage.php:125
+msgid "<strong>Next check: %s %s (%s)</strong> - Note: Clicking \"Clear All Caches\" will reset this schedule."
+msgstr ""
+
+#: inc/Services/Admin/Settings/SingleVideoPage.php:22
+#: inc/Services/Admin/Settings/SingleVideoPage.php:23
+#: frontend/src/components/Settings/Tabs.js:18
+#: frontend/src/components/SingleVideos/index.js:22
+#: frontend/src/components/SingleVideos/index.js:74
+msgid "Single Videos"
+msgstr ""
+
+#: inc/Services/LicenseNotification.php:96
+msgid "Your YouTube Feed Pro license key %s"
+msgstr ""
+
+#: inc/Services/ShortcodeService.php:47
+msgid "This error message is only visible to WordPress admins"
+msgstr ""
+
+#: inc/Services/ShortcodeService.php:48
+msgid "Error: No connected account."
+msgstr ""
+
+#: inc/Services/ShortcodeService.php:49
+msgid "Please go to the YouTube Feed settings page to connect an account."
+msgstr ""
+
+#: templates/item.php:135
+#: templates/player-free.php:28
+#: templates/player.php:48
+#: templates/single/shortcode-content.php:59
+msgid "YouTube Video %s"
+msgstr ""
+
+#: templates/search/form.php:2
+msgid "Search Videos"
+msgstr ""
+
+#: templates/search/form.php:3
+msgid "Search..."
+msgstr ""
+
+#: templates/search/form.php:4
+msgid "Submit"
+msgstr ""
+
+#: frontend/src/components/About/index.js:165
+msgid "Smash Balloon Team"
+msgstr ""
+
+#: frontend/src/components/About/index.js:171
+msgid "At Smash Balloon, we build software that helps you create beautiful responsive social media feeds for your website in minutes."
+msgstr ""
+
+#: frontend/src/components/About/index.js:179
+msgid "We're on a mission to make it super simple to add social media feeds in WordPress. No more complicated setup steps, ugly iframe widgets, or negative page speed scores."
+msgstr ""
+
+#: frontend/src/components/About/index.js:185
+msgid "Our plugins aren't just easy to use, but completely customizable, reliable, and fast! Which is why over 1.6 million awesome users, just like you, choose to use them on their site."
+msgstr ""
+
+#: frontend/src/components/About/index.js:196
+msgid "Our Other Social Media Feed Plugins"
+msgstr ""
+
+#: frontend/src/components/About/index.js:199
+msgid "We’re more than just an Instagram plugin! Check out our other plugins and add more content to your site."
+msgstr ""
+
+#: frontend/src/components/About/index.js:225
+msgid "Plugins we recommend"
+msgstr ""
+
+#: frontend/src/components/common/LicenseInactiveNotice.js:75
+#: frontend/src/components/common/LicenseNotice.js:71
+#: frontend/src/components/Settings/General/LicenseSection.js:107
+msgid "Deactivate"
+msgstr ""
+
+#: frontend/src/components/common/LicenseInactiveNotice.js:236
+#: frontend/src/components/common/LicenseNotice.js:209
+msgid "Paste license key here"
+msgstr ""
+
+#: frontend/src/components/common/LicenseNotice.js:115
+msgid "Your YouTube Feed Pro License has expired. Renew to keep using PRO features."
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:12
+msgid "AJAX theme loading fix"
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:18
+msgid "Usage Tracking"
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:20
+msgid "This helps us prevent plugin and theme conflicts by sending a report in the background once per week about your settings and relevant site stats. It does not send sensitive information like access tokens, email addresses, or user info. This will not affect your site performance as well. <a href='https://smashballoon.com/youtube-feed/docs/usage-tracking/' target='_blank'>Learn More</a>"
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:30
+msgid "Cron Clear Cache"
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:32
+msgid "If your YouTube feed is not updating, your WordPress installation may have a rare issue with clearing temporary data in your database. Enable this setting to use WordPress cron to clear your feed caches."
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:43
+msgid "The default HTML for the feed can be replaced with custom templates added to your theme's folder. Enable this setting to use these templates. See <a href='https://smashballoon.com/doc/guide-to-creating-custom-templates/' target='_blank'>this guide</a>."
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:51
+msgid "Enqueue JavaScript in header"
+msgstr ""
+
+#: frontend/src/components/Settings/AdvancedSettings.js:53
+msgid "Add the JavaScript file for the plugin in the header instead of the footer"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:27
+msgid "Caching"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:38
+msgid "Every 30 minutes"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:41
+msgid "Every hour"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:44
+msgid "Every 12 hours"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:47
+msgid "Every 24 hours"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:57
+msgid "1:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:58
+msgid "2:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:59
+msgid "3:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:60
+msgid "4:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:61
+msgid "5:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:62
+msgid "6:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:63
+msgid "7:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:64
+msgid "8:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:65
+msgid "9:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:66
+msgid "10:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:67
+msgid "11:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:68
+msgid "12:00"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:75
+msgid "AM"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:76
+msgid "PM"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:91
+msgid "Cache cleared successfully."
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:98
+msgid "Couldn't clear the cache."
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CachingSection.js:112
+msgid "Clear All Caches"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CustomCodeSection.js:11
+msgid "Custom Code"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CustomCodeSection.js:15
+msgid "Custom CSS"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/CustomCodeSection.js:31
+msgid "Custom JavaScript"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/GDPRSection.js:25
+msgid "GDPR"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/GDPRSection.js:37
+msgid "Automatic"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/GDPRSection.js:45
+msgid "We will automatically enable GDPR compliance if we detect a supported privacy consent plugin. <a href='https://smashballoon.com/doc/feeds-for-youtube-gdpr-compliance/?youtube' target='_blank'>Learn More</a>"
+msgstr ""
+
+#: frontend/src/components/Settings/Feeds/GDPRSection.js:56
+msgid "Block CDN Images"
+msgstr ""
+
+#: frontend/src/components/Settings/General/ExportSection.js:39
+msgid "Import Feed Settings"
+msgstr ""
+
+#: frontend/src/components/Settings/General/ExportSection.js:82
+#: frontend/src/components/SingleVideos/ImporterPopup.js:103
+msgid "Import"
+msgstr ""
+
+#: frontend/src/components/Settings/General/ExportSection.js:87
+msgid "You will need a JSON file previously exported from the Feeds for YouTube Plugin"
+msgstr ""
+
+#: frontend/src/components/Settings/General/ExportSection.js:97
+msgid "Export Feed Settings"
+msgstr ""
+
+#: frontend/src/components/Settings/General/ExportSection.js:112
+#: frontend/src/components/Support/index.js:224
+msgid "Select Feed"
+msgstr ""
+
+#: frontend/src/components/Settings/General/ExportSection.js:127
+#: frontend/src/components/Support/index.js:238
+msgid "Export"
+msgstr ""
+
+#: frontend/src/components/Settings/General/ExportSection.js:131
+msgid "Export settings for one or more of your feeds"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:32
+msgid "Test Connection"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:45
+msgid "Connection successful"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:52
+msgid "Connection failed"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:53
+msgid "View error"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:157
+msgid "<span>You are using Lite version of the plugin–no license needed. Enjoy! 🙂 To unlock more features, consider <a href='%s' target='_blank'>Upgrading to Pro</a></span>"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:170
+msgid "License Key"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:172
+msgid "Your license key provides access to updates and support"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:187
+msgid "Your <strong>YouTube Feed Pro</strong> license is %s"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:195
+msgid "<em>Already purchased? Simply enter your license key below to activate YouTube Feeds Pro.</em>"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:211
+msgid "Enter License Key"
+msgstr ""
+
+#: frontend/src/components/Settings/General/LicenseSection.js:234
+msgid "Manage License"
+msgstr ""
+
+#: frontend/src/components/Settings/General/PreserveSettingsSection.js:11
+msgid "Preserve settings if plugin is removed"
+msgstr ""
+
+#: frontend/src/components/Settings/General/PreserveSettingsSection.js:28
+msgid "This will make sure that all of your feeds and settings are still saved even if the plugin is uninstalled"
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:157
+msgid "Enter API Key"
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:170
+msgid "Entered API Key is invalid. You can double check the API Key or learn more about generating them <a target='_blank' href='https://smashballoon.com/youtube-api-key/'>here</a>"
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:218
+msgid "Connected YouTube Account"
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:223
+msgid "This account is used to display channel feeds. It will not affect playlist, favorites, search, livestreams or single videos stream."
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:277
+msgid "Feed not working? "
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:286
+msgid "Try Re-authenticating connected account"
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:326
+msgid "API Key"
+msgstr ""
+
+#: frontend/src/components/Settings/General/SourcesSection.js:332
+msgid "API Key is used to fetch from the YouTube API, and is required for several features to work. <a target='_blank' href='https://smashballoon.com/youtube-api-key/'>Learn more</a>"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:22
+msgid "Get more features with YouTube Feed Pro"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:30
+msgid "Lite Feed Users get a 50% OFF"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:42
+msgid "Show Live Streams"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:50
+msgid "All Feed Types: Playlist, Favorites, Search"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:61
+msgid "Add custom actions to end of the video"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:72
+msgid "Convert videos to Wordpress posts"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:82
+msgid "Add videos in a Carousel"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:83
+msgid "Show subscribers"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:84
+msgid "Show video details"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:85
+msgid "Fast and Effective Support"
+msgstr ""
+
+#: frontend/src/components/Settings/SettingsFooter.js:86
+msgid "Always up to date"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:13
+msgid "Save new videos as"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:24
+msgid "Draft"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:27
+msgid "Publish"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:32
+msgid "When you import new videos, they will be saved accordingly"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:42
+msgid "Information to Display"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:55
+msgid "Title"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:66
+msgid "User Name"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:113
+msgid "Stats (Like and Comment Count)"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:122
+msgid "Saved Featured Images"
+msgstr ""
+
+#: frontend/src/components/Settings/SingleVideosSettings.js:137
+msgid "Enabling this feature will automatically download video thumbnails and assign them as the featured image for a video post created using YouTube Feeds. Image files are stored in your WordPress media library."
+msgstr ""
+
+#: frontend/src/components/Settings/Sources/SourceRedirectPopup.js:66
+msgid "Delete %s?"
+msgstr ""
+
+#: frontend/src/components/Settings/Sources/SourceRedirectPopup.js:69
+msgid "Are you sure you want to delete this channel?"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:12
+msgid "Used for showing views. Example: 392k views"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:18
+msgid "Ago"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:20
+msgid "Used for showing time. Example: 3d ago"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:28
+msgid "Used to highlight when a video is streaming live"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:36
+msgid "Used to highlight when a video is going to stream live"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:42
+msgid "Minutes"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:44
+msgid "Used to show length of the video. Example: 3 minutes 21 seconds"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:50
+msgid "Hours"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:52
+msgid "Used to show length of the video. Example: 1 hour 3 minutes"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:60
+msgid "To display the call to action"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:63
+msgid "Thousands"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:65
+msgid "Used in the number of views. Example: 321K videos"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:71
+msgid "Millions"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:73
+msgid "Used in the number of views. Example: 4.2M videos"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:83
+msgid "Custom Text/Translate"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:85
+msgid "Enter custom text for the words below, or translate it into the language you would like to use."
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:95
+msgid "Original Text"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:96
+msgid "Custom text/translation"
+msgstr ""
+
+#: frontend/src/components/Settings/TranslationSettings.js:97
+msgid "Context"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/ImporterPopup.js:49
+msgid "Couldn't find any videos to import."
+msgstr ""
+
+#: frontend/src/components/SingleVideos/ImporterPopup.js:60
+#: frontend/src/components/SingleVideos/index.js:47
+msgid "Import Videos"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/ImporterPopup.js:62
+msgid "Generate WordPress posts from your YouTube channel. Enter the channel name or ID and the number of videos to import below and click “Import”."
+msgstr ""
+
+#: frontend/src/components/SingleVideos/ImporterPopup.js:70
+msgid "Channel Name or ID"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/ImporterPopup.js:76
+msgid "Enter Channel name or ID (for example: voxdotcom)"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/ImporterPopup.js:84
+msgid "Number of Videos"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/ImporterPopup.js:110
+msgid "Importing • %s Videos Imported"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/index.js:29
+msgid "Please go to <a href='%s'>Settings</a> and enter an API key to activate the importer tool."
+msgstr ""
+
+#: frontend/src/components/SingleVideos/index.js:64
+msgid "View All Videos"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:33
+msgid "Channel Title"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:35
+msgid "Published"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:36
+msgid "Drafts"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:37
+msgid "Actions"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:97
+msgid "View All"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:103
+#: frontend/src/components/SingleVideos/VideosTable.js:156
+msgid "Publish All"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:116
+#: frontend/src/components/SingleVideos/VideosTable.js:159
+msgid "Delete All"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:153
+msgid "Bulk Actions"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:221
+msgid "%s of %s"
+msgstr ""
+
+#: frontend/src/components/SingleVideos/VideosTable.js:317
+msgid "No single videos found"
+msgstr ""
+
+#: frontend/src/components/StickyWidget.js:44
+msgid "Get All Access Bundle"
+msgstr ""
+
+#: frontend/src/components/StickyWidget.js:70
+msgid "Our Feeds for other platforms"
+msgstr ""
+
+#: frontend/src/components/StickyWidget.js:113
+msgid "Follow Us"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:51
+msgid "Search Documentation"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:116
+msgid "Need more support? We’re here to help."
+msgstr ""
+
+#: frontend/src/components/Support/index.js:123
+msgid "Submit a Support Ticket"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:135
+msgid "Our fast and friendly support team is always happy to help!"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:162
+msgid "System Info"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:201
+msgid "Expand"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:202
+msgid "Collapse"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:208
+msgid "Export Settings"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:210
+msgid "Share your plugin settings easily with Support"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:336
+msgid "Getting Started"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:337
+msgid "Some helpful resources to get you started"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:341
+msgid "More help getting started"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:349
+msgid "Docs & Troubleshooting"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:350
+msgid "Run into an issue? Check out our help docs."
+msgstr ""
+
+#: frontend/src/components/Support/index.js:354
+msgid "View Documentation"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:362
+msgid "Additional Resources"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:363
+msgid "To help you get the most out of the plugin"
+msgstr ""
+
+#: frontend/src/components/Support/index.js:367
+msgid "View Blog"
+msgstr ""
