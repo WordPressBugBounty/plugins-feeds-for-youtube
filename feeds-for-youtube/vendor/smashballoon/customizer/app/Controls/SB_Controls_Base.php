@@ -7,10 +7,9 @@
  */
 namespace Smashballoon\Customizer\Controls;
 
-if (!\defined('ABSPATH')) {
+if (!defined('ABSPATH')) {
     exit;
 }
-/** @internal */
 abstract class SB_Controls_Base
 {
     /**

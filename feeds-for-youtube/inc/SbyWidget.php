@@ -13,8 +13,8 @@ class SbyWidget extends WP_Widget
     public function __construct() {
         parent::__construct(
             'youtube-feeds-widget',
-            __( 'YouTube Feeds', SBY_TEXT_DOMAIN ),
-            array( 'description' => __( 'Display your YouTube feeds', SBY_TEXT_DOMAIN ), )
+            __( 'YouTube Feeds', 'feeds-for-youtube' ),
+            array( 'description' => __( 'Display your YouTube feeds', 'feeds-for-youtube' ), )
         );
     }
 

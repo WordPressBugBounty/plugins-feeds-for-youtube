@@ -567,7 +567,11 @@ class SBY_Feed_Saver {
 				'millionstext' => __( 'M', 'feeds-for-youtube' ),
 				'watchnowtext' => __( 'Watch Now', 'feeds-for-youtube' ),
 				'cta' => 'related',
-	
+				
+				// pro comments
+				'numcomments' => 20,
+				'enablecomments' => false,
+
 				'linktext' => __( 'Learn More', 'feeds-for-youtube' ),
 				'linkurl' => '',
 				'linkopentype' => 'same',

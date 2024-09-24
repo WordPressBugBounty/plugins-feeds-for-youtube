@@ -40,14 +40,14 @@ class SBY_RSS_Connect
 
 		if ( ! ini_get( 'allow_url_fopen' ) ) {
 			if ( ! $this->is_live_stream ) {
-				$error_message = '<p><b>'. __( 'Unable to retrieve new videos without an API key.', 'youtube-feed' ) .'</b></p>';
+				$error_message = '<p><b>'. __( 'Unable to retrieve new videos without an API key.', 'feeds-for-youtube' ) .'</b></p>';
 				if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-					$error_message .= '<p>' . sprintf( __( 'Due to your server configuration, an API key is required to update your feed. See %sthis FAQ%s to set up an API key.', 'youtube-feed' ), '<a href="https://smashballoon.com/youtube-api-key/" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
+					$error_message .= '<p>' . sprintf( __( 'Due to your server configuration, an API key is required to update your feed. See %sthis FAQ%s to set up an API key.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-api-key/" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
 				}
 			} else {
-				$error_message = '<p><b>'. __( 'Unable to retrieve new videos due to server configuration.', 'youtube-feed' ) .'</b></p>';
+				$error_message = '<p><b>'. __( 'Unable to retrieve new videos due to server configuration.', 'feeds-for-youtube' ) .'</b></p>';
 				if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-					$error_message .= '<p>' . sprintf( __( 'You must have the allow_url_fopen directive enabled in your server\'s php.ini file to retrieve live streams.', 'youtube-feed' ), '<a href="https://smashballoon.com/youtube-api-key/" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
+					$error_message .= '<p>' . sprintf( __( 'You must have the allow_url_fopen directive enabled in your server\'s php.ini file to retrieve live streams.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-api-key/" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
 				}
 			}
 
@@ -62,7 +62,7 @@ class SBY_RSS_Connect
 		}
 
 		if ( wp_remote_retrieve_response_code( wp_remote_get( $this->url ) ) === 404 ) {
-			$error_message = '<p><b>'. __( 'Cannot collect videos from this channel. Please make sure this is a valid channel ID.', 'youtube-feed' ) .'</b></p>';
+			$error_message = '<p><b>'. __( 'Cannot collect videos from this channel. Please make sure this is a valid channel ID.', 'feeds-for-youtube' ) .'</b></p>';
 
 			global $sby_posts_manager;
 

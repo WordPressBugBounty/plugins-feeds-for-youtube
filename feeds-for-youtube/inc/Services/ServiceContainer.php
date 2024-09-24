@@ -15,7 +15,7 @@ use SmashBalloon\YouTubeFeed\Services\Integrations\Divi\SBY_Divi_Handler;
 
 class ServiceContainer extends ServiceProvider {
 
-	private $services = [
+	protected $services = [
 		CronUpdaterService::class,
 		RoutineManagerService::class,
 		ConfigService::class,

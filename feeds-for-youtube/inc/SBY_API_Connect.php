@@ -105,10 +105,10 @@ class SBY_API_Connect
 		if ( isset( $response['error'] ) ) {
 			if ( isset( $response['error']['errors'][0]['reason'] ) && $response['error']['errors'][0]['message'] === 'Invalid Credentials' ) {
 				$error_message = '<p><b>' . __( 'Reconnect to YouTube to show this feed.', 'feeds-for-youtube' ) . '</b></p>';
-				$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', SBY_TEXT_DOMAIN ) . '</p>';
+				$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', 'feeds-for-youtube' ) . '</p>';
 
 				if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-					$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area' ) . '</a>';
+					$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area', 'feeds-for-youtube' ) . '</a>';
 				}
 				global $sby_posts_manager;
 
@@ -128,7 +128,7 @@ class SBY_API_Connect
 					}
 					$error_message .= '</p>';
 
-					$error_message .= '<a href="https://smashballoon.com/youtube-feed/docs/errors/" target="blank" rel="noopener nofollow">' . __( 'Directions on how to resolve this issue' ) . '</a>';
+					$error_message .= '<a href="https://smashballoon.com/youtube-feed/docs/errors/" target="blank" rel="noopener nofollow">' . __( 'Directions on how to resolve this issue', 'feeds-for-youtube' ) . '</a>';
 				} else {
 					$error_message .= '</p>';
 				}
@@ -154,7 +154,7 @@ class SBY_API_Connect
 			$response_array = $response;
 		}
 
-		$message = sprintf( __( 'Error connecting to %s.', SBY_TEXT_DOMAIN ), $response_array['url'] ). ' ';
+		$message = sprintf( __( 'Error connecting to %s.', 'feeds-for-youtube' ), $response_array['url'] ). ' ';
 		if ( isset( $response_array['response'] ) && isset( $response_array['response']->errors ) ) {
 			foreach ( $response_array['response']->errors as $key => $item ) {
 				$message .= ' '.$key . ' - ' . $item[0] . ' |';

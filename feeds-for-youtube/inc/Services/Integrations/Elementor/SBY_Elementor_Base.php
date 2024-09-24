@@ -54,12 +54,15 @@ class SBY_Elementor_Base
 	}
 
 	public function register_frontend_scripts(){
-		wp_enqueue_style(
-			'sby_styles', 
-			trailingslashit(SBY_PLUGIN_URL) . 'css/sb-youtube.min.css', 
-			array(), 
-			SBYVER
-		);
+
+		$css_file_name = 'sb-youtube.min.css';
+
+			wp_enqueue_style(
+				'sby_styles', 
+				trailingslashit(SBY_PLUGIN_URL) . 'css/' . $css_file_name,
+				array(), 
+				SBYVER
+			);
 
 		$data = array(
 			'isAdmin' => is_admin(),

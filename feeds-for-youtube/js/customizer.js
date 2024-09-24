@@ -653,6 +653,41 @@ SB_Customizer.initPromise = new Promise((resolve) => {
 				}
 			});
 		},
+
+		/**
+		 * Custom field click action
+		 * Action
+		 * @since 2.3.3
+		 */
+		fieldCustomClickAction : function( clickAction ){
+			var self = this;
+			switch (clickAction) {
+				case 'clearCommentCache':
+					self.clearCommentCache();
+				break;
+			}
+		},
+
+		/**
+		 * Clear comment cache action
+		 *
+		 * @since 2.3.3
+		 */
+		clearCommentCache : function(){
+			var self = this;
+			self.loadingBar = true;
+			var clearCommentCacheData = {
+				action : 'sby_feed_saver_clear_comments_cache',
+			};
+			self.ajaxPost(clearCommentCacheData, function(_ref){
+				var data = _ref.data;
+				if( data === 'success' ){
+					self.processNotification("commentCacheCleared");
+				}else{
+					self.processNotification("unkownError");
+				}
+			});
+		},
 	}
 	resolve(SB_Customizer);
 });

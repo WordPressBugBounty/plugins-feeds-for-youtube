@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit849b5a221d2e283d22423471339bb812
+class ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac
 {
     public static $files = array (
         'sb_ytf_bbf73f3db644d3dced353b837903e74c' => __DIR__ . '/..' . '/php-di/php-di/src/DI/functions.php',
@@ -15,8 +15,8 @@ class ComposerStaticInit849b5a221d2e283d22423471339bb812
         'S' => 
         array (
             'Smashballoon\\Stubs\\' => 19,
+            'Smashballoon\\Framework\\' => 23,
             'Smashballoon\\Customizer\\' => 24,
-            'SmashBalloon\\YoutubeFeed\\Vendor\\Smashballoon\\Framework\\' => 55,
             'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' => 46,
             'SmashBalloon\\YoutubeFeed\\Vendor\\PhpDocReader\\' => 45,
             'SmashBalloon\\YoutubeFeed\\Vendor\\Invoker\\' => 40,
@@ -31,13 +31,13 @@ class ComposerStaticInit849b5a221d2e283d22423471339bb812
         array (
             0 => __DIR__ . '/..' . '/smashballoon/stubs/src',
         ),
+        'Smashballoon\\Framework\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/smashballoon/framework',
+        ),
         'Smashballoon\\Customizer\\' => 
         array (
             0 => __DIR__ . '/..' . '/smashballoon/customizer/app',
-        ),
-        'SmashBalloon\\YoutubeFeed\\Vendor\\Smashballoon\\Framework\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/smashballoon/framework',
         ),
         'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' => 
         array (
@@ -72,9 +72,9 @@ class ComposerStaticInit849b5a221d2e283d22423471339bb812
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit849b5a221d2e283d22423471339bb812::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit849b5a221d2e283d22423471339bb812::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit849b5a221d2e283d22423471339bb812::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac::$classMap;
 
         }, null, ClassLoader::class);
     }

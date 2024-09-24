@@ -32,6 +32,8 @@ class CronUpdaterService extends ServiceProvider {
 	public function sby_cron_updater() {
 		if ( \sby_is_pro() ) {
 			SBY_Cron_Updater_Pro::do_feed_updates();
+			SBY_Cron_Updater_Pro::do_comment_delete();
+			
 		} else {
 			SBY_Cron_Updater::do_feed_updates();
 		}

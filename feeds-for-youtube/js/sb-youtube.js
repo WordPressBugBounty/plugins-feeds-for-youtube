@@ -1,5 +1,15 @@
+let xss = require("xss");
 var sby_js_exists = (typeof sby_js_exists !== 'undefined') ? true : false;
 if(!sby_js_exists) {
+
+    /**
+     * Sanitize string by escaping HTML entities
+     * @param input
+     * @returns {string}
+     */
+    function sbyEncodeInput(input)  {
+        return xss(input);
+    }
 
     function sbyAddImgLiquid() {
         /*! imgLiquid v0.9.944 / 03-05-2013 https://github.com/karacas/imgLiquid */
@@ -1220,8 +1230,8 @@ if(!sby_js_exists) {
                                   if (!jQuery(event.target).closest('.sby_lb-outerContainer').length) {
                                       if (!jQuery(event.target).closest('.sby_lb-dataContainer').length) {
                                           //Fade out lightbox
+                                          lightboxOnClose();
                                           lbBuilder.pausePlayer();
-
                                           jQuery('#sby_lightboxOverlay, #sby_lightbox').fadeOut();
                                       }
                                   }
@@ -1246,9 +1256,10 @@ if(!sby_js_exists) {
                                   lbBuilder.pausePlayer();
 
                                   return b.changeImage(b.currentImageIndex === b.album.length - 1 ? 0 : b.currentImageIndex + 1), !1
-                              }), this.$lightbox.find(".sby_lb-loader, .sby_lb-close").on("click", function() {
-
-                                  lbBuilder.pausePlayer();
+                              }), 
+                              this.$lightbox.find(".sby_lb-loader, .sby_lb-close").on("click", function() {
+                                    lightboxOnClose();
+                                    lbBuilder.pausePlayer();
 
                                   return b.end(), !1
                               })
@@ -1271,7 +1282,7 @@ if(!sby_js_exists) {
                                   f = a(b.prop("tagName") + '[rel="' + b.attr("rel") + '"]');
                                   for (var j = 0; j < f.length; j = ++j) c(a(f[j])), f[j] === b[0] && (g = j)
                               }
-                              var k = e.scrollTop() + this.options.positionFromTop,
+                              var k = e.scrollTop() + this.options.positionFromTop - 50,
                                 l = e.scrollLeft();
                               this.$lightbox.css({
                                   top: k + "px",
@@ -2124,6 +2135,7 @@ if(!sby_js_exists) {
                         }
 
                         $('.sby_no_js').removeClass('sby_no_js');
+                        openComments();
                     }
 
                 };
@@ -2634,7 +2646,7 @@ if(!sby_js_exists) {
                 } else if (typeof window.Cookiebot !== "undefined") { // Cookiebot by Cybot A/S
                     this.settings.consentGiven = Cookiebot.consented;
                 } else if (typeof window.BorlabsCookie !== 'undefined') { // Borlabs Cookie by Borlabs
-                    this.settings.consentGiven = window.BorlabsCookie.checkCookieConsent('youtube');
+                    this.settings.consentGiven = typeof window.BorlabsCookie.Consents !== 'undefined' ? window.BorlabsCookie.Consents.hasConsent('youtube') : window.BorlabsCookie.checkCookieConsent('youtube');
                 }
 
                 var evt = jQuery.Event('sbycheckconsent');
@@ -2722,6 +2734,7 @@ if(!sby_js_exists) {
                 var evt = jQuery.Event('sbyafterlayoutinit');
                 evt.feed = this;
                 jQuery(window).trigger(evt);
+                openComments(); 
             };
 
             this.initGrid = function() {
@@ -2944,7 +2957,7 @@ if(!sby_js_exists) {
                         e.preventDefault();
                         var $expand = jQuery(this);
                         $caption = typeof $caption !== 'undefined' ? $caption : $item.find('.sby_info .sby_caption');
-                        captionText = typeof captiontext !== 'undefined' ? captionText : $item.find('.sby_item_video_thumbnail').attr('data-title');
+                        captionText = typeof captiontext !== 'undefined' ? captionText : sbyEncodeInput($item.find('.sby_item_video_thumbnail').attr('data-title'));
                         if ($item.hasClass('sby_caption_full') && typeof short_text !== 'undefined') {
                             $caption.html(short_text);
                             $item.removeClass('sby_caption_full');
@@ -3029,7 +3042,7 @@ if(!sby_js_exists) {
                 //window.sby.ctas
 
                 var videoID = typeof videoID !== 'undefined' ? videoID : $item.find('.sby_item_video_thumbnail').attr('data-video-id'),
-                  text = typeof $item.find('.sby_item_video_thumbnail').attr('data-title') !== 'undefined' ? $item.find('.sby_item_video_thumbnail').attr('data-title') : '',
+                  text = sbyEncodeInput(typeof $item.find('.sby_item_video_thumbnail').attr('data-title') !== 'undefined' ? $item.find('.sby_item_video_thumbnail').attr('data-title') : ''),
                   ctaInCaption = window.sby.ctaDetect(text);
 
                 if (ctaInCaption) {
@@ -3086,6 +3099,11 @@ if(!sby_js_exists) {
                         $(this).find('.sby_view_count').text(data.sby_view_count);
                         $(this).find('.sby_comment_count').text(data.sby_comment_count);
                         $(this).find('.sby_like_count').text(data.sby_like_count);
+
+                        //Set for attributes too.
+                        $(this).find('.sby_video_thumbnail').attr('data-views',data.sby_view_count);
+                        $(this).find('.sby_video_thumbnail').attr('data-comment-count', data.sby_comment_count);
+
                         if (data.sby_live_broadcast.broadcast_type !== 'none') {
                             $(this).find('.sby_ls_message').text(data.sby_live_broadcast.live_streaming_string);
                             $(this).find('.sby_date').html(data.sby_live_broadcast.live_streaming_date);
@@ -3094,7 +3112,7 @@ if(!sby_js_exists) {
                             $(this).attr('data-live-date',data.sby_live_broadcast.live_streaming_timestamp);
                         }
                         if (typeof data.sby_description !== 'undefined') {
-                            $(this).find('.sby_item_video_thumbnail').attr('data-title',data.sby_description );
+                            $(this).find('.sby_item_video_thumbnail').attr('data-title', sbyEncodeInput(data.sby_description) );
                         }
                     }
                 });
@@ -3131,16 +3149,15 @@ if(!sby_js_exists) {
                 $self.find('.sby_player_item').find('.sby_info').replaceWith(
                   $newItem.find('.sby_info').clone(true,true)
                 );
-                //sby_info
-                // retreive the new item's data
-                let newItemVideoTitle = $newItem.find('.sby_video_title_wrap .sby_video_title').text();
-                let newItemChannel = $newItem.find('.sby_username_wrap .sby_username').text();
-                let newItemDate = $newItem.find('.sby_date_wrap .sby_date').text();
+ 
+                const videoTitle = checkValue($newItem.attr('data-video-title'));
+                const videoPublishData = checkValue($newItem.find('.sby_video_thumbnail').attr('data-formatted-published-date')) ;
 
-                // update the player info
-                $self.find('.sby-player-info .sby-video-header-info h5').text( newItemVideoTitle );
-                $self.find('.sby-player-info .sby-video-header-meta .sby-channel-name').text( newItemChannel );
-                $self.find('.sby-player-info .sby-video-header-meta .sby-video-date').text( newItemDate );
+                $self.find('.sby-player-info .sby-video-header-info .sby-video-info-header h5').text( videoTitle );
+                $self.find('.sby-player-info .sby-video-header-meta .sby-video-date').text( videoPublishData );
+
+                resetComments($self);
+                openComments();
             };
 
             this.maybeAddCTA = function(playerID,$el) {
@@ -3160,7 +3177,7 @@ if(!sby_js_exists) {
                 return {
                     feedIndex : closestFeedIndex,
                     link: a.attr("href"),
-                    videoTitle: typeof a.attr("data-video-title") !== 'undefined' ? a.attr("data-video-title") : 'YouTube Video',
+                    videoTitle: typeof a.attr("data-video-title") !== 'undefined' ? sbyEncodeInput(a.attr("data-video-title")) : 'YouTube Video',
                     video: a.attr("data-video-id"),
                     channelID: a.attr("data-channel-id")
                 }
@@ -3225,65 +3242,179 @@ if(!sby_js_exists) {
         function SbyLightboxBuilderPro() {
             SbyLightboxBuilder.call(this);
 
-            var feedContainer = $('.sb_youtube'),
-                channelSubscribers = feedContainer.attr('data-channel-subscribers'),
-                subscribeBtnText = feedContainer.attr('data-subscribe-btn-text'),
-                subscribeBtn = feedContainer.attr('data-subscribe-btn');
+               
 
             this.getData = function(a){
-                var closestFeedIndex = parseInt(a.closest('.sb_youtube').attr('data-sby-index')-1);
+                const feedParent = a.closest('.sb_youtube');
+                var closestFeedIndex = parseInt(feedParent.attr('data-sby-index')-1);
+                const subscribeBtnText = feedParent.attr('data-subscribe-btn-text');
+                const subscribeBtn = feedParent.attr('data-subscribe-btn');
+                const colorScheme = feedParent.hasClass('sby_palette_dark') ? 'dark' : 'light';
+                const atts = feedParent.attr('data-shortcode-atts');
+                const liveDataAttr = a.closest('.sby_item').attr('data-live-date');
+                const channelHeaderColorsAttr = feedParent.attr('data_channel_header_colors') ?  JSON.parse(feedParent.attr('data_channel_header_colors')) : '';
+
                 return {
                     feedIndex : closestFeedIndex,
                     link: a.attr("href"),
                     video: a.attr("data-video-id"),
-                    title: a.attr("data-title"),
-                    videoTitle: typeof a.attr("data-video-title") !== 'undefined' ? a.attr("data-video-title") : 'YouTube Video',
+                    title: sbyEncodeInput(a.attr("data-title")),
+                    videoTitle: typeof a.attr("data-video-title") !== 'undefined' ? sbyEncodeInput(a.attr("data-video-title")) : 'YouTube Video',
                     avatar: a.attr("data-avatar"),
-                    user: a.attr("data-user"),
+                    user: sbyEncodeInput(a.attr("data-user")),
                     channelURL: a.attr("data-url"),
                     channelID: a.attr("data-channel-id"),
-                    channelSubscribers: channelSubscribers,
+                    channelSubscribers: a.closest('.sb_youtube').attr('data-channel-subscribers'),
                     subscribeBtn: subscribeBtn,
                     subscribeBtnText: subscribeBtnText,
+                    colorScheme: colorScheme,
+                    publishedDate: a.attr("data-published-date"),
+                    commentCount: a.attr("data-comment-count"),
+                    views: a.attr("data-views"),
+                    liveData: liveDataAttr,
+                    channelHeaderColors : channelHeaderColorsAttr,
+                    atts: atts
                 }
             };
 
             this.template = function() {
-                return "<div id='sby_lightboxOverlay' class='sby_lightboxOverlay'></div>"+
-                  "<div id='sby_lightbox' class='sby_lightbox'>"+
-                  "<div class='sby_lb-outerContainer'>"+
-                  "<div class='sby_lb-container'>"+
-                  "<div class='sby_lb_video_thumbnail_wrap'>"+
-                  "<span class='sby_lb_video_thumbnail'>" +
-                  "<img class='sby_lb-image' alt='Lightbox image placeholder' src='' />"+
-                  "<div class='sby_lb-player' id='sby_lb-player'></div>" +
-                  "</span>" +
-                  "</div>" +
-
-                  "<div class='sby_lb-nav'><a class='sby_lb-prev' href='#' ><p class='sby-screenreader'>Previous Slide</p><span></span></a><a class='sby_lb-next' href='#' ><p class='sby-screenreader'>Next Slide</p><span></span></a></div>"+
-                  "<div class='sby_lb-loader'><a class='sby_lb-cancel'></a></div>"+
-                  "</div>"+
-                  "</div>"+
-                  "<div class='sby_lb-dataContainer'>"+
-                  "<div class='sby_lb-data'>"+
-                  "<div class='sby_lb-details'>"+
-                  "<div class='sby_lb-caption'></div>"+
-                  "<div class='sby_lb-info'>"+
-                  "<div class='sby_lb-number'></div>"+
-                  "</div>"+
-                  "</div>"+
-                  "<div class='sby_lb-closeContainer'><a class='sby_lb-close'></a></div>"+
-                  "</div>"+
-                  "</div>"+
-                  "</div>";
+                return `
+                <div id='sby_lightboxOverlay' class='sby_lightboxOverlay'></div>
+                <div id='sby_lightbox' class='sby_lightbox'>
+                 <div class='sby_lb-header'></div>
+                  <div class='sby_lb-outerContainer'>
+                    <a class='sby_lb-close'></a>
+                    <div class='sby_lb-container'>
+                      <div class='sby_lb_video_thumbnail_wrap'>
+                        <span class='sby_lb_video_thumbnail'>
+                          <img class='sby_lb-image' alt='Lightbox image placeholder' src='' />
+                          <div class='sby_lb-player' id='sby_lb-player'></div>
+                        </span>
+                      </div>
+                      <div class='sby_lb-nav'>
+                        <a class='sby_lb-prev' href='#'>
+                          <p class='sby-screenreader'>Previous Slide</p>
+                          <span></span>
+                        </a>
+                        <a class='sby_lb-next' href='#'>
+                          <p class='sby-screenreader'>Next Slide</p>
+                          <span></span>
+                        </a>
+                      </div>
+                      <div class='sby_lb-loader'>
+                        <a class='sby_lb-cancel'></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class='sby_lb-dataContainer'>
+                    <div class='sby_lb-data'>
+                      <div class='sby_lb-details'>
+                        <div class='sby_lb-caption'>
+                        </div>
+                        <div class='sby_lb-info'>
+                          <div class='sby_lb-number'></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
             };
 
             this.beforePlayerSetup = function($lightbox,data,index,album,feed){
+                
+                $('body').css('overflow', 'hidden');
                 if (!$lightbox.find('.sby_cta_items_wraps').length) {
                     $lightbox.find('.sby_lb_video_thumbnail_wrap').append($(feed.el).find('.sby_cta_items_wraps').clone());
                 } else {
                     $lightbox.find('.sby_cta_items_wraps').replaceWith($(feed.el).find('.sby_cta_items_wraps').clone());
                 }
+            };
+
+            this.afterPlayerSetup = function($lightbox,data,index,album) {
+
+                this.availableAvatarUrls = {};
+                const subscribeSection = data?.subscribeBtn ? data.subscribeBtn : false;
+                const subscribeBtnText = data?.subscribeBtnText ? data.subscribeBtnText : '';
+
+
+                const subscribeClass = subscribeSection ? 'sby_lb-channel-info' : 'sby_lb-no-channel-info'
+
+                if (typeof sbyLightboxAction === 'function') {
+                    setTimeout(function() {
+                        sbyLightboxAction();
+                    },100);
+                }
+
+                if(data?.colorScheme && 'dark' === data.colorScheme ) {
+                    LightboxColorScheme(data.colorScheme, true);
+                }
+
+                let avatarImage = '',
+
+                subscribeBtn = subscribeSection ? '<a class="sby-lb-subscribe-btn" href="http://www.youtube.com/channel/'+ data.channelID +'?sub_confirmation=1&feature=subscribe-embed-click" target="_blank" rel="noopener noreferrer">'+ getStaticSVG('youtube') +' <p>' + subscribeBtnText +'</p></a>' : '';
+                if (typeof data.avatar !== 'undefined' && data.avatar !== '' && typeof data.user !== 'undefined') {
+                    avatarImage = (data.avatar !== 'undefined') ? data.avatar : '';
+                } else if (typeof data.user !== 'undefined') {
+                    jQuery.each(window.sby.feeds, function() {
+                        if (typeof this.availableAvatarUrls !== 'undefined' && typeof this.availableAvatarUrls[data.user] !== 'undefined' && this.availableAvatarUrls[data.user] !== 'undefined') {
+                            avatarImage = this.availableAvatarUrls[data.user];
+                        }
+                    });
+                }
+
+                const avatarImageHtml = avatarImage ? '<img src="'+ avatarImage +'" referrerPolicy="no-referrer"/>' : getStaticSVG('profile-picture');
+                const userHtml = subscribeSection ? '<div class="sby-lb-channel-header"><a class="sby_lightbox_username" href="'+ data.channelURL+'" target="_blank" rel="noopener">'+ avatarImageHtml + '<p class="sby-lb-channel-name-with-subs"><span>@'+data.user + '</span><span>' + data.channelSubscribers  +'</span></p></a> ' + subscribeBtn + '</div>' : '';
+
+                if( window.sbyOptions.isPro ) {
+
+                const description = data?.title ? addLinksTotext(data.title) : '';
+                const publishedDate = data?.publishedDate ? timeAgo(convertUnixToMs(data.publishedDate)) : '';
+                const views = data?.views ? data.views : '';
+
+                const videoHeaderSection  = `
+                    <div class="sby_lb-video-heading">
+                        <h3>${data.videoTitle}</h3>
+                        <div class="sby_lb-video-info">
+                            <span>${views}</span>
+                            <span class="sby_lb-spacer">·</span>
+                            <span>${publishedDate}</span>
+                        </div>
+                    </div>
+                `;
+
+                const videoDescriptionhtml = `
+                    <div class="sby_lb-video-description-wrap">
+                        <div class="sby_lb-description sby-read-more-target">
+                            ${description}
+                        </div>
+                        <button class="sby_lb-more-info-btn sby-read-more-trigger">Description${getStaticSVG('angle-down')}</button>
+                    </div>
+                `;
+
+                const commentSectionHtml = `
+                    <div class="sby-comments-wrap">
+                    </div>
+                `;
+
+                const videoDescription = description ? videoDescriptionhtml : '';
+
+                $lightbox.find(".sby_lb-caption").html( `<div class="sby_lb-caption-inner ${subscribeClass}">` + videoHeaderSection + userHtml + videoDescription + commentSectionHtml + `</div>` ).fadeIn("fast");
+
+                if( data?.liveData && '0' === data.liveData ) {
+                    const videoId = data?.video ? data.video : ''; 
+                    const atts = data?.atts ? data.atts : '';
+                    const currentCommentCount = data?.commentCount ? data.commentCount : ''; 
+                    const target = $lightbox.find(".sby-comments-wrap");
+                    generateCommentSection(videoId, atts, target, currentCommentCount);
+                } else {
+                    toggleReadMore();
+                }
+
+                if( data?.channelHeaderColors ) {
+                    setColorsToChannelHeader(data.channelHeaderColors)
+                }
+                
+            }
             };
         }
 
@@ -3405,7 +3536,7 @@ if(!sby_js_exists) {
                         if (typeof $(this).find('.sby_item_video_thumbnail').attr('data-full-res') !== 'undefined') {
                             var thisVid = {
                                 videoID: $(this).attr('data-video-id'),
-                                title: $(this).attr('data-video-title'),
+                                title: sbyEncodeInput($(this).attr('data-video-title')),
                                 thumbnail: $(this).find('.sby_item_video_thumbnail').attr('data-full-res'),
                             }
                             relatedVids.push(thisVid);
@@ -3504,15 +3635,6 @@ if(!sby_js_exists) {
 
         function sbyGetlightboxBuilder() {
             return new SbyLightboxBuilderPro();
-        }
-
-        function sbyAjax(submitData,onSuccess) {
-            $.ajax({
-                url: sbyOptions.adminAjaxUrl,
-                type: 'post',
-                data: submitData,
-                success: onSuccess
-            });
         }
 
         function sbyIsTouch() {
@@ -3834,7 +3956,7 @@ window.onYouTubeIframeAPIReady = function() {
                 width: '100',
                 videoId: jQuery(this).find('.sby_item').first().attr('data-video-id'),
                 playerVars: {
-                    modestbranding: 1,
+                    modestbranding: 1, 
                     rel: 0,
                     autoplay: autoplay
                 }
@@ -3850,3 +3972,591 @@ window.onYouTubeIframeAPIReady = function() {
     }
 
 };
+
+/**
+ * Retrieves a specific attribute value from the given API data object.
+ * 
+ * @param {Object} rootPath
+ * @param {string} attrName
+ * 
+ * @returns {string|boolean}
+ */
+
+function getSingleApiData(rootPath, attrName) {
+    switch(attrName) {
+        case 'authorProfileImageUrl':
+            return rootPath?.snippet?.authorProfileImageUrl ? rootPath.snippet.authorProfileImageUrl : '';
+        case 'authorDisplayName':
+            return rootPath?.snippet?.authorDisplayName ? rootPath.snippet.authorDisplayName : '';
+        case 'authorChannelUrl':
+            return rootPath?.snippet?.authorChannelUrl ? rootPath.snippet.authorChannelUrl : '';
+        case 'textDisplay':
+            return rootPath?.snippet?.textDisplay ? rootPath.snippet.textDisplay : '';
+        case 'likeCount':
+            return rootPath?.snippet?.likeCount ? rootPath.snippet.likeCount : '';
+        case 'publishedAt':
+            return rootPath?.snippet?.publishedAt ? rootPath.snippet.publishedAt : '';
+        case 'totalReplyCount':
+            return rootPath?.totalReplyCount ? rootPath.totalReplyCount : '';
+        default:
+            return false;
+    }
+}
+
+/**
+ * Retrieves a static SVG image based on the provided name.
+ * @param {string} name 
+ * @returns {string|boolean} 
+ */
+function getStaticSVG(name) {
+
+    switch(name) {
+        case 'profile-picture':
+            return '<svg fill="currentColor" width="800px" height="800px" viewBox="0 0 512 512" id="_x30_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M256,90  c37.02,0,67.031,35.468,67.031,79.219S293.02,248.438,256,248.438s-67.031-35.468-67.031-79.219S218.98,90,256,90z M369.46,402  H142.54c-11.378,0-20.602-9.224-20.602-20.602C121.938,328.159,181.959,285,256,285s134.062,43.159,134.062,96.398  C390.062,392.776,380.839,402,369.46,402z"/></svg>';
+        case 'thumbs-up':
+            return '<svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.4159 4.18027C13.761 4.18027 14.0778 4.32177 14.3664 4.60477C14.6549 4.88777 14.7992 5.20738 14.7992 5.5636V6.2706C14.7992 6.36471 14.7902 6.45188 14.7722 6.5321C14.7542 6.61232 14.7272 6.69266 14.6912 6.7731L12.684 11.4908C12.5845 11.7449 12.4181 11.9486 12.1849 12.1019C11.9517 12.2552 11.69 12.3318 11.3999 12.3318H5.15938C4.77282 12.3318 4.44566 12.2006 4.17788 11.9383C3.90999 11.6759 3.77604 11.346 3.77604 10.9484V4.7561C3.77604 4.56277 3.81332 4.38049 3.88788 4.20927C3.96254 4.03804 4.06477 3.88754 4.19454 3.75777L7.28938 0.662932C7.5186 0.431043 7.79427 0.281321 8.11638 0.213765C8.43849 0.146321 8.71416 0.178988 8.94338 0.311765C9.22549 0.46421 9.40932 0.695932 9.49488 1.00693C9.58032 1.31793 9.58999 1.62804 9.52388 1.93727L9.09554 4.18027H13.4159ZM1.34404 12.3318C1.01393 12.3318 0.726767 12.2097 0.482544 11.9654C0.238322 11.7212 0.116211 11.434 0.116211 11.1039V5.40827C0.116211 5.07804 0.236989 4.79082 0.478544 4.5466C0.7201 4.30238 1.00466 4.18027 1.33221 4.18027H1.34804C1.67827 4.18027 1.96549 4.30238 2.20971 4.5466C2.45393 4.79082 2.57604 5.07804 2.57604 5.40827V11.1039C2.57604 11.434 2.45393 11.7212 2.20971 11.9654C1.96549 12.2097 1.67827 12.3318 1.34804 12.3318H1.34404Z" fill="currentColor"/></svg>';
+        case 'angle-down':
+            return '<svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.94 0.726654L4 3.77999L7.06 0.726654L8 1.66665L4 5.66665L0 1.66665L0.94 0.726654Z" fill="currentColor"/></svg>';
+        case 'youtube':
+            return '<svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.66671 7.5L9.12671 5.5L5.66671 3.5V7.5ZM13.3734 2.28C13.46 2.59334 13.52 3.01334 13.56 3.54667C13.6067 4.08 13.6267 4.54 13.6267 4.94L13.6667 5.5C13.6667 6.96 13.56 8.03334 13.3734 8.72C13.2067 9.32 12.82 9.70667 12.22 9.87334C11.9067 9.96 11.3334 10.02 10.4534 10.06C9.58671 10.1067 8.79337 10.1267 8.06004 10.1267L7.00004 10.1667C4.20671 10.1667 2.46671 10.06 1.78004 9.87334C1.18004 9.70667 0.793374 9.32 0.626707 8.72C0.540041 8.40667 0.480041 7.98667 0.440041 7.45334C0.393374 6.92 0.373374 6.46 0.373374 6.06L0.333374 5.5C0.333374 4.04 0.440041 2.96667 0.626707 2.28C0.793374 1.68 1.18004 1.29334 1.78004 1.12667C2.09337 1.04 2.66671 0.980002 3.54671 0.940002C4.41337 0.893336 5.20671 0.873336 5.94004 0.873336L7.00004 0.833336C9.79337 0.833336 11.5334 0.940003 12.22 1.12667C12.82 1.29334 13.2067 1.68 13.3734 2.28Z" fill="currentColor"/></svg>';
+        case 'cross':
+            return '<svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.25 1.41L12.84 0L7.25 5.59L1.66 0L0.25 1.41L5.84 7L0.25 12.59L1.66 14L7.25 8.41L12.84 14L14.25 12.59L8.66 7L14.25 1.41Z" fill="currentColor"/></svg>';
+        case 'message':
+            return '<svg width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.33341 22C2.60008 22 1.9723 21.7389 1.45008 21.2167C0.927859 20.6944 0.666748 20.0667 0.666748 19.3333V3.33334C0.666748 2.6 0.927859 1.97223 1.45008 1.45001C1.9723 0.927783 2.60008 0.666672 3.33341 0.666672H24.6667C25.4001 0.666672 26.0279 0.927783 26.5501 1.45001C27.0723 1.97223 27.3334 2.6 27.3334 3.33334V24.1C27.3334 24.7 27.0612 25.1167 26.5167 25.35C25.9723 25.5833 25.489 25.4889 25.0667 25.0667L22.0001 22H3.33341ZM23.1334 19.3333L24.6667 20.8333V3.33334H3.33341V19.3333H23.1334Z" fill="currentColor"/></svg>';
+        default:
+          return false;
+      }
+}
+
+
+/**
+ * Generates the HTML template for a single comment.
+ * 
+ * @param {string} authorProfileImageUrl
+ * @param {string} authorDisplayName
+ * @param {string} authorChannelUrl
+ * @param {string} textDisplay
+ * @param {number} likeCount
+ * @param {string} publishedAt
+ * @param {number} totalReplyCount
+ * 
+ * @returns {string}
+ */
+function commentSingleTemplate(authorProfileImageUrl, authorDisplayName, authorChannelUrl, textDisplay, likeCount, publishedAt, totalReplyCount) {
+
+    const dummyProfilePic = authorProfileImageUrl ? `<img src=${authorProfileImageUrl} loading="lazy" referrerPolicy="no-referrer"/>` : getStaticSVG('profile-picture');
+    const replies = totalReplyCount ? `<button class="sby-replies">${totalReplyCount ? totalReplyCount : 0 } Replies ${getStaticSVG('angle-down')}</button>` : '';
+
+    return `
+            <div class="sby-comment-profile-pic">
+                ${dummyProfilePic}
+            </div>
+            <div class="sby-comment-heading">
+                <a href="${authorChannelUrl}" target="_blank" class="sby-comment-user-name">${authorDisplayName}</a>
+                <span>${timeAgo(publishedAt)}</span>
+            </div>
+                <div class="sby-comment-text">
+                <p class="sby-read-more-target">${textDisplay}</p>
+                <div class="sby-read-more-trigger">
+                    <button class="sby-read-more-text">Read More</button>
+                    <button class="sby-read-less-text">Read Less</button>
+                </div>
+             </div>
+            <div class="sby-comment-bottom">
+                <span class="sby-comment-likes">
+                    ${getStaticSVG('thumbs-up')} ${likeCount ? formatLargeNumber(likeCount) : 0 }
+                </span>
+                ${replies}
+            </div>
+    `;
+}
+
+/**
+ * Generates the HTML template when no comments are found.
+ *
+ * @returns {string}
+ */
+
+function noCommentsTemplate() {
+    return `
+        <h4 class="sby-comments-sub-heading">Comments</h4>
+        <div class="sby-no-comments">
+            ${getStaticSVG('message')}
+            <p>There are no comments to display</p>
+        </div>`;
+}
+
+/**
+ * Generates the HTML template when there is an error retriving comments.
+ *
+ * @returns {string}
+ */
+function errorCommentTemplate(error) {
+    return `
+        <h4 class="sby-comments-sub-heading">Comments</h4>
+        <div class="sby-no-comments">
+            <p>${error}</p>
+        </div>`;
+}
+
+/**
+ * Format date and time for ISO 8601
+ * 
+ * @param timestamp
+ * 
+ * @returns {string}
+ */
+function timeAgo(timestamp) {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffMs = now - past;
+
+    // Helper functions to get time units
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(months / 12);
+
+    // Determine the largest unit of time that applies
+    if (years > 0) {
+        return `${years} year${years > 1 ? 's' : ''} ago`;
+    }
+    if (months > 0) {
+        return `${months} month${months > 1 ? 's' : ''} ago`;
+    }
+    if (days > 0) {
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    }
+    if (hours > 0) {
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    }
+    if (minutes > 0) {
+        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    }
+    if (seconds > 0) {
+        return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+    }
+
+    return 'just now';
+}
+
+/**
+ * Converts plain text into HTML with clickable links.
+ * 
+ * @param {string} text
+ * 
+ * @returns {string} 
+ */
+function addLinksTotext(text) {
+    //Add links to the caption
+    if(!text) {
+        return '';
+    }
+
+    text = text.replace(/(>#)/g,'> #');
+
+    return sbyLinkify(text);
+}
+
+/**
+ * Convert Unix timestamp to milliseconds
+ * @param timestamp
+ * @returns {string}
+ */
+
+function convertUnixToMs(timestamp) {
+
+    if( ! timestamp ) {
+        return '';
+    }
+
+    return new Date(parseInt(timestamp) * 1000);
+
+}
+
+/**
+ * Toggles the visibility of accordion sections based on the trigger element.
+ * 
+ * @param {string} className
+ * @param {string} target
+ * @param {string} parent
+ * @param {string} trigger 
+ * 
+ * @returns {void} 
+ */
+function toggleAccordion(className, target, parent ,trigger  ) {
+    jQuery(trigger).css('display', 'none');
+    jQuery(target).unbind('click');
+    jQuery(target).click(function(){
+        jQuery(this).toggleClass(className + '-trigger');
+        jQuery(this).closest(parent).find(trigger).toggle();
+    });
+}
+/**
+ * Toggles the visibility of "Read More" buttons
+ * 
+ * @returns {void}
+ */
+function toggleReadMore() {
+    const target = jQuery('.sby-read-more-target');
+    const triggerClassName = '.sby-read-more-trigger';
+
+    target.each(function(e) {
+        const currentTarget = jQuery(this)[0];
+
+        const paragraphHeight = currentTarget.scrollHeight;
+        const clientHeight = currentTarget.offsetHeight;
+        const hasMoreThanFourLines = paragraphHeight > clientHeight && paragraphHeight > clientHeight + 1; // clientHeight + 1 to fix firefox clientHeight calculate issue.
+
+        if (hasMoreThanFourLines) {
+            const trigger = jQuery(this).parent().find(triggerClassName);
+
+            trigger.unbind('click');
+            trigger.click(function() {
+                jQuery(this).toggleClass('sby-read-more-trigger-active');
+                jQuery(this).parent().find('.sby-read-more-target').toggleClass('sby-read-more-target-active');
+            });
+        } else {
+            jQuery(this).parent().find(triggerClassName).hide();
+        }
+
+    });
+}
+
+/**
+ * Applies a color scheme class to the lightbox based on the flag provided.
+ * 
+ * @param {string} colorScheme 
+ * @param {boolean} flag
+ */
+function LightboxColorScheme(colorScheme, flag) {
+
+    const commentWrap = jQuery('.sby_lb-caption');
+    const colorSchemeClassName = 'sby-lb-dark-scheme';
+
+    if( false === flag) {
+        commentWrap.removeClass(colorSchemeClassName);
+        return false;
+    }
+
+    if( 'dark' === colorScheme && true === flag) {
+        commentWrap.addClass(colorSchemeClassName);
+        return false;
+    }
+}
+
+/**
+ * Resets the body's overflow style and the lightbox color scheme when the lightbox is closed.
+ *
+ * @returns {void}
+ */
+function lightboxOnClose() {
+    jQuery('body').css('overflow', 'auto');
+    LightboxColorScheme('', false)
+}
+
+/**
+ * Retrieves the layout type of the closest ancestor element with a specific layout class.
+ *
+ * @param {jQuery|HTMLElement} target
+ * @returns {string|boolean}
+ */
+function getLayout(target) {
+    const currentTarget = target.closest('.sb_youtube');
+
+    if( currentTarget.hasClass('sby_layout_list') ) {
+        return 'list'
+    }
+
+    if( currentTarget.hasClass('sby_layout_grid') ) {
+        return 'grid'
+    }
+
+    if( currentTarget.hasClass('sby_layout_carousel') ) {
+        return 'carousel'
+    }
+
+    if( currentTarget.hasClass('sby_layout_gallery') ) {
+        return 'gallery'
+    }
+
+    return false;
+}
+
+/**
+ * Opens and displays the comments section on the page.
+ * 
+ * @returns {void}
+ */
+function openComments() {
+
+    if( ! window.sbyOptions.isPro ) {
+        return false;
+    }
+    const openCommentTrigger = jQuery('.sby-comments-trigger');
+    openCommentTrigger.unbind('click');
+    openCommentTrigger.click(function() {
+        const commentWrapClass = '.sby-comments-wrap';
+        const commentSecionWrap = jQuery(this).closest('.sby-comment-container');
+        const commentSection =  commentSecionWrap.find(commentWrapClass);
+        const currentLayout =  getLayout(jQuery(this));
+
+        if( commentSection.text().length <= 0) {
+            let commentCount;
+            let videoId;
+            let target;
+
+            if( 'gallery' === currentLayout ) {
+                const targetParent = jQuery(this).closest('.sb_youtube');
+                const currentTarget = targetParent.find('.sby_item.sby_current');
+
+                if( targetParent && currentTarget ) {
+                    videoId = checkValue(currentTarget.attr('data-video-id'));
+                    commentCount = checkValue(currentTarget.find('a').attr('data-comment-count'));
+                    target = targetParent.find(commentWrapClass);
+                }
+            }
+
+            if( 'list' === currentLayout ) {
+                const currentTarget = jQuery(this).closest('.sby_item');
+
+                if( currentTarget ) {
+                    videoId = checkValue(currentTarget.attr('data-video-id'));
+                    commentCount = checkValue(currentTarget.find('a').attr('data-comment-count'));
+                    target = currentTarget.find(commentWrapClass);
+                }
+
+                // Reset all other comments opened 
+                resetComments(jQuery(this).closest('.sb_youtube'));
+            }
+
+            const atts = checkValue(jQuery(this).closest('.sb_youtube').attr('data-shortcode-atts'));
+
+            generateCommentSection(videoId, atts, target, commentCount);
+            commentSection.addClass('sby-comments-active');
+
+        } else {
+            commentSection.toggle();
+            commentSection.toggleClass('sby-comments-active');
+        }
+
+        const currentTextState = commentSecionWrap.find('.sby-comments-trigger p');
+
+        if( currentTextState ) {
+            changeTextOnToggle(currentTextState, 'Show Comments', 'Hide Comments');
+        }
+
+    });
+}
+
+/**
+ * Returns a valid value or an empty string based on the input.
+ * @param {*} element 
+ * @returns {string} 
+ */
+function checkValue(element) {
+    return element ? element : '';
+}
+
+/**
+ * Sends an AJAX request with the specified data and handles the response.
+ * @param {Object} submitData
+ * @param {Function} onSuccess 
+ * 
+ * @returns {void} 
+ */
+function sbyAjax(submitData,onSuccess) {
+    jQuery.ajax({
+        url: sbyOptions.adminAjaxUrl,
+        type: 'post',
+        data: submitData,
+        success: onSuccess
+    });
+}
+
+/**
+ * Fetches and generates a comment section for a given video.
+ * 
+ * @param {string} videoId 
+ * @param {Object} atts
+ * @param {jQuery} target
+ * 
+ * @returns {void}
+ */
+
+function generateCommentSection(videoId, atts, target, commentCount) {
+
+    submitData = {
+        action: 'sby_get_comments',
+        video_id: videoId,
+        atts: atts
+    };
+
+    let onSuccess = function (data) {
+
+        if( ! data ) {
+            return false;
+        }
+
+        if( false === data.success ) {
+            target.html(errorCommentTemplate(data.data));
+            return false;
+        }
+
+        const commentJson = JSON.parse(data);
+
+        if( ! commentJson ) {
+            return false;
+        }
+
+        if( commentJson?.success && false === commentJson.success) {
+            target.html(errorCommentTemplate(commentJson.data));
+            return false;
+        }
+
+        if( commentJson?.error && commentJson?.error?.message) {
+            let errorMessage = commentJson.error.message;
+            if( errorMessage.includes('disabled comments') ) {
+                errorMessage = 'Comments are turned off'
+            }
+            target.html(errorCommentTemplate(errorMessage));
+            return false;
+        }
+
+        const noOfItems = commentJson?.items && commentJson?.items.length ? commentJson.items.length : '';
+        const videoLink = videoId ? `https://www.youtube.com/watch?v=${videoId}` : '';
+
+        if(! noOfItems ) {
+            target.html(noCommentsTemplate());
+            toggleReadMore();
+            return false;
+        }
+
+        currentCommentCount = commentCount ? `( ${commentCount} )` : '';
+
+        let commentHtml = `<h4 class="sby-comments-sub-heading">Comments ${currentCommentCount}</h4><ul class="sby-comments">`;
+        jQuery.each(commentJson.items, function(index, comment) {
+
+            const topLevelCommentPath = comment?.snippet?.topLevelComment;
+            const topLevelCommentSnippet = comment?.snippet;
+
+            // Generate the HTML for each comment
+            commentHtml += `<li class="sby-comment">${commentSingleTemplate( getSingleApiData(topLevelCommentPath, 'authorProfileImageUrl'), getSingleApiData(topLevelCommentPath, 'authorDisplayName'), getSingleApiData(topLevelCommentPath, 'authorChannelUrl'), getSingleApiData(topLevelCommentPath, 'textDisplay'), getSingleApiData(topLevelCommentPath, 'likeCount'), getSingleApiData(topLevelCommentPath, 'publishedAt'), getSingleApiData(topLevelCommentSnippet, 'totalReplyCount'))}
+            <ul class="sby-reply-comments">`;
+
+            if( comment?.replies?.comments ) {
+                // Use $.each to loop through replies
+                jQuery.each(comment.replies.comments, function(replyIndex, reply) {
+
+                    commentHtml += `<li class="sby-reply-comment" >${commentSingleTemplate(getSingleApiData(reply, 'authorProfileImageUrl'), getSingleApiData(reply, 'authorDisplayName'), getSingleApiData(reply, 'authorChannelUrl'), getSingleApiData(reply, 'textDisplay'), getSingleApiData(reply, 'likeCount'), getSingleApiData(reply, 'publishedAt'))}</li>`;
+                });
+            }
+            // Close the comment container
+            commentHtml += `</ul></li>`;
+        });
+        commentHtml += `</ul>`;
+        commentHtml += `<a href="${videoLink}" target="_blank" class="sby-view-all-button ">View all comments on YouTube</a>`;
+
+        target.html(commentHtml).fadeIn("fast"); 
+
+        toggleReadMore();
+        toggleAccordion('sby-active','.sby-replies','.sby-comment','.sby-reply-comments');
+    }
+
+    toggleReadMore();
+    sbyAjax(submitData,onSuccess)
+
+}
+
+/**
+ * Toggles the text of an element based on its current content.
+ *
+ * This function updates the text of an element if the element's current text
+ * matches the specified `currentText`. If it matches, the text is replaced with
+ * the provided `replacementText`. If it does not match, the text remains as `currentText`.
+ *
+ * @param {Object} currentState
+ * @param {string} currentText
+ * @param {string} replacementText
+ * 
+ * @returns {void} 
+ */
+
+function changeTextOnToggle(currentState, currentText, replacementText ) {
+
+    if( currentState && currentText && replacementText ) {
+        const currentStateText = currentText === currentState.text() ? replacementText : currentText;
+        currentState.text(currentStateText);
+    }
+}
+
+/**
+ * Resets the comments of a specified parent element.
+ *
+ * @param {jQuery} parent
+ *
+ * @returns {void} 
+ */
+
+function resetComments(parent) {
+    if( 'gallery' === getLayout(parent) || 'list' === getLayout(parent) ) {
+        const trigger = parent.find('.sby-comments-trigger');
+        trigger.find('p').text('Show Comments');
+        parent.find('.sby-comments-wrap').html('');
+    }
+}
+
+/**
+ * Formats a large number into a more readable string with a suffix.
+ * The function converts large numbers into a string with a suffix to denote the scale of the number.
+ *
+ * @param {number} num
+ * 
+ * @returns {string}
+ */
+
+function formatLargeNumber(num) {
+    if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+    if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+    if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+
+    return num;
+}
+
+/**
+ * Applies a set of colors to the channel header.
+ * 
+ * @param {Object} colorArray - An object containing color properties for the channel header.
+ * @param {string} colorArray.channelName - The text color for the channel name element.
+ * @param {string} colorArray.subscribeCount - The text color for the subscribe count element.
+ * @param {string} colorArray.buttonBackground - The background color for the button element.
+ * @param {string} colorArray.buttonText - The text color for the button element.
+ * 
+ * @returns {void}
+ */
+function setColorsToChannelHeader(colorArray) {
+    const {channelName, subscribeCount, buttonBackground, buttonText} = colorArray;
+    const parent = jQuery('.sby_lb-dataContainer .sby-lb-channel-header');
+    
+    if( ! parent ) {
+        return false;
+    }
+
+    if( channelName ) {
+        parent.find('.sby-lb-channel-name-with-subs span:first-child').css('color', channelName);
+    }
+
+    if( subscribeCount ) {
+        parent.find('.sby-lb-channel-name-with-subs span:nth-child(2)').css('color', subscribeCount);
+    }
+
+    if( buttonBackground ) {
+        parent.find('.sby-lb-subscribe-btn').css('background', buttonBackground);
+    }
+
+    if( buttonText ) {
+        parent.find('.sby-lb-subscribe-btn').css('color', buttonText);
+    }
+}

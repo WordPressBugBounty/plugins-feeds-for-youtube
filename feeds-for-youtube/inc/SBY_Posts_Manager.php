@@ -230,7 +230,7 @@ class SBY_Posts_Manager
 			if ( $created ) {
 				$this->remove_error( 'upload_dir' );
 			} else {
-				$this->add_error( 'upload_dir', array( __( 'There was an error creating the folder for storing resized images.', SBY_TEXT_DOMAIN ), $upload_dir ) );
+				$this->add_error( 'upload_dir', array( __( 'There was an error creating the folder for storing resized images.', 'feeds-for-youtube' ), $upload_dir ) );
 			}
 		} else {
 			$this->remove_error( 'upload_dir' );

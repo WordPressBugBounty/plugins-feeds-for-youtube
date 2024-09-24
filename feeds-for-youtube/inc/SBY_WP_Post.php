@@ -23,10 +23,10 @@ class SBY_WP_Post
 
 		// Get global settings
 		$sby_settings = sby_get_database_settings();
-		$wp_posts_disabled = !empty($sby_settings['disable_wp_posts']);;
+		$wp_posts_disabled = !empty($sby_settings['disable_wp_posts']);
 
 		// Do not create posts if feature is not available in the tier or WP Posts creation disabled
-		if ( !in_array( 'convert_videos_to_cpt', $license_tier_features ) || $wp_posts_disabled ) {
+		if ($wp_posts_disabled) {
 			return;
 		}
 

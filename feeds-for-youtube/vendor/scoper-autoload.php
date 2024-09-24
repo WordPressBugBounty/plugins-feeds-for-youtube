@@ -4,7 +4,7 @@
 
 $loader = (static function () {
     // Backup the autoloaded Composer files
-    $existingComposerAutoloadFiles = $GLOBALS['__composer_autoload_files'] ?? [];
+    $existingComposerAutoloadFiles = isset($GLOBALS['__composer_autoload_files']) ? $GLOBALS['__composer_autoload_files'] : [];
 
     $loader = require_once __DIR__.'/autoload.php';
     // Ensure InstalledVersions is available
@@ -29,14 +29,6 @@ if (!function_exists('humbug_phpscoper_expose_class')) {
         }
     }
 }
-humbug_phpscoper_expose_class('ComposerAutoloaderInit849b5a221d2e283d22423471339bb812', 'SmashBalloon\YoutubeFeed\Vendor\ComposerAutoloaderInit849b5a221d2e283d22423471339bb812');
-
-// Function aliases. For more information see:
-// https://github.com/humbug/php-scoper/blob/master/docs/further-reading.md#function-aliases
-if (!function_exists('dbDelta')) { function dbDelta() { return \SmashBalloon\YoutubeFeed\Vendor\dbDelta(...func_get_args()); } }
-if (!function_exists('do_action')) { function do_action() { return \SmashBalloon\YoutubeFeed\Vendor\do_action(...func_get_args()); } }
-if (!function_exists('get_plugins')) { function get_plugins() { return \SmashBalloon\YoutubeFeed\Vendor\get_plugins(...func_get_args()); } }
-if (!function_exists('plugin_dir_url')) { function plugin_dir_url() { return \SmashBalloon\YoutubeFeed\Vendor\plugin_dir_url(...func_get_args()); } }
-if (!function_exists('trailingslashit')) { function trailingslashit() { return \SmashBalloon\YoutubeFeed\Vendor\trailingslashit(...func_get_args()); } }
+humbug_phpscoper_expose_class('ComposerAutoloaderInit2c160231bd8dba80bd059e9887f9c7ac', 'SmashBalloon\YoutubeFeed\Vendor\ComposerAutoloaderInit2c160231bd8dba80bd059e9887f9c7ac');
 
 return $loader;

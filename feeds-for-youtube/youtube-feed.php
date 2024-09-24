@@ -3,7 +3,7 @@
 Plugin Name: Feeds for YouTube
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.2.2
+Version: 2.2.3
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
 Text Domain: feeds-for-youtube
@@ -53,7 +53,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.2.2' );
+    define( 'SBYVER', '2.2.3' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.0' );
@@ -122,13 +122,13 @@ if ( ! function_exists( 'sby_init' ) ) {
             define( 'SBY_SEARCH_NAME', 'sbys' );
         }
         if ( ! defined( 'SBY_PLUGIN_NAME' ) ) {
-            define( 'SBY_PLUGIN_NAME', __( 'Feeds for YouTube', SBY_TEXT_DOMAIN ) );
+            define( 'SBY_PLUGIN_NAME', __( 'Feeds for YouTube', 'feeds-for-youtube' ) );
         }
         if ( ! defined( 'SBY_INDEF_ART' ) ) {
-            define( 'SBY_INDEF_ART', __( 'a', SBY_TEXT_DOMAIN ) );
+            define( 'SBY_INDEF_ART', __( 'a', 'feeds-for-youtube' ) );
         }
         if ( ! defined( 'SBY_SOCIAL_NETWORK' ) ) {
-            define( 'SBY_SOCIAL_NETWORK', __( 'YouTube', SBY_TEXT_DOMAIN ) );
+            define( 'SBY_SOCIAL_NETWORK', __( 'YouTube', 'feeds-for-youtube' ) );
         }
         if ( ! defined( 'SBY_SETUP_URL' ) ) {
             define( 'SBY_SETUP_URL', 'https://smashballoon.com/youtube-feed/free' );
@@ -210,11 +210,11 @@ if ( ! function_exists( 'sby_init' ) ) {
     function sby_cron_custom_interval( $schedules ) {
         $schedules['sby30mins'] = array(
             'interval' => 30 * 60,
-            'display'  => __( 'Every 30 minutes' )
+            'display'  => __( 'Every 30 minutes', 'feeds-for-youtube' )
         );
         $schedules['sbyweekly'] = array(
             'interval' => 3600 * 24 * 7,
-            'display'  => __( 'Weekly' )
+            'display'  => __( 'Weekly', 'feeds-for-youtube' )
         );
 
         return $schedules;
@@ -552,15 +552,15 @@ if ( ! function_exists( 'sby_init' ) ) {
     $plugin_file = 'feeds-for-youtube/youtube-feed.php';
     add_filter( "plugin_action_links_{$plugin_file}", 'sby_add_settings_link', 10, 2 );
     function sby_add_settings_link( $links, $file ) {
-        $pro_link          = '<a href="https://smashballoon.com/youtube-feed/demo/?utm_campaign=youtube-free&utm_source=plugins-page&utm_medium=upgrade-link" target="_blank" style="font-weight: bold; color: #1da867;">' . __( 'Try the Pro Demo', 'instagram-feed' ) . '</a>';
-        $sby_settings_link = '<a href="' . admin_url( 'admin.php?page=sby-feed-builder' ) . '">' . __( 'Settings' ) . '</a>';
+        $pro_link          = '<a href="https://smashballoon.com/youtube-feed/demo/?utm_campaign=youtube-free&utm_source=plugins-page&utm_medium=upgrade-link" target="_blank" style="font-weight: bold; color: #1da867;">' . __( 'Try the Pro Demo', 'feeds-for-youtube' ) . '</a>';
+        $sby_settings_link = '<a href="' . admin_url( 'admin.php?page=sby-feed-builder' ) . '">' . __( 'Settings', 'feeds-for-youtube' ) . '</a>';
         array_unshift( $links, $pro_link, $sby_settings_link );
 
         return $links;
     }
 
     function sby_text_domain() {
-        load_plugin_textdomain( 'feeds-for-youtube', false, basename( dirname( __FILE__ ) ) . '/languages' );
+        load_plugin_textdomain( 'feeds-for-youtube', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
     }
 
     add_action( 'plugins_loaded', 'sby_text_domain' );

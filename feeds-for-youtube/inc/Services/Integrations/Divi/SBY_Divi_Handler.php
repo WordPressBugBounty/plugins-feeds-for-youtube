@@ -10,13 +10,15 @@ use SmashBalloon\YouTubeFeed\Helpers\Util;
  *
  * @since 2.3
  */
-class SBY_Divi_Handler{
+class SBY_Divi_Handler
+{
 	/**
 	 * Constructor.
 	 *
 	 * @since 2.3
 	 */
-	public function register(){
+	public function register()
+	{
 		$this->load();
 	}
 
@@ -28,8 +30,9 @@ class SBY_Divi_Handler{
 	 *
 	 * @return bool
 	 */
-	public function allow_load() {
-		if ( function_exists( 'et_divi_builder_init_plugin') ) {
+	public function allow_load()
+	{
+		if (function_exists('et_divi_builder_init_plugin')) {
 			return true;
 		}
 		$allow_themes = [ 'Divi' ];
@@ -37,7 +40,7 @@ class SBY_Divi_Handler{
 		$theme_name   = $theme->get_template();
 		$theme_parent = $theme->parent();
 
-		return (bool) array_intersect( [ $theme_name, $theme_parent ], $allow_themes );
+		return (bool) array_intersect([ $theme_name, $theme_parent ], $allow_themes);
 	}
 
 
@@ -46,8 +49,9 @@ class SBY_Divi_Handler{
 	 *
 	 * @since 2.3
 	 */
-	public function load() {
-		if( $this->allow_load() ){
+	public function load()
+	{
+		if ($this->allow_load()) {
 			$this->hooks();
 		}
 	}
@@ -57,15 +61,16 @@ class SBY_Divi_Handler{
 	 *
 	 * @since 2.3
 	 */
-	public function hooks() {
-		add_action( 'et_builder_ready', [ $this, 'register_module' ] );
+	public function hooks()
+	{
+		add_action('et_builder_ready', [ $this, 'register_module' ]);
 
-		if ( wp_doing_ajax() ) {
-			add_action( 'wp_ajax_sb_youtubefeed_divi_preview', [ $this, 'preview' ] );
+		if (wp_doing_ajax()) {
+			add_action('wp_ajax_sb_youtubefeed_divi_preview', [ $this, 'preview' ]);
 		}
 
-		if ( $this->is_divi_builder() ) {
-			add_action( 'wp_enqueue_scripts', [ $this, 'builder_scripts' ] );
+		if ($this->is_divi_builder()) {
+			add_action('wp_enqueue_scripts', [ $this, 'builder_scripts' ]);
 		}
 	}
 
@@ -74,33 +79,36 @@ class SBY_Divi_Handler{
 	 *
 	 * @since 2.3
 	 */
-	public function builder_scripts() {
-		wp_enqueue_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/sb-youtube.min.css', array(), SBYVER );
+	public function builder_scripts()
+	{
+		$css_file_name = 'sb-youtube.min.css';
 
-        $data = array(
-			'isAdmin' => is_admin(),
-			'adminAjaxUrl' => admin_url( 'admin-ajax.php' ),
-			'placeholder' => trailingslashit( SBY_PLUGIN_URL ) . 'img/placeholder.png',
-			'placeholderNarrow' => trailingslashit( SBY_PLUGIN_URL ) . 'img/placeholder-narrow.png',
-			'lightboxPlaceholder' => trailingslashit( SBY_PLUGIN_URL ) . 'img/lightbox-placeholder.png',
-			'lightboxPlaceholderNarrow' => trailingslashit( SBY_PLUGIN_URL ) . 'img/lightbox-placeholder-narrow.png',
-			'autoplay' => false,
-			'semiEagerload' => false,
-			'eagerload' => false,
-			'nonce'	=> wp_create_nonce( 'sby_nonce' ),
-			'isPro'	=> sby_is_pro(),
-			'resized_url' => Util::sby_get_resized_uploads_url(),
-			'isCustomizer' => false
+		wp_enqueue_style('sby_styles', trailingslashit(SBY_PLUGIN_URL) . 'css/' . $css_file_name, array(), SBYVER);
+
+		$data = array(
+		'isAdmin' => is_admin(),
+		'adminAjaxUrl' => admin_url('admin-ajax.php'),
+		'placeholder' => trailingslashit(SBY_PLUGIN_URL) . 'img/placeholder.png',
+		'placeholderNarrow' => trailingslashit(SBY_PLUGIN_URL) . 'img/placeholder-narrow.png',
+		'lightboxPlaceholder' => trailingslashit(SBY_PLUGIN_URL) . 'img/lightbox-placeholder.png',
+		'lightboxPlaceholderNarrow' => trailingslashit(SBY_PLUGIN_URL) . 'img/lightbox-placeholder-narrow.png',
+		'autoplay' => false,
+		'semiEagerload' => false,
+		'eagerload' => false,
+		'nonce'    => wp_create_nonce('sby_nonce'),
+		'isPro'    => sby_is_pro(),
+		'resized_url' => Util::sby_get_resized_uploads_url(),
+		'isCustomizer' => false
 		);
 
-    	wp_enqueue_script(
+		wp_enqueue_script(
 			'sbyscripts',
 			SBY_PLUGIN_URL . 'js/sb-youtube.min.js',
 			array('jquery'),
 			SBYVER,
 			true
 		);
-		wp_localize_script( 'sbyscripts', 'sbyOptions', $data );
+		wp_localize_script('sbyscripts', 'sbyOptions', $data);
 
 		wp_enqueue_script(
 			'sbyoutube-divi',
@@ -115,9 +123,9 @@ class SBY_Divi_Handler{
 			'sbyoutube-divi',
 			'sb_divi_builder',
 			[
-				'ajax_handler'		=> admin_url('admin-ajax.php'),
-				'nonce'             => wp_create_nonce('sby-admin'),
-				'feed_splash' 		=> htmlspecialchars(SBY_Integration::get_widget_cta('button'))
+			'ajax_handler'        => admin_url('admin-ajax.php'),
+			'nonce'             => wp_create_nonce('sby-admin'),
+			'feed_splash'         => htmlspecialchars(SBY_Integration::get_widget_cta('button'), ENT_QUOTES | ENT_HTML5)
 			]
 		);
 	}
@@ -127,7 +135,8 @@ class SBY_Divi_Handler{
 	 *
 	 * @since 2.3
 	 */
-	public function register_module() {
+	public function register_module()
+	{
 		if (!class_exists('ET_Builder_Module')) {
 			return;
 		}
@@ -141,11 +150,12 @@ class SBY_Divi_Handler{
 	 *
 	 * @since 2.3
 	 */
-	public function preview(){
-		check_ajax_referer('sby-admin' , 'nonce');
+	public function preview()
+	{
+		check_ajax_referer('sby-admin', 'nonce');
 
 		$cap = current_user_can('manage_youtube_feed_options') ? 'manage_youtube_feed_options' : 'manage_options';
-		$cap = apply_filters('sby_settings_pages_capability', $cap );
+		$cap = apply_filters('sby_settings_pages_capability', $cap);
 		if (! current_user_can($cap)) {
 			wp_send_json_error(); // This auto-dies.
 		}
@@ -156,7 +166,7 @@ class SBY_Divi_Handler{
 			do_shortcode(
 				sprintf(
 					'[youtube-feed feed="%1$s"]',
-					absint( $feed_id )
+					absint($feed_id)
 				)
 			)
 		);
@@ -169,8 +179,8 @@ class SBY_Divi_Handler{
 	 *
 	 * @return bool
 	 */
-	private function is_divi_builder() {
+	private function is_divi_builder()
+	{
 		return !empty($_GET['et_fb']); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
-
 }

@@ -7,8 +7,7 @@
  */
 namespace Smashballoon\Customizer;
 
-use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\License_Tier\License_Tier;
-/** @internal */
+use Smashballoon\Framework\Packages\License_Tier\License_Tier;
 class Sample_Plugin_License_Tier extends License_Tier
 {
     /**

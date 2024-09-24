@@ -1,7 +1,7 @@
 {
   "files": {
     "main.js": "/static/js/main.js",
-    "main.css": "/static/css/main.20182fbf.css",
+    "main.css": "/static/css/main.ac6922b3.css",
     "static/images/team-avatar.png": "/static/images/team-avatar.png?b8a57dc248733c0ffb9a48aea0b0b556",
     "static/images/plugin-om.png": "/static/images/plugin-om.png?47c0b4663d97ae6d41bad01d2d6f0812",
     "static/images/social-wall-graphic.png": "/static/images/social-wall-graphic.png?96a1f22ab85d53469c1ae626e79cade8",
@@ -59,12 +59,10 @@
     "static/media/angleup.svg": "/static/media/angleup.74dceadaed0ef6610e21d2b772001b6f.svg",
     "static/media/rightAngle.svg": "/static/media/rightAngle.bc8331151bb35dff81b255d23a2a04ef.svg",
     "static/media/successNotification.svg": "/static/media/successNotification.32f9a33a82656f14896dd70d6b6356c9.svg",
-    "static/media/checkmark.svg": "/static/media/checkmark.82b67373bc96ad542aed04168c2913c4.svg",
-    "main.js.map": "/static/js/main.js.map",
-    "main.20182fbf.css.map": "/static/css/main.20182fbf.css.map"
+    "static/media/checkmark.svg": "/static/media/checkmark.82b67373bc96ad542aed04168c2913c4.svg"
   },
   "entrypoints": [
     "static/js/main.js",
-    "static/css/main.20182fbf.css"
+    "static/css/main.ac6922b3.css"
   ]
 }

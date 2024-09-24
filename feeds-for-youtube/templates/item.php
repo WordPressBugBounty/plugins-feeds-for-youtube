@@ -24,7 +24,7 @@ $media_url               = SBY_Display_Elements::get_optimum_media_url( $post, $
 $media_full_res          = SBY_Parse::get_media_url( $post );
 $media_all_sizes_json    = SBY_Parse::get_media_src_set( $post );
 $permalink = SBY_Parse::get_permalink( $post );
-$img_alt                 = SBY_Parse::get_caption( $post, __( 'Image for post' ) . ' ' . $post_id );
+$img_alt                 = SBY_Parse::get_caption( $post, __( 'Image for post', 'feeds-for-youtube' ) . ' ' . $post_id );
 $items_style_attr = SBY_Display_Elements::get_style_att( 'item', $settings );
 $title = SBY_Parse::get_video_title( $post );
 

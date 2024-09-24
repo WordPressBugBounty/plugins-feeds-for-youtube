@@ -37,7 +37,7 @@ class SBY_GDPR_Integrations {
 		if ( class_exists( 'COMPLIANZ' ) ) {
 			return 'Complianz by Really Simple Plugins';
 		}
-		if ( function_exists('BorlabsCookieHelper') ) {
+		if ( function_exists( 'BorlabsCookieHelper' ) || ( defined( 'BORLABS_COOKIE_VERSION' ) && version_compare( BORLABS_COOKIE_VERSION, '3.0', '>=' ) ) ) {
 			return 'Borlabs Cookie by Borlabs';
 		}
 

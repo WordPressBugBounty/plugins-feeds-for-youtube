@@ -20,7 +20,7 @@ function sby_admin_init() {
 	$position = 99;
 	$tabs = array(
 		array(
-			'title' => __( 'All Feeds', SBY_TEXT_DOMAIN ),
+			'title' => __( 'All Feeds', 'feeds-for-youtube' ),
 			'slug' => 'allfeeds',
 			'capability' => $capability,
 			'numbered_tab' => false,
@@ -48,75 +48,75 @@ function sby_admin_init() {
 	$types = array(
 		array(
 			'slug' => 'channel',
-			'label' => __( 'Channel', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Channel', 'feeds-for-youtube' ),
 			'input_type' => 'text',
 			'default' => $first_channel_id,
-			'note' => __( 'Eg: Channel ID or User Name', SBY_TEXT_DOMAIN ),
+			'note' => __( 'Eg: Channel ID or User Name', 'feeds-for-youtube' ),
 			'example' => 'smashballoon',
-			'description' => __( 'Display videos from a YouTube channel (channel)', SBY_TEXT_DOMAIN ),
-			'tooltip' => '<p>' . __( 'Enter any channel ID or user name to display all of an accounts latest videos starting with the most recently published.', SBY_TEXT_DOMAIN ) . '</p><p><ul>
-                                    <li><b>' . __( 'Channel ID or User Name', SBY_TEXT_DOMAIN ).'</b><br>
-                                        ' . __( 'You can find the ID or User Name of your YouTube Channel from the URL. In each URL format, the text you need to use is highlighted below:', SBY_TEXT_DOMAIN ).'<br><br>
-                                    ' . __( 'URL Format 1:', SBY_TEXT_DOMAIN ).' <code>https://www.youtube.com/channel/<span class="sbspf-highlight">UC1a2b3c4D5F6g7i8j9k</span></code>
+			'description' => __( 'Display videos from a YouTube channel (channel)', 'feeds-for-youtube' ),
+			'tooltip' => '<p>' . __( 'Enter any channel ID or user name to display all of an accounts latest videos starting with the most recently published.', 'feeds-for-youtube' ) . '</p><p><ul>
+                                    <li><b>' . __( 'Channel ID or User Name', 'feeds-for-youtube' ).'</b><br>
+                                        ' . __( 'You can find the ID or User Name of your YouTube Channel from the URL. In each URL format, the text you need to use is highlighted below:', 'feeds-for-youtube' ).'<br><br>
+                                    ' . __( 'URL Format 1:', 'feeds-for-youtube' ).' <code>https://www.youtube.com/channel/<span class="sbspf-highlight">UC1a2b3c4D5F6g7i8j9k</span></code>
                                     <br>
-                                    ' . __( 'URL Format 2:', SBY_TEXT_DOMAIN ).' <code>https://www.youtube.com/user/<span class="sbspf-highlight">your_user_name</span></code>
+                                    ' . __( 'URL Format 2:', 'feeds-for-youtube' ).' <code>https://www.youtube.com/user/<span class="sbspf-highlight">your_user_name</span></code>
                                                                         </li>
                                 </ul></p>'
 		),
 		array(
 			'slug' => 'playlist',
-			'label' => __( 'Playlist', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Playlist', 'feeds-for-youtube' ),
 			'input_type' => 'text',
 			'default' => '',
-			'note' => __( 'Eg: Playlist ID', SBY_TEXT_DOMAIN ),
+			'note' => __( 'Eg: Playlist ID', 'feeds-for-youtube' ),
 			'example' => 'PLLLm1a2b3c4D6g7i8j9k_1a',
-			'description' => __( 'Display videos from a specific playlist (playlist)', SBY_TEXT_DOMAIN ),
-			'tooltip' => '<p>' . __( 'Enter any playlist ID to display videos from a playlist starting with the most recently published.', SBY_TEXT_DOMAIN ) . '</p><p><ul>
-                                    <li><b>' . __( 'Playlist ID', SBY_TEXT_DOMAIN ).'</b><br>
-                                        ' . __( 'You can find the ID of your YouTube playlist from the URL. The text you need to use is highlighted below:', SBY_TEXT_DOMAIN ).'<br><br>
+			'description' => __( 'Display videos from a specific playlist (playlist)', 'feeds-for-youtube' ),
+			'tooltip' => '<p>' . __( 'Enter any playlist ID to display videos from a playlist starting with the most recently published.', 'feeds-for-youtube' ) . '</p><p><ul>
+                                    <li><b>' . __( 'Playlist ID', 'feeds-for-youtube' ).'</b><br>
+                                        ' . __( 'You can find the ID of your YouTube playlist from the URL. The text you need to use is highlighted below:', 'feeds-for-youtube' ).'<br><br>
                                     <code>https://www.youtube.com/playlist?list=<span class="sbspf-highlight">PLLLm1a2b3c4D6g7i8j9k_1a2b3c4D57i8j9k</span></code>
                                     </li>
                                 </ul></p>'
 		),
 		array(
 			'slug' => 'favorites',
-			'label' => __( 'Favorites', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Favorites', 'feeds-for-youtube' ),
 			'input_type' => 'text',
 			'default' => '',
-			'note' => __( 'Eg: Channel ID or User Name', SBY_TEXT_DOMAIN ),
+			'note' => __( 'Eg: Channel ID or User Name', 'feeds-for-youtube' ),
 			'example' => 'smashballoon',
-			'description' => __( 'Display the "favorites" playlist for a channel (favorites)', SBY_TEXT_DOMAIN ),
-			'tooltip' => '<p>' . __( 'Displays all videos marked as "favorites" by a YouTube account starting with the most recently published.', SBY_TEXT_DOMAIN ) . '</p><p><ul>
-                                    <li><b>' . __( 'Channel ID or User Name', SBY_TEXT_DOMAIN ).'</b><br>
-                                        ' . __( 'You can find the ID or User Name of your YouTube Channel from the URL. In each URL format, the text you need to use is highlighted below:', SBY_TEXT_DOMAIN ).'<br><br>
-                                    ' . __( 'URL Format 1:', SBY_TEXT_DOMAIN ).' <code>https://www.youtube.com/channel/<span class="sbspf-highlight">UC1a2b3c4D5F6g7i8j9k</span></code>
+			'description' => __( 'Display the "favorites" playlist for a channel (favorites)', 'feeds-for-youtube' ),
+			'tooltip' => '<p>' . __( 'Displays all videos marked as "favorites" by a YouTube account starting with the most recently published.', 'feeds-for-youtube' ) . '</p><p><ul>
+                                    <li><b>' . __( 'Channel ID or User Name', 'feeds-for-youtube' ).'</b><br>
+                                        ' . __( 'You can find the ID or User Name of your YouTube Channel from the URL. In each URL format, the text you need to use is highlighted below:', 'feeds-for-youtube' ).'<br><br>
+                                    ' . __( 'URL Format 1:', 'feeds-for-youtube' ).' <code>https://www.youtube.com/channel/<span class="sbspf-highlight">UC1a2b3c4D5F6g7i8j9k</span></code>
                                     <br>
-                                    ' . __( 'URL Format 2:', SBY_TEXT_DOMAIN ).' <code>https://www.youtube.com/user/<span class="sbspf-highlight">your_user_name</span></code>
+                                    ' . __( 'URL Format 2:', 'feeds-for-youtube' ).' <code>https://www.youtube.com/user/<span class="sbspf-highlight">your_user_name</span></code>
                                                                         </li>
                                 </ul></p>'
 		),
 		array(
 			'slug' => 'search',
-			'label' => __( 'Search', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Search', 'feeds-for-youtube' ),
 			'input_type' => 'text',
 			'default' => '',
-			'note' => __( 'Eg: Search Term', SBY_TEXT_DOMAIN ),
+			'note' => __( 'Eg: Search Term', 'feeds-for-youtube' ),
 			'example' => 'cats',
-			'description' => __( 'Display a feed of matching search results (search)', SBY_TEXT_DOMAIN ),
-			'tooltip' => '<p>' . __( 'Enter any search term or phrase. Separate multiple terms with commas. You can add your own additional query vars using the <a href="https://smashballoon.com/youtube-feed/custom-search-guide/" target="_blank" rel="noopener">guide on our website</a> and the input field above.', SBY_TEXT_DOMAIN ) . '</p>',
+			'description' => __( 'Display a feed of matching search results (search)', 'feeds-for-youtube' ),
+			'tooltip' => '<p>' . __( 'Enter any search term or phrase. Separate multiple terms with commas. You can add your own additional query vars using the <a href="https://smashballoon.com/youtube-feed/custom-search-guide/" target="_blank" rel="noopener">guide on our website</a> and the input field above.', 'feeds-for-youtube' ) . '</p>',
 			'onselect' => 'search_query_string'
 		),
 		array(
 			'slug' => 'live',
-			'label' => __( 'Live Streams', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Live Streams', 'feeds-for-youtube' ),
 			'input_type' => 'text',
 			'default' => '',
-			'note' => __( 'Eg: Channel ID', SBY_TEXT_DOMAIN ),
+			'note' => __( 'Eg: Channel ID', 'feeds-for-youtube' ),
 			'example' => 'UC1a2b3c4D5F6g7i8j9k',
-			'description' => __( 'Display upcoming and currently playing live streams (live)', SBY_TEXT_DOMAIN ),
-			'tooltip' => '<p>' . __( 'Displays a single upcoming or currently playing live streaming video from a channel.', SBY_TEXT_DOMAIN ) . '</p><p><ul>
-                                    <li><b>' . __( 'Channel ID', SBY_TEXT_DOMAIN ).'</b><br>
-                                        ' . __( 'You can find the ID of your YouTube Channel from the URL. The text you need to use is highlighted below:', SBY_TEXT_DOMAIN ).'<br><br>
+			'description' => __( 'Display upcoming and currently playing live streams (live)', 'feeds-for-youtube' ),
+			'tooltip' => '<p>' . __( 'Displays a single upcoming or currently playing live streaming video from a channel.', 'feeds-for-youtube' ) . '</p><p><ul>
+                                    <li><b>' . __( 'Channel ID', 'feeds-for-youtube' ).'</b><br>
+                                        ' . __( 'You can find the ID of your YouTube Channel from the URL. The text you need to use is highlighted below:', 'feeds-for-youtube' ).'<br><br>
                                     <code>https://www.youtube.com/channel/<span class="sbspf-highlight">UC1a2b3c4D5F6g7i8j9k</span></code>
                                                                         </li>
                                 </ul></p>',
@@ -124,15 +124,15 @@ function sby_admin_init() {
 		),
 		array(
 			'slug' => 'single',
-			'label' => __( 'Single Videos', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Single Videos', 'feeds-for-youtube' ),
 			'input_type' => 'text',
 			'default' => '',
-			'note' => __( 'Eg: Video ID 1, Video ID 2', SBY_TEXT_DOMAIN ),
+			'note' => __( 'Eg: Video ID 1, Video ID 2', 'feeds-for-youtube' ),
 			'example' => 'ahL3sbPK1U8',
-			'description' => __( 'Display a feed of individual videos', SBY_TEXT_DOMAIN ),
-			'tooltip' => '<p>' . __( 'Displays individual videos sorted in order here. Display multiple single videos by using a comma separated list.', SBY_TEXT_DOMAIN ) . '</p><p><ul>
-                                    <li><b>' . __( 'Video ID', SBY_TEXT_DOMAIN ).'</b><br>
-                                        ' . __( 'You can find the Video ID of your individual videos from the URL. The text you need to use is highlighted below:', SBY_TEXT_DOMAIN ).'<br><br>
+			'description' => __( 'Display a feed of individual videos', 'feeds-for-youtube' ),
+			'tooltip' => '<p>' . __( 'Displays individual videos sorted in order here. Display multiple single videos by using a comma separated list.', 'feeds-for-youtube' ) . '</p><p><ul>
+                                    <li><b>' . __( 'Video ID', 'feeds-for-youtube' ).'</b><br>
+                                        ' . __( 'You can find the Video ID of your individual videos from the URL. The text you need to use is highlighted below:', 'feeds-for-youtube' ).'<br><br>
                                     <code>https://www.youtube.com/watch?v=<span class="sbspf-highlight">ahL3sbPK1U8</span></code>
                                                                         </li>
                                 </ul></p>'
@@ -142,178 +142,177 @@ function sby_admin_init() {
 	$admin->add_false_field( 'usecustomsearch', 'configure' );
 	$admin->add_false_field( 'showpast', 'configure' );
 
-	$text_domain = SBY_TEXT_DOMAIN;
 	/* Layout */
 	$layouts = array(
 		array(
 			'slug' => 'grid',
-			'label' => __( 'Grid', $text_domain ),
+			'label' => __( 'Grid', 'feeds-for-youtube' ),
 			'image' => 'img/grid.png',
-			'note' => __( 'Video thumbnails are displayed in columns and play in a lightbox when clicked.', $text_domain ),
+			'note' => __( 'Video thumbnails are displayed in columns and play in a lightbox when clicked.', 'feeds-for-youtube' ),
 			'options' => array(
 				array(
 					'name' => 'cols',
 					'callback' => 'select',
-					'label' => __( 'Columns', $text_domain ),
+					'label' => __( 'Columns', 'feeds-for-youtube' ),
 					'min' => 1,
 					'max' => 7,
 					'default' => 3,
 					'shortcode' => array(
 						'example' => '3',
-						'description' => __( 'Videos in carousel when 480px screen width or less.', $text_domain ),
+						'description' => __( 'Videos in carousel when 480px screen width or less.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'colsmobile',
 					'callback' => 'select',
-					'label' => __( 'Mobile Columns', $text_domain ),
+					'label' => __( 'Mobile Columns', 'feeds-for-youtube' ),
 					'min' => 1,
 					'max' => 2,
 					'default' => 2,
 					'shortcode' => array(
 						'example' => '2',
-						'description' => __( 'Columns when 480px screen width or less.', $text_domain ),
+						'description' => __( 'Columns when 480px screen width or less.', 'feeds-for-youtube' ),
 					)
 				),
 			)
 		),
 		array(
 			'slug' => 'gallery',
-			'label' => __( 'Gallery', $text_domain ),
+			'label' => __( 'Gallery', 'feeds-for-youtube' ),
 			'image' => 'img/gallery.png',
-			'note' => __( 'One large video that plays when clicked with thumbnails underneath to play more.', $text_domain ),
+			'note' => __( 'One large video that plays when clicked with thumbnails underneath to play more.', 'feeds-for-youtube' ),
 			'options' => array(
 				array(
 					'name' => 'cols',
 					'callback' => 'select',
-					'label' => __( 'Columns', $text_domain ),
+					'label' => __( 'Columns', 'feeds-for-youtube' ),
 					'min' => 1,
 					'max' => 7,
 					'default' => 3,
 					'shortcode' => array(
 						'example' => '3',
-						'description' => __( 'Videos in carousel when 480px screen width or less.', $text_domain ),
+						'description' => __( 'Videos in carousel when 480px screen width or less.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'colsmobile',
 					'callback' => 'select',
-					'label' => __( 'Mobile Columns', $text_domain ),
+					'label' => __( 'Mobile Columns', 'feeds-for-youtube' ),
 					'min' => 1,
 					'max' => 2,
 					'default' => 2,
 					'shortcode' => array(
 						'example' => '2',
-						'description' => __( 'Columns when 480px screen width or less.', $text_domain ),
+						'description' => __( 'Columns when 480px screen width or less.', 'feeds-for-youtube' ),
 					)
 				),
 			)
 		),
 		array(
 			'slug' => 'list',
-			'label' => __( 'List', $text_domain ),
+			'label' => __( 'List', 'feeds-for-youtube' ),
 			'image' => 'img/list.png',
-			'note' => __( 'A single columns of videos that play when clicked.', $text_domain ),
+			'note' => __( 'A single columns of videos that play when clicked.', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'carousel',
-			'label' => __( 'Carousel', $text_domain ),
+			'label' => __( 'Carousel', 'feeds-for-youtube' ),
 			'image' => 'img/carousel.png',
-			'note' => __( 'Posts are displayed in a slideshow carousel.', $text_domain ),
+			'note' => __( 'Posts are displayed in a slideshow carousel.', 'feeds-for-youtube' ),
 			'options' => array(
 				array(
 					'name' => 'cols',
 					'callback' => 'select',
-					'label' => __( 'Columns', $text_domain ),
+					'label' => __( 'Columns', 'feeds-for-youtube' ),
 					'min' => 1,
 					'max' => 7,
 					'default' => 3,
 					'shortcode' => array(
 						'example' => '3',
-						'description' => __( 'Videos in carousel when 480px screen width or less.', $text_domain ),
+						'description' => __( 'Videos in carousel when 480px screen width or less.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'colsmobile',
 					'callback' => 'select',
-					'label' => __( 'Mobile Columns', $text_domain ),
+					'label' => __( 'Mobile Columns', 'feeds-for-youtube' ),
 					'min' => 1,
 					'max' => 2,
 					'default' => 2,
 					'shortcode' => array(
 						'example' => '2',
-						'description' => __( 'Columns when 480px screen width or less.', $text_domain ),
+						'description' => __( 'Columns when 480px screen width or less.', 'feeds-for-youtube' ),
 					)				),
 				array(
 					'name' => 'rows',
 					'callback' => 'select',
-					'label' => __( 'Number of Rows', $text_domain ),
+					'label' => __( 'Number of Rows', 'feeds-for-youtube' ),
 					'min' => 1,
 					'max' => 2,
 					'default' => 1,
 					'shortcode' => array(
 						'example' => '2',
-						'description' => __( 'Choose 2 rows to show two posts in a single slide.', $text_domain ),
+						'description' => __( 'Choose 2 rows to show two posts in a single slide.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'loop',
 					'callback' => 'select',
-					'label' => __( 'Loop Type', $text_domain ),
+					'label' => __( 'Loop Type', 'feeds-for-youtube' ),
 					'options' => array(
 						array(
-							'label' => __( 'Rewind', $text_domain ),
+							'label' => __( 'Rewind', 'feeds-for-youtube' ),
 							'value' => 'rewind'
 						),
 						array(
-							'label' => __( 'Infinity', $text_domain ),
+							'label' => __( 'Infinity', 'feeds-for-youtube' ),
 							'value' => 'infinity'
 						)
 					),
 					'default' => 'rewind',
 					'shortcode' => array(
 						'example' => 'infinity',
-						'description' => __( 'What happens when the last slide is reached.', $text_domain ),
+						'description' => __( 'What happens when the last slide is reached.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'arrows',
 					'callback' => 'checkbox',
-					'label' => __( 'Show Navigation Arrows', $text_domain ),
+					'label' => __( 'Show Navigation Arrows', 'feeds-for-youtube' ),
 					'default' => true,
 					'shortcode' => array(
 						'example' => 'false',
-						'description' => __( 'Show arrows on the sides to navigate posts.', $text_domain ),
+						'description' => __( 'Show arrows on the sides to navigate posts.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'pag',
 					'callback' => 'checkbox',
-					'label' => __( 'Show Pagination', $text_domain ),
+					'label' => __( 'Show Pagination', 'feeds-for-youtube' ),
 					'default' => true,
 					'shortcode' => array(
 						'example' => 'false',
-						'description' => __( 'Show dots below carousel for an ordinal indication of which slide is being shown.', $text_domain ),
+						'description' => __( 'Show dots below carousel for an ordinal indication of which slide is being shown.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'autoplay',
 					'callback' => 'checkbox',
-					'label' => __( 'Enable Autoplay', $text_domain ),
+					'label' => __( 'Enable Autoplay', 'feeds-for-youtube' ),
 					'default' => false,
 					'shortcode' => array(
 						'example' => 'true',
-						'description' => __( 'Whether or not to change slides automatically on an interval.', $text_domain ),
+						'description' => __( 'Whether or not to change slides automatically on an interval.', 'feeds-for-youtube' ),
 					)
 				),
 				array(
 					'name' => 'time',
 					'callback' => 'text',
-					'label' => __( 'Interval Time', $text_domain ),
+					'label' => __( 'Interval Time', 'feeds-for-youtube' ),
 					'default' => 5000,
 					'shortcode' => array(
 						'example' => '3000',
-						'description' => __( 'Duration in milliseconds before the slide changes.', $text_domain ),
+						'description' => __( 'Duration in milliseconds before the slide changes.', 'feeds-for-youtube' ),
 					)
 				),
 			)
@@ -325,35 +324,35 @@ function sby_admin_init() {
 	$display_your_feed_table_headings = array(
 		array(
 			'slug' => 'configure',
-			'label' => __( 'Configure Options', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Configure Options', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'customize',
-			'label' => __( 'Customize Options', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Customize Options', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'layout',
-			'label' => __( 'Layout Options', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Layout Options', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'experience',
-			'label' => __( 'Video Experience Options', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Video Experience Options', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'text',
-			'label' => __( 'Custom Text/Translations', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Custom Text/Translations', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'header',
-			'label' => __( 'Header Options', SBY_TEXT_DOMAIN ),
+			'label' => __( 'Header Options', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'button',
-			'label' => __( '"Load More" Button Options', SBY_TEXT_DOMAIN ),
+			'label' => __( '"Load More" Button Options', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'subscribe',
-			'label' => __( '"Subscribe" Button Options', SBY_TEXT_DOMAIN ),
+			'label' => __( '"Subscribe" Button Options', 'feeds-for-youtube' ),
 		)
 	);
 	$admin->set_display_table_sections( $display_your_feed_table_headings );

@@ -100,7 +100,7 @@ class SBY_Upgrader {
 
 		// Check for permissions.
 		if ( ! current_user_can( 'install_plugins' ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'You are not allowed to install plugins.', SBY_TEXT_DOMAIN ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'You are not allowed to install plugins.', 'feeds-for-youtube' ) ) );
 		}
 		if ( self::is_dev_url( home_url() ) ) {
 			wp_send_json_success(
@@ -112,7 +112,7 @@ class SBY_Upgrader {
 		// Check license key.
 		$license = ! empty( $_POST['license_key'] ) ? sanitize_key( $_POST['license_key'] ) : '';
 		if ( empty( $license ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'You are not licensed.', SBY_TEXT_DOMAIN ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'You are not licensed.', 'feeds-for-youtube' ) ) );
 		}
 
 		$args = array(
@@ -200,7 +200,7 @@ class SBY_Upgrader {
 
 		}
 
-		wp_send_json_error( array( 'message' => esc_html__( 'Could not connect.', SBY_TEXT_DOMAIN ) ) );
+		wp_send_json_error( array( 'message' => esc_html__( 'Could not connect.', 'feeds-for-youtube' ) ) );
 	}
 
 	/**
@@ -209,7 +209,7 @@ class SBY_Upgrader {
 	 * @since 4.0
 	 */
 	public function install_upgrade() {
-		$error = esc_html__( 'Could not install upgrade. Please download from smashballoon.com and install manually.', SBY_TEXT_DOMAIN );
+		$error = esc_html__( 'Could not install upgrade. Please download from smashballoon.com and install manually.', 'feeds-for-youtube' );
 		// verify params present (oth & download link).
 		$post_oth = ! empty( $_REQUEST['oth'] ) ? sanitize_text_field( $_REQUEST['oth'] ) : '';
 		$post_url = ! empty( $_REQUEST['file'] ) ? $_REQUEST['file'] : '';
@@ -246,7 +246,7 @@ class SBY_Upgrader {
 		$active = activate_plugin( self::SLUG, $url, false, true );
 		if ( ! is_wp_error( $active ) ) {
 			deactivate_plugins( plugin_basename( SBY_PLUGIN_DIR ) );
-			wp_send_json_success( esc_html__( 'Plugin installed & activated.', SBY_TEXT_DOMAIN ) );
+			wp_send_json_success( esc_html__( 'Plugin installed & activated.', 'feeds-for-youtube' ) );
 		}
 
 		$creds = request_filesystem_credentials( $url, '', false, false, null );
@@ -261,7 +261,7 @@ class SBY_Upgrader {
 		// We do not need any extra credentials if we have gotten this far, so let's install the plugin.
 		$license = get_option( 'sby_license_key' );
 		if ( empty( $license ) ) {
-			wp_send_json_error( new \WP_Error( '403', esc_html__( 'You are not licensed.', SBY_TEXT_DOMAIN ) ) );
+			wp_send_json_error( new \WP_Error( '403', esc_html__( 'You are not licensed.', 'feeds-for-youtube' ) ) );
 		}
 
 		// Do not allow WordPress to search/download translations, as this will break JS output.
@@ -287,7 +287,7 @@ class SBY_Upgrader {
 				$file = $version_info->package;
 			}
 		} else {
-			wp_send_json_error( new \WP_Error( '403', esc_html__( 'You are not licensed.', SBY_TEXT_DOMAIN ) ) );
+			wp_send_json_error( new \WP_Error( '403', esc_html__( 'You are not licensed.', 'feeds-for-youtube' ) ) );
 		}
 
 		if ( ! empty( $file ) ) {
@@ -306,11 +306,11 @@ class SBY_Upgrader {
 				$activated = activate_plugin( $plugin_basename );
 
 				if ( ! is_wp_error( $activated ) ) {
-					wp_send_json_success( esc_html__( 'Plugin installed & activated.', SBY_TEXT_DOMAIN ) );
+					wp_send_json_success( esc_html__( 'Plugin installed & activated.', 'feeds-for-youtube' ) );
 				} else {
 					// Reactivate the lite plugin if pro activation failed.
 					$activated = activate_plugin( plugin_basename( SBY_PLUGIN_BASENAME ), '', false, true );
-					wp_send_json_error( esc_html__( 'Pro version installed but needs to be activated from the Plugins page inside your WordPress admin.', SBY_TEXT_DOMAIN ) );
+					wp_send_json_error( esc_html__( 'Pro version installed but needs to be activated from the Plugins page inside your WordPress admin.', 'feeds-for-youtube' ) );
 				}
 			}
 		}
@@ -383,10 +383,10 @@ class SBY_Upgrader {
 			$error = sanitize_text_field( $response['error'] );
 			switch ( $error ) {
 				case 'expired':
-					$message = __( 'This license is expired.', SBY_TEXT_DOMAIN );
+					$message = __( 'This license is expired.', 'feeds-for-youtube' );
 					break;
 				default:
-					$message = __( 'We encountered a problem unlocking the PRO features. Please install the PRO version manually.', SBY_TEXT_DOMAIN );
+					$message = __( 'We encountered a problem unlocking the PRO features. Please install the PRO version manually.', 'feeds-for-youtube' );
 			}
 		}
 

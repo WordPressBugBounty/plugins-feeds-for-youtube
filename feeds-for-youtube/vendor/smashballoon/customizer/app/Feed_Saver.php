@@ -7,7 +7,6 @@
  */
 namespace Smashballoon\Customizer;
 
-/** @internal */
 class Feed_Saver
 {
     /**
@@ -172,7 +171,7 @@ class Feed_Saver
             return \false;
         }
         $settings_array = self::format_settings($this->sanitized_and_sorted_data['feed_settings']);
-        $this->sanitized_and_sorted_data['feeds'][] = array('key' => 'settings', 'values' => array(\json_encode($settings_array)));
+        $this->sanitized_and_sorted_data['feeds'][] = array('key' => 'settings', 'values' => array(json_encode($settings_array)));
         if (!empty($this->feed_name)) {
             $this->sanitized_and_sorted_data['feeds'][] = array('key' => 'feed_name', 'values' => array($this->feed_name));
         }
@@ -200,11 +199,11 @@ class Feed_Saver
         $args = array('id' => $this->insert_id);
         $settings_array = self::format_settings($this->sanitized_and_sorted_data['feed_settings']);
         if ($this->is_legacy) {
-            $to_save_json = \json_encode($settings_array);
+            $to_save_json = json_encode($settings_array);
             update_option('sbi_legacy_feed_settings', $to_save_json, \false);
             return \true;
         }
-        $this->sanitized_and_sorted_data['feeds'][] = array('key' => 'settings', 'values' => array(\json_encode($settings_array)));
+        $this->sanitized_and_sorted_data['feeds'][] = array('key' => 'settings', 'values' => array(json_encode($settings_array)));
         $this->sanitized_and_sorted_data['feeds'][] = array('key' => 'feed_name', 'values' => array(sanitize_text_field($this->feed_name)));
         $success = $this->db->feeds_update($this->sanitized_and_sorted_data['feeds'], $args);
         return $success;
@@ -223,7 +222,7 @@ class Feed_Saver
     {
         $settings_array = array();
         foreach ($raw_settings as $single_setting) {
-            if (\count($single_setting['values']) > 1) {
+            if (count($single_setting['values']) > 1) {
                 $settings_array[$single_setting['key']] = $single_setting['values'];
             } else {
                 $settings_array[$single_setting['key']] = isset($single_setting['values'][0]) ? $single_setting['values'][0] : '';
@@ -246,31 +245,31 @@ class Feed_Saver
             $feed_settings->set_feed_type_and_terms();
             $feed_settings->set_transient_name();
             $return = $feed_settings->get_legacy_feed_settings();
-            $this->feed_db_data = array('id' => 'legacy', 'feed_name' => __('Legacy Feeds', 'feeds-for-youtube'), 'feed_title' => __('Legacy Feeds', 'feeds-for-youtube'), 'status' => 'publish', 'last_modified' => \date('Y-m-d H:i:s'));
+            $this->feed_db_data = array('id' => 'legacy', 'feed_name' => __('Legacy Feeds', 'feeds-for-youtube'), 'feed_title' => __('Legacy Feeds', 'feeds-for-youtube'), 'status' => 'publish', 'last_modified' => date('Y-m-d H:i:s'));
         } elseif (empty($this->insert_id)) {
             return \false;
         } else {
             $args = array('id' => $this->insert_id);
             $settings_db_data = $this->db->feeds_query($args);
-            if (\false === $settings_db_data || \sizeof($settings_db_data) === 0) {
+            if (\false === $settings_db_data || sizeof($settings_db_data) === 0) {
                 return \false;
             }
             $this->feed_db_data = array('id' => $settings_db_data[0]['id'], 'feed_name' => $settings_db_data[0]['feed_name'], 'feed_title' => $settings_db_data[0]['feed_title'], 'status' => $settings_db_data[0]['status'], 'last_modified' => $settings_db_data[0]['last_modified']);
-            $return = \json_decode($settings_db_data[0]['settings'], \true);
+            $return = json_decode($settings_db_data[0]['settings'], \true);
             $return['feed_name'] = $settings_db_data[0]['feed_name'];
         }
         $return = wp_parse_args($return, $this->proxy_provider->get_db_settings());
         if (empty($return['id'])) {
             return $return;
         }
-        if (!\is_array($return['id'])) {
-            $return['id'] = \explode(',', \str_replace(' ', '', $return['id']));
+        if (!is_array($return['id'])) {
+            $return['id'] = explode(',', str_replace(' ', '', $return['id']));
         }
-        if (!\is_array($return['tagged'])) {
-            $return['tagged'] = \explode(',', \str_replace(' ', '', $return['tagged']));
+        if (!is_array($return['tagged'])) {
+            $return['tagged'] = explode(',', str_replace(' ', '', $return['tagged']));
         }
-        if (!\is_array($return['hashtag'])) {
-            $return['hashtag'] = \explode(',', \str_replace(' ', '', $return['hashtag']));
+        if (!is_array($return['hashtag'])) {
+            $return['hashtag'] = explode(',', str_replace(' ', '', $return['hashtag']));
         }
         $args = array('id' => $return['id']);
         $source_query = $this->db->source_query($args);
@@ -308,9 +307,9 @@ class Feed_Saver
     {
         $encryption = new \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Data_Encryption();
         $user_id = $source['account_id'];
-        $info = !empty($source['info']) ? \json_decode($encryption->decrypt($source['info']), \true) : array();
+        $info = !empty($source['info']) ? json_decode($encryption->decrypt($source['info']), \true) : array();
         $cdn_avatar_url = \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Parse_Pro::get_avatar_url($info);
-        $processed = array('record_id' => \stripslashes($source['id']), 'user_id' => $user_id, 'type' => \stripslashes($source['account_type']), 'privilege' => \stripslashes($source['privilege']), 'access_token' => \stripslashes($encryption->decrypt($source['access_token'])), 'username' => \stripslashes($source['username']), 'name' => \stripslashes($source['username']), 'info' => \stripslashes($encryption->decrypt($source['info'])), 'error' => \stripslashes($source['error']), 'expires' => \stripslashes($source['expires']), 'profile_picture' => $cdn_avatar_url, 'local_avatar_url' => \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Connected_Account::maybe_local_avatar($source['username'], $cdn_avatar_url));
+        $processed = array('record_id' => stripslashes($source['id']), 'user_id' => $user_id, 'type' => stripslashes($source['account_type']), 'privilege' => stripslashes($source['privilege']), 'access_token' => stripslashes($encryption->decrypt($source['access_token'])), 'username' => stripslashes($source['username']), 'name' => stripslashes($source['username']), 'info' => stripslashes($encryption->decrypt($source['info'])), 'error' => stripslashes($source['error']), 'expires' => stripslashes($source['expires']), 'profile_picture' => $cdn_avatar_url, 'local_avatar_url' => \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Connected_Account::maybe_local_avatar($source['username'], $cdn_avatar_url));
         return $processed;
     }
     /**
@@ -325,7 +324,7 @@ class Feed_Saver
      */
     public function get_feed_settings_preview($settings_db_data)
     {
-        if (\false === $settings_db_data || \sizeof($settings_db_data) === 0) {
+        if (\false === $settings_db_data || sizeof($settings_db_data) === 0) {
             return \false;
         }
         $return = $settings_db_data;
@@ -335,7 +334,7 @@ class Feed_Saver
         }
         $sources = array();
         foreach ($return['sources'] as $single_source) {
-            \array_push($sources, $single_source['account_id']);
+            array_push($sources, $single_source['account_id']);
         }
         $args = array('id' => $sources);
         $source_query = $this->db->source_query($args);
@@ -361,119 +360,121 @@ class Feed_Saver
      */
     public static function settings_defaults($return_array = \true)
     {
-        $defaults = array(
-            'connected_accounts' => array(),
-            'type' => 'channel',
-            'channel' => '',
-            'num' => 9,
-            'nummobile' => 9,
-            'minnum' => 9,
-            'widthresp' => \true,
-            'class' => '',
-            'height' => '',
-            'heightunit' => '%',
-            'disablemobile' => \false,
-            'itemspacing' => 5,
-            'itemspacingunit' => 'px',
-            'background' => '',
-            'headercolor' => '',
-            'subscribecolor' => '',
-            'subscribetextcolor' => '',
-            'buttoncolor' => '',
-            'buttonhovercolor' => '',
-            'buttontextcolor' => '',
-            'layout' => 'grid',
-            'playvideo' => 'automatically',
-            'sortby' => 'none',
-            'imageres' => 'auto',
-            'showheader' => \true,
-            'showdescription' => \true,
-            'showbutton' => \true,
-            'headersize' => 'small',
-            'headeroutside' => \false,
-            'showsubscribe' => \true,
-            'buttontext' => __('Load More...', 'feeds-for-youtube'),
-            'subscribetext' => __('Subscribe', 'feeds-for-youtube'),
-            'caching_type' => 'page',
-            'cache_time' => 1,
-            'cache_time_unit' => 'hours',
-            'backup_cache_enabled' => \true,
-            'resizeprocess' => 'background',
-            'disable_resize' => \true,
-            'storage_process' => 'background',
-            'favor_local' => \false,
-            'disable_js_image_loading' => \false,
-            'ajax_post_load' => \false,
-            'ajaxtheme' => \false,
-            'enqueue_css_in_shortcode' => \false,
-            'font_method' => 'svg',
-            'customtemplates' => \false,
-            'gallerycols' => 3,
-            'gallerycolsmobile' => 2,
-            'gridcols' => 3,
-            'gridcolsmobile' => 2,
-            'playerratio' => '9:16',
-            'eagerload' => \false,
-            'custom_css' => '',
-            'custom_js' => '',
-            'gdpr' => 'auto',
-            'disablecdn' => \false,
-            'allowcookies' => \false,
-            // pro only
-            'usecustomsearch' => \false,
-            'headerchannel' => '',
-            'customsearch' => '',
-            'showpast' => \true,
-            'showlikes' => \true,
-            'carouselcols' => 3,
-            'carouselcolsmobile' => 2,
-            'carouselarrows' => \true,
-            'carouselpag' => \true,
-            'carouselautoplay' => \false,
-            'infoposition' => 'below',
-            'include' => array('title', 'icon', 'user', 'views', 'date', 'countdown'),
-            'hoverinclude' => array('description', 'stats'),
-            'descriptionlength' => 150,
-            'userelative' => \true,
-            'dateformat' => '0',
-            'customdate' => '',
-            'showsubscribers' => \true,
-            'subscriberstext' => __('subscribers', 'feeds-for-youtube'),
-            'viewstext' => __('views', 'feeds-for-youtube'),
-            'agotext' => __('ago', 'feeds-for-youtube'),
-            'beforedatetext' => __('Streaming live', 'feeds-for-youtube'),
-            'beforestreamtimetext' => __('Streaming live in', 'feeds-for-youtube'),
-            'minutetext' => __('minute', 'feeds-for-youtube'),
-            'minutestext' => __('minutes', 'feeds-for-youtube'),
-            'hourstext' => __('hours', 'feeds-for-youtube'),
-            'thousandstext' => __('K', 'feeds-for-youtube'),
-            'millionstext' => __('M', 'feeds-for-youtube'),
-            'watchnowtext' => __('Watch Now', 'feeds-for-youtube'),
-            'cta' => 'related',
-            'colorpalette' => 'inherit',
-            'linktext' => __('Learn More', 'feeds-for-youtube'),
-            'linkurl' => '',
-            'linkopentype' => 'same',
-            'linkcolor' => '',
-            'linktextcolor' => '',
-            'custombgcolor1' => '',
-            'customtextcolor1' => '',
-            'customtextcolor2' => '',
-            'customlinkcolor1' => '',
-            'custombuttoncolor1' => '',
-            'custombuttoncolor2' => '',
-        );
-        $defaults = self::filter_defaults($defaults);
-        // some settings are comma separated and not arrays when the feed is created
-        if ($return_array) {
-            $settings_with_multiples = array('sources');
-            foreach ($settings_with_multiples as $multiple_key) {
-                if (isset($defaults[$multiple_key])) {
-                    $defaults[$multiple_key] = \explode(',', $defaults[$multiple_key]);
+        {
+            $defaults = array(
+                'connected_accounts' => array(),
+                'type' => 'channel',
+                'channel' => '',
+                'num' => 9,
+                'nummobile' => 9,
+                'minnum' => 9,
+                'widthresp' => \true,
+                'class' => '',
+                'height' => '',
+                'heightunit' => '%',
+                'disablemobile' => \false,
+                'itemspacing' => 5,
+                'itemspacingunit' => 'px',
+                'background' => '',
+                'headercolor' => '',
+                'subscribecolor' => '',
+                'subscribetextcolor' => '',
+                'buttoncolor' => '',
+                'buttonhovercolor' => '',
+                'buttontextcolor' => '',
+                'layout' => 'grid',
+                'playvideo' => 'automatically',
+                'sortby' => 'none',
+                'imageres' => 'auto',
+                'showheader' => \true,
+                'showdescription' => \true,
+                'showbutton' => \true,
+                'headersize' => 'small',
+                'headeroutside' => \false,
+                'showsubscribe' => \true,
+                'buttontext' => __('Load More...', 'feeds-for-youtube'),
+                'subscribetext' => __('Subscribe', 'feeds-for-youtube'),
+                'caching_type' => 'page',
+                'cache_time' => 1,
+                'cache_time_unit' => 'hours',
+                'backup_cache_enabled' => \true,
+                'resizeprocess' => 'background',
+                'disable_resize' => \true,
+                'storage_process' => 'background',
+                'favor_local' => \false,
+                'disable_js_image_loading' => \false,
+                'ajax_post_load' => \false,
+                'ajaxtheme' => \false,
+                'enqueue_css_in_shortcode' => \false,
+                'font_method' => 'svg',
+                'customtemplates' => \false,
+                'gallerycols' => 3,
+                'gallerycolsmobile' => 2,
+                'gridcols' => 3,
+                'gridcolsmobile' => 2,
+                'playerratio' => '9:16',
+                'eagerload' => \false,
+                'custom_css' => '',
+                'custom_js' => '',
+                'gdpr' => 'auto',
+                'disablecdn' => \false,
+                'allowcookies' => \false,
+                // pro only
+                'usecustomsearch' => \false,
+                'headerchannel' => '',
+                'customsearch' => '',
+                'showpast' => \true,
+                'showlikes' => \true,
+                'carouselcols' => 3,
+                'carouselcolsmobile' => 2,
+                'carouselarrows' => \true,
+                'carouselpag' => \true,
+                'carouselautoplay' => \false,
+                'infoposition' => 'below',
+                'include' => array('title', 'icon', 'user', 'views', 'date', 'countdown'),
+                'hoverinclude' => array('description', 'stats'),
+                'descriptionlength' => 150,
+                'userelative' => \true,
+                'dateformat' => '0',
+                'customdate' => '',
+                'showsubscribers' => \true,
+                'subscriberstext' => __('subscribers', 'feeds-for-youtube'),
+                'viewstext' => __('views', 'feeds-for-youtube'),
+                'agotext' => __('ago', 'feeds-for-youtube'),
+                'beforedatetext' => __('Streaming live', 'feeds-for-youtube'),
+                'beforestreamtimetext' => __('Streaming live in', 'feeds-for-youtube'),
+                'minutetext' => __('minute', 'feeds-for-youtube'),
+                'minutestext' => __('minutes', 'feeds-for-youtube'),
+                'hourstext' => __('hours', 'feeds-for-youtube'),
+                'thousandstext' => __('K', 'feeds-for-youtube'),
+                'millionstext' => __('M', 'feeds-for-youtube'),
+                'watchnowtext' => __('Watch Now', 'feeds-for-youtube'),
+                'cta' => 'related',
+                'colorpalette' => 'inherit',
+                'linktext' => __('Learn More', 'feeds-for-youtube'),
+                'linkurl' => '',
+                'linkopentype' => 'same',
+                'linkcolor' => '',
+                'linktextcolor' => '',
+                'custombgcolor1' => '',
+                'customtextcolor1' => '',
+                'customtextcolor2' => '',
+                'customlinkcolor1' => '',
+                'custombuttoncolor1' => '',
+                'custombuttoncolor2' => '',
+            );
+            $defaults = self::filter_defaults($defaults);
+            // some settings are comma separated and not arrays when the feed is created
+            if ($return_array) {
+                $settings_with_multiples = array('sources');
+                foreach ($settings_with_multiples as $multiple_key) {
+                    if (isset($defaults[$multiple_key])) {
+                        $defaults[$multiple_key] = explode(',', $defaults[$multiple_key]);
+                    }
                 }
             }
+            return $defaults;
         }
-        return $defaults;
     }
     /**
      * Provides backwards compatibility for extensions
@@ -502,7 +503,7 @@ class Feed_Saver
         foreach ($data as $key => $value) {
             $data_type = $this->get_data_type($key);
             $sanitized_values = array();
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 foreach ($value as $item) {
                     $type = $this->is_boolean($item) ? 'boolean' : $data_type['sanitization'];
                     $sanitized_values[] = $this->sanitize($type, $item);
@@ -558,7 +559,7 @@ class Feed_Saver
      */
     private function is_boolean($value)
     {
-        return $value === 'true' || $value === 'false' || \is_bool($value);
+        return $value === 'true' || $value === 'false' || is_bool($value);
     }
     private function cast_boolean($value)
     {

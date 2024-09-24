@@ -23,12 +23,20 @@ $gallery_player_attr              = SBY_Display_Elements::get_element_attribute(
 $num_setting = $settings['num'];
 $nummobile_setting = $settings['nummobile'];
 
+$data_channel_header_colors = array(
+    'channelName' => !empty($settings['subscribebtnprimarycolor']) ? $settings['subscribebtnprimarycolor'] : '',
+    'subscribeCount' => !empty($settings['subscribebtnsecondarycolor']) ? $settings['subscribebtnsecondarycolor'] : '',
+    'buttonBackground' => !empty($settings['subscribelinkcolorbg']) ? $settings['subscribelinkcolorbg'] : '',
+    'buttonText' => !empty($settings['subscribebtntextcolor']) ? $settings['subscribebtntextcolor'] : '',
+);
+
 if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] ) {
 	include sby_get_feed_template_part( 'header', $settings );
 }
 ?>
 
-<div 
+
+<div
 	id="sb_youtube_<?php echo esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) ); ?>" 
 	<?php echo $feed_classes; ?> 
 	data-feedid="<?php echo esc_attr( $feed_id ); ?>" 
@@ -40,6 +48,7 @@ if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] 
 	<?php $header_data ? printf( 'data-channel-subscribers="%s"', esc_attr( $subscriber_count_with_text ) ) : ''; ?>
 	data-subscribe-btn="<?php echo esc_attr( $settings['enablesubscriberlink'] ); ?>" 
 	data-subscribe-btn-text="<?php echo esc_attr( SBY_Display_Elements::get_subscribe_btn_text( $settings ) ); ?>" 
+	data_channel_header_colors ="<?php echo esc_attr(wp_json_encode($data_channel_header_colors)); ?>"
 	<?php echo $other_atts . $feed_styles; ?> 
 	<?php echo $sby_main_atts ?> 
 >

@@ -25,7 +25,7 @@ class ErrorReportingService extends ServiceProvider {
 		$error_messages = $sby_posts_manager->get_frontend_errors();
 		if ( ! empty( $error_messages ) ) {?>
 			<div id="sby_mod_error"<?php echo $style; ?>>
-				<span><?php _e('This error message is only visible to WordPress admins', SBY_TEXT_DOMAIN ); ?></span><br />
+				<span><?php _e('This error message is only visible to WordPress admins', 'feeds-for-youtube' ); ?></span><br />
 				<?php if ( isset( $error_messages['accesstoken'] ) ) :
 					echo $error_messages['accesstoken'];
 

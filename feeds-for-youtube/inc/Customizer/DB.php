@@ -69,6 +69,7 @@ class DB extends \Smashballoon\Customizer\DB {
 		global $wpdb;
 		$feeds_table_name = $wpdb->prefix . 'sby_feeds';
 		$feed_caches_table_name = $wpdb->prefix . 'sby_feed_caches';
+		$feed_ids_array = array_map('intval', $feed_ids_array);
 		$feed_ids_array = implode(',', $feed_ids_array);
 		$wpdb->query(
 			$wpdb->prepare(

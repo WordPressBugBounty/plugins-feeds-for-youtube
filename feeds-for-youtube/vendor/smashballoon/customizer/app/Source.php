@@ -11,7 +11,6 @@
 namespace Smashballoon\Customizer;
 
 use function SmashBalloon\YoutubeFeed\Vendor\DI\value;
-/** @internal */
 class Source
 {
     const BATCH_SIZE = 10;
@@ -75,7 +74,7 @@ class Source
             $code = !empty($single_source['error']['error']['code']) ? esc_html($single_source['error']['error']['code']) : '';
             if (isset($single_source['error']['response']) && is_wp_error($single_source['error']['response'])) {
                 $response = $single_source['error']['response'];
-                $message = \sprintf(__('Error connecting to %s.', 'feeds-for-youtube'), $single_source['error']['url']);
+                $message = sprintf(__('Error connecting to %s.', 'feeds-for-youtube'), $single_source['error']['url']);
                 if (isset($response) && isset($response->errors)) {
                     foreach ($response->errors as $key => $item) {
                         $code = $key;
@@ -88,16 +87,16 @@ class Source
             $return_html .= '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">';
             $return_html .= '<path d="M8.99935 0.666504C4.39935 0.666504 0.666016 4.39984 0.666016 8.99984C0.666016 13.5998 4.39935 17.3332 8.99935 17.3332C13.5993 17.3332 17.3327 13.5998 17.3327 8.99984C17.3327 4.39984 13.5993 0.666504 8.99935 0.666504ZM9.83268 13.1665H8.16602V11.4998H9.83268V13.1665ZM9.83268 9.83317H8.16602V4.83317H9.83268V9.83317Z" fill="#995C00"/>';
             $return_html .= '</svg>';
-            $return_html .= '<span><strong>' . \sprintf(__('Connection Error: %s ', 'feeds-for-youtube'), $code) . '</strong></span><br>' . $message . '</div></div>';
+            $return_html .= '<span><strong>' . sprintf(__('Connection Error: %s ', 'feeds-for-youtube'), $code) . '</strong></span><br>' . $message . '</div></div>';
             $return = array('success' => \false, 'message' => $return_html);
-            return \json_encode($return);
+            return json_encode($return);
         } else {
             global $sb_instagram_posts_manager;
             $sb_instagram_posts_manager->remove_error('connection');
         }
         $manager = new \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Data_Manager();
         $manager->update_last_used();
-        return \json_encode(\Smashballoon\Customizer\SBI_Feed_Builder::get_source_list());
+        return json_encode(\Smashballoon\Customizer\SBI_Feed_Builder::get_source_list());
     }
     /**
      * Used in an AJAX call to update Multiple sources based on selections or
@@ -114,7 +113,7 @@ class Source
         if (!sbi_current_user_can('manage_instagram_feed_options')) {
             wp_send_json_error();
         }
-        if (isset($_POST['sourcesList']) && !empty($_POST['sourcesList']) && \is_array($_POST['sourcesList'])) {
+        if (isset($_POST['sourcesList']) && !empty($_POST['sourcesList']) && is_array($_POST['sourcesList'])) {
             foreach ($_POST['sourcesList'] as $single_source) {
                 $source_data = array('access_token' => sanitize_text_field($single_source['access_token']), 'id' => sanitize_text_field($single_source['id']), 'type' => sanitize_text_field($single_source['type']), 'username' => isset($single_source['username']) ? sanitize_text_field($single_source['username']) : '');
                 if ($single_source['type'] === 'business') {
@@ -126,7 +125,7 @@ class Source
                 self::process_connecting_source_data($source_data);
             }
         }
-        echo \json_encode(\Smashballoon\Customizer\SBI_Feed_Builder::get_source_list());
+        echo json_encode(\Smashballoon\Customizer\SBI_Feed_Builder::get_source_list());
         wp_die();
     }
     /**
@@ -144,7 +143,7 @@ class Source
         }
         $args = array('page' => $_POST['page']);
         $source_data = \Smashballoon\Customizer\SBI_Db::source_query($args);
-        echo \json_encode($source_data);
+        echo json_encode($source_data);
         wp_die();
     }
     /**
@@ -160,9 +159,9 @@ class Source
     public function get_connection_urls($is_settings = \false)
     {
         $urls = array();
-        $admin_url_state = $is_settings ? admin_url(\sprintf('admin.php?page=%s-settings', $this->config->plugin_slug)) : admin_url(\sprintf('admin.php?page=%s-feed-builder', $this->config->plugin_slug));
+        $admin_url_state = $is_settings ? admin_url(sprintf('admin.php?page=%s-settings', $this->config->plugin_slug)) : admin_url(sprintf('admin.php?page=%s-feed-builder', $this->config->plugin_slug));
         //If the admin_url isn't returned correctly then use a fallback
-        if ($admin_url_state === \sprintf('/wp-admin/admin.php?page=%s-feed-builder', $this->config->plugin_slug) || $admin_url_state === \sprintf('/wp-admin/admin.php?page=%s-feed-builder&tab=configuration', $this->config->plugin_slug)) {
+        if ($admin_url_state === sprintf('/wp-admin/admin.php?page=%s-feed-builder', $this->config->plugin_slug) || $admin_url_state === sprintf('/wp-admin/admin.php?page=%s-feed-builder&tab=configuration', $this->config->plugin_slug)) {
             $admin_url_state = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
         }
         #$urls['personal']  ='https://connect.smashballoon.com/auth/ig/?wordpress_user=&v=pro&vn=' . SBYVER . '&state=';
@@ -211,8 +210,8 @@ class Source
         $user_id = sanitize_text_field($_GET['sbi_id']);
         $user_name = sanitize_text_field($_GET['sbi_username']);
         $expires_in = (int) $_GET['sbi_expires_in'];
-        $expires_timestamp = \time() + $expires_in;
-        $source_data = array('access_token' => $access_token, 'id' => $user_id, 'user_id' => $user_id, 'type' => 'basic', 'username' => $user_name, 'privilege' => '', 'expires' => \date('Y-m-d H:i:s', $expires_timestamp));
+        $expires_timestamp = time() + $expires_in;
+        $source_data = array('access_token' => $access_token, 'id' => $user_id, 'user_id' => $user_id, 'type' => 'basic', 'username' => $user_name, 'privilege' => '', 'expires' => date('Y-m-d H:i:s', $expires_timestamp));
         $connection = new \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_API_Connect($source_data, 'header', array());
         $connection->connect();
         $header_details = '{}';
@@ -221,7 +220,7 @@ class Source
             $header_details_array = $connection->get_data();
             $header_details_array = self::merge_account_details($header_details_array, $source_data);
             $source_data['username'] = $header_details_array['username'];
-            $header_details = \json_encode($header_details_array);
+            $header_details = json_encode($header_details_array);
         } else {
             $source_data['error'] = $connection;
             if ($connection->is_wp_error()) {
@@ -246,7 +245,7 @@ class Source
         $matches_existing_personal = isset($results[0]) && $results[0]['account_type'] === 'personal';
         if ($already_connected_as_business_account) {
             $return['matchingExistingAccounts'] = $results[0];
-            $instagram_account_data = \json_decode($encryption->decrypt($results[0]['info']), \true);
+            $instagram_account_data = json_decode($encryption->decrypt($results[0]['info']), \true);
             $return['matchingExistingAccounts']['avatar'] = isset($instagram_account_data['profile_picture_url']) ? $instagram_account_data['profile_picture_url'] : \false;
             $return['notice'] = __('The Instagram account you are logged into is already connected as a "business" account. Remove the business account if you\'d like to connect as a basic account instead (not recommended).', 'feeds-for-youtube');
         } elseif ($matches_existing_personal) {
@@ -270,7 +269,7 @@ class Source
     public static function retrieve_available_business_accounts()
     {
         $return = array('type' => 'business', 'unconnectedAccounts' => array(), 'matchingExistingAccounts' => array(), 'didQuickUpdate' => \false);
-        $access_token = sbi_maybe_clean(\urldecode($_GET['sbi_access_token']));
+        $access_token = sbi_maybe_clean(urldecode($_GET['sbi_access_token']));
         if (empty($access_token)) {
             return array();
         }
@@ -290,19 +289,19 @@ class Source
             }
             return array('error' => array('code' => 'HTTP Request', 'message' => __('Your server could not complete a remote request to Facebook\'s API. Your host may be blocking access or there may be a problem with your server.', 'feeds-for-youtube'), 'details' => $error_message));
         }
-        $pages_data_arr = \json_decode($pages_data, \true);
+        $pages_data_arr = json_decode($pages_data, \true);
         if (empty($pages_data_arr['data'])) {
-            return array('error' => array('code' => 'No Accounts Found', 'message' => __('Couldn\'t find Business Profile', 'feeds-for-youtube'), 'details' => \sprintf(__('Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile.', 'feeds-for-youtube'), '<a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">', '</a>')));
+            return array('error' => array('code' => 'No Accounts Found', 'message' => __('Couldn\'t find Business Profile', 'feeds-for-youtube'), 'details' => sprintf(__('Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile.', 'feeds-for-youtube'), '<a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">', '</a>')));
         }
         $user_url = 'https://graph.facebook.com/me?fields=name,id,picture&access_token=' . $access_token;
         $args = array('timeout' => 60);
         $result = wp_remote_get($user_url, $args);
         if (!is_wp_error($result)) {
             $user_data = $result['body'];
-            $user_data_arr = \json_decode($user_data, \true);
+            $user_data_arr = json_decode($user_data, \true);
             $return['user'] = $user_data_arr;
         }
-        $return['numFound'] = \count($pages_data_arr['data']);
+        $return['numFound'] = count($pages_data_arr['data']);
         foreach ($pages_data_arr['data'] as $page_data) {
             if (isset($page_data['instagram_business_account'])) {
                 $instagram_business_id = $page_data['instagram_business_account']['id'];
@@ -312,10 +311,10 @@ class Source
                 $result = wp_remote_get($instagram_account_url, $args);
                 if (!is_wp_error($result)) {
                     $instagram_account_info = $result['body'];
-                    $instagram_account_data = \json_decode($instagram_account_info, \true);
+                    $instagram_account_data = json_decode($instagram_account_info, \true);
                     $instagram_biz_img = isset($instagram_account_data['profile_picture_url']) ? $instagram_account_data['profile_picture_url'] : \false;
                     $source_data = array('access_token' => $access_token, 'id' => $instagram_business_id, 'user_id' => $instagram_business_id, 'type' => 'business', 'username' => $instagram_account_data['username'], 'avatar' => $instagram_biz_img, 'privilege' => 'tagged');
-                    $source_data['info'] = \json_encode($instagram_account_data);
+                    $source_data['info'] = json_encode($instagram_account_data);
                     $return['unconnectedAccounts'][] = $source_data;
                     $args = array('id' => $instagram_business_id);
                     $results = \Smashballoon\Customizer\SBI_Db::source_query($args);
@@ -333,7 +332,7 @@ class Source
             }
         }
         if (empty($return['unconnectedAccounts'])) {
-            return array('error' => array('code' => 'No Accounts Found', 'message' => __('Couldn\'t find Business Profile', 'feeds-for-youtube'), 'details' => \sprintf(__('Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile. If you are, in fact, logged-in to the correct account please make sure you have Instagram accounts connected with your Facebook account by following %3$sthis FAQ%4$s', 'feeds-for-youtube'), '<a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">', '</a>', '<a href="https://smashballoon.com/reconnecting-an-instagram-business-profile/" target="_blank" rel="noopener noreferrer">', '</a>')));
+            return array('error' => array('code' => 'No Accounts Found', 'message' => __('Couldn\'t find Business Profile', 'feeds-for-youtube'), 'details' => sprintf(__('Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile. If you are, in fact, logged-in to the correct account please make sure you have Instagram accounts connected with your Facebook account by following %3$sthis FAQ%4$s', 'feeds-for-youtube'), '<a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">', '</a>', '<a href="https://smashballoon.com/reconnecting-an-instagram-business-profile/" target="_blank" rel="noopener noreferrer">', '</a>')));
         }
         return $return;
     }
@@ -353,12 +352,12 @@ class Source
         }
         if (isset($source_data['info'])) {
             // data from an API request related to the source is saved as a JSON string
-            if (\is_object($source_data['info']) || \is_array($source_data['info'])) {
-                $source_data['info'] = \json_encode($source_data['info']);
+            if (is_object($source_data['info']) || is_array($source_data['info'])) {
+                $source_data['info'] = json_encode($source_data['info']);
             }
         }
         if (self::exists_in_database($source_data)) {
-            $source_data['last_updated'] = \date('Y-m-d H:i:s');
+            $source_data['last_updated'] = date('Y-m-d H:i:s');
             self::update($source_data, \false);
         } else {
             if (!isset($source_data['access_token'])) {
@@ -435,7 +434,7 @@ class Source
         $sbi_statuses_option = get_option('sbi_statuses', array());
         $options = get_option('sb_instagram_settings', array());
         $connected_accounts = isset($options['connected_accounts']) ? $options['connected_accounts'] : array();
-        $sbi_statuses_option['legacy_source_queue'] = \array_chunk(\array_keys($connected_accounts), self::BATCH_SIZE);
+        $sbi_statuses_option['legacy_source_queue'] = array_chunk(array_keys($connected_accounts), self::BATCH_SIZE);
         update_option('sbi_statuses', $sbi_statuses_option);
         return $sbi_statuses_option['legacy_source_queue'];
     }
@@ -464,7 +463,7 @@ class Source
             return;
         }
         $sbi_statuses_option = get_option('sbi_statuses', array());
-        $batch = \array_shift($sbi_statuses_option['legacy_source_queue']);
+        $batch = array_shift($sbi_statuses_option['legacy_source_queue']);
         update_option('sbi_statuses', $sbi_statuses_option);
         // updated early just in case there is a fatal error
         if (empty($batch)) {
@@ -501,7 +500,7 @@ class Source
         }
         $source_data = array('access_token' => $connected_account['access_token'], 'id' => $connected_account['user_id'], 'type' => $account_type, 'username' => $connected_account['username'], 'privilege' => !empty($connected_account['use_tagged']) ? 'tagged' : '');
         if (!empty($connected_account['expires_timestamp'])) {
-            $source_data['expires'] = \date('Y-m-d H:i:s', $connected_account['expires_timestamp']);
+            $source_data['expires'] = date('Y-m-d H:i:s', $connected_account['expires_timestamp']);
         }
         if ($connected_account['local_avatar']) {
             \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Connected_Account::update_local_avatar_status($connected_account['username'], \true);
@@ -517,7 +516,7 @@ class Source
                 \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Connected_Account::update_local_avatar_status($header_details_array['username'], $created);
             }
             $source_data['username'] = $header_details_array['username'];
-            $header_details = \json_encode($header_details_array);
+            $header_details = json_encode($header_details_array);
         } else {
             $source_data['error'] = $connection;
             if ($connection->is_wp_error()) {
@@ -569,7 +568,7 @@ class Source
         if (!self::should_do_source_updates()) {
             return \false;
         }
-        $connected_accounts = (array) \json_decode(\stripcslashes(get_option('sbi_connected_accounts')), \true);
+        $connected_accounts = (array) json_decode(stripcslashes(get_option('sbi_connected_accounts')), \true);
         $connected_account = isset($connected_accounts[$slug_or_id]) ? $connected_accounts[$slug_or_id] : \false;
         if ($connected_account) {
             return self::update_single_source($connected_account);
@@ -603,7 +602,7 @@ class Source
      */
     public static function add_error($account_id, $error)
     {
-        $source_data = array('id' => $account_id, 'error' => \is_string($error) ? $error : \json_encode($error));
+        $source_data = array('id' => $account_id, 'error' => is_string($error) ? $error : json_encode($error));
         return self::update_or_insert($source_data);
     }
     /**
@@ -622,10 +621,10 @@ class Source
         $encryption = new \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Data_Encryption();
         $connected_accounts = array();
         foreach ($source_data as $source_datum) {
-            $info = !empty($source_datum['info']) ? \json_decode($encryption->decrypt($source_datum['info']), \true) : array();
+            $info = !empty($source_datum['info']) ? json_decode($encryption->decrypt($source_datum['info']), \true) : array();
             $settings = array('gdpr' => 'no');
             $avatar = \SmashBalloon\YoutubeFeed\Vendor\SB_Instagram_Parse::get_avatar($info, $settings, \true);
-            $connected_account = array('id' => $source_datum['account_id'], 'user_id' => $source_datum['account_id'], 'type' => $source_datum['account_type'], 'account_type' => $source_datum['account_type'], 'username' => $source_datum['username'], 'access_token' => sbi_maybe_clean($source_datum['access_token']), 'privilege' => $source_datum['privilege'], 'expires_timestamp' => \strtotime($source_datum['expires']), 'is_valid' => empty($source_datum['error']), 'profile_picture' => $avatar, 'last_checked' => isset($source_datum['last_updated']) ? \strtotime($source_datum['last_updated']) : \time());
+            $connected_account = array('id' => $source_datum['account_id'], 'user_id' => $source_datum['account_id'], 'type' => $source_datum['account_type'], 'account_type' => $source_datum['account_type'], 'username' => $source_datum['username'], 'access_token' => sbi_maybe_clean($source_datum['access_token']), 'privilege' => $source_datum['privilege'], 'expires_timestamp' => strtotime($source_datum['expires']), 'is_valid' => empty($source_datum['error']), 'profile_picture' => $avatar, 'last_checked' => isset($source_datum['last_updated']) ? strtotime($source_datum['last_updated']) : time());
             if (!empty($info['private'])) {
                 $connected_account['private'] = $info['private'];
             }

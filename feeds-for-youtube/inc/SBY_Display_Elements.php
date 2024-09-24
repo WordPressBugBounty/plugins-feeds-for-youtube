@@ -295,12 +295,12 @@ class SBY_Display_Elements
 		}
 	}
 
-	public static function escaped_formatted_count_string( $count, $type ) {
+	public static function escaped_formatted_count_string( $count, $type, $no_spinner = false ) {
 		global $sby_settings;
 
 		$type_text = isset( $sby_settings[ $type . 'text' ] ) ? ' ' . esc_attr($sby_settings[ $type . 'text' ]) : '';
 
-		if ( $count === '' ) {
+		if ( '' === $count && false === $no_spinner ) { 
 			return SBY_Display_Elements::spinner() . $type_text;
 		}
 

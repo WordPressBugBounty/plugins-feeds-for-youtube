@@ -1,9 +1,11 @@
 <?php
+
 /**
  * YouTube Feeds Builder
  *
  * @since 2.0
  */
+
 namespace SmashBalloon\YouTubeFeed\Builder;
 
 use SmashBalloon\YouTubeFeed\SB_YouTube_Data_Encryption;
@@ -11,10 +13,12 @@ use SmashBalloon\YouTubeFeed\Services\ShortcodeService;
 use SmashBalloon\YouTubeFeed\Services\AssetsService;
 use SmashBalloon\YouTubeFeed\Feed_Locator;
 
-class SBY_Feed_Builder {
+class SBY_Feed_Builder
+{
 	private static $instance;
-	public static function instance() {
-		if ( null === self::$instance ) {
+	public static function instance()
+	{
+		if (null === self::$instance) {
 			self::$instance = new self();
 			return self::$instance;
 		}
@@ -26,7 +30,8 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->init();
 	}
 
@@ -34,19 +39,20 @@ class SBY_Feed_Builder {
 	 * Init the Builder.
 	 *
 	 * @since 2.0
-	*/
-	public function init() {
-        if ( ! is_admin() ) {
-            return;
+	 */
+	public function init()
+	{
+		if (! is_admin()) {
+			return;
 		}
 
-        // register admin menu for sby-feed-builder
-        add_action( 'admin_menu', array( $this, 'register_menu' ) );
+		// register admin menu for sby-feed-builder
+		add_action('admin_menu', array( $this, 'register_menu' ));
 
-        // add ajax listeners
-        SBY_Feed_Saver_Manager::hooks();
-        SBY_Source::hooks();
-        self::hooks();
+		// add ajax listeners
+		SBY_Feed_Saver_Manager::hooks();
+		SBY_Source::hooks();
+		self::hooks();
 	}
 
 	/**
@@ -54,31 +60,33 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function hooks() {
-		add_action( 'wp_ajax_sbi_dismiss_onboarding', array( 'SmashBalloon\YouTubeFeed\Builder\SBI_Feed_Builder', 'after_dismiss_onboarding' ) );
+	public static function hooks()
+	{
+		add_action('wp_ajax_sbi_dismiss_onboarding', array( 'SmashBalloon\YouTubeFeed\Builder\SBI_Feed_Builder', 'after_dismiss_onboarding' ));
 	}
 
 	/**
 	 * Check users capabilities and maybe nonce before AJAX actions
 	 *
 	 * @param $check_nonce
-	 * @param string $action
+	 * @param string      $action
 	 *
 	 * @since 2.0
 	 */
-	public static function check_privilege( $check_nonce = false, $action = 'sby-admin' ) {
-		$cap = current_user_can( 'manage_instagram_feed_options' ) ? 'manage_instagram_feed_options' : 'manage_options';
-		$cap = apply_filters( 'sbi_settings_pages_capability', $cap );
+	public static function check_privilege($check_nonce = false, $action = 'sby-admin')
+	{
+		$cap = current_user_can('manage_instagram_feed_options') ? 'manage_instagram_feed_options' : 'manage_options';
+		$cap = apply_filters('sbi_settings_pages_capability', $cap);
 
-		if ( ! current_user_can( $cap ) ) {
-			wp_die( 'You did not do this the right way!' );
+		if (! current_user_can($cap)) {
+			wp_die('You did not do this the right way!');
 		}
 
-		if ( $check_nonce ) {
-			$nonce = ! empty( $_POST[ $check_nonce ] ) ? $_POST[ $check_nonce ] : false;
+		if ($check_nonce) {
+			$nonce = ! empty($_POST[ $check_nonce ]) ? $_POST[ $check_nonce ] : false;
 
-			if ( ! wp_verify_nonce( $nonce, $action ) ) {
-				wp_die( 'You did not do this the right way!' );
+			if (! wp_verify_nonce($nonce, $action)) {
+				wp_die('You did not do this the right way!');
 			}
 		}
 	}
@@ -88,21 +96,22 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public function register_menu() {
+	public function register_menu()
+	{
 
-		$cap = current_user_can( 'manage_youtube_feed_options' ) ? 'manage_youtube_feed_options' : 'manage_options';
-		$cap = apply_filters( 'sbi_settings_pages_capability', $cap );
+		$cap = current_user_can('manage_youtube_feed_options') ? 'manage_youtube_feed_options' : 'manage_options';
+		$cap = apply_filters('sbi_settings_pages_capability', $cap);
 
 		$feed_builder = add_submenu_page(
 			SBY_MENU_SLUG,
-			__( 'All Feeds', 'youtube-feed' ),
-			__( 'All Feeds', 'youtube-feed' ),
+			__('All Feeds', 'feeds-for-youtube'),
+			__('All Feeds', 'feeds-for-youtube'),
 			$cap,
 			SBY_MENU_SLUG,
 			array( $this, 'feed_builder' ),
 			0
 		);
-		add_action( 'load-' . $feed_builder, array( $this, 'builder_enqueue_admin_scripts' ) );
+		add_action('load-' . $feed_builder, array( $this, 'builder_enqueue_admin_scripts' ));
 	}
 
 	/**
@@ -112,58 +121,59 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public function builder_enqueue_admin_scripts() {
-		if ( get_current_screen() ) :
+	public function builder_enqueue_admin_scripts()
+	{
+		if (get_current_screen()) :
 			$screen = get_current_screen();
-			if ( strpos($screen->id, 'sby-feed-builder')  !== false ) :
+			if (strpos($screen->id, 'sby-feed-builder')  !== false) :
 				$installed_plugins = get_plugins();
 
 				$newly_retrieved_source_connection_data = SBY_Source::maybe_source_connection_data();
-				$license_key                            = get_option( 'sby_license_key', '' );
+				$license_key                            = get_option('sby_license_key', '');
 
 				$sby_builder = array(
-					'ajaxHandler'         => admin_url( 'admin-ajax.php' ),
+					'ajaxHandler'         => admin_url('admin-ajax.php'),
 					'pluginType'           => 'pro',
-					'builderUrl'           => admin_url( 'admin.php?page=sby-feed-builder' ),
-					'nonce'                => wp_create_nonce( 'sby-admin' ),
-					'adminPostURL'         => admin_url( 'post.php' ),
-					'widgetsPageURL'       => admin_url( 'widgets.php' ),
-					'supportPageUrl'       => admin_url( 'admin.php?page=sby-support' ),
+					'builderUrl'           => admin_url('admin.php?page=sby-feed-builder'),
+					'nonce'                => wp_create_nonce('sby-admin'),
+					'adminPostURL'         => admin_url('post.php'),
+					'widgetsPageURL'       => admin_url('widgets.php'),
+					'supportPageUrl'       => admin_url('admin.php?page=sby-support'),
 					'pluginURL'  			=> SBY_PLUGIN_URL,
 					'genericText'          => self::get_generic_text(),
 					'welcomeScreen'        => array(
-						'mainHeading'              => __( 'All Feeds', 'feeds-for-youtube' ),
-						'createFeed'               => __( 'Create your Feed', 'feeds-for-youtube' ),
-						'createFeedDescription'    => __( 'Connect your Instagram account and choose a feed type', 'feeds-for-youtube' ),
-						'customizeFeed'            => __( 'Customize your feed type', 'feeds-for-youtube' ),
-						'customizeFeedDescription' => __( 'Choose layouts, color schemes, filters and more', 'feeds-for-youtube' ),
-						'embedFeed'                => __( 'Embed your feed', 'feeds-for-youtube' ),
-						'embedFeedDescription'     => __( 'Easily add the feed anywhere on your website', 'feeds-for-youtube' ),
+						'mainHeading'              => __('All Feeds', 'feeds-for-youtube'),
+						'createFeed'               => __('Create your Feed', 'feeds-for-youtube'),
+						'createFeedDescription'    => __('Connect your Instagram account and choose a feed type', 'feeds-for-youtube'),
+						'customizeFeed'            => __('Customize your feed type', 'feeds-for-youtube'),
+						'customizeFeedDescription' => __('Choose layouts, color schemes, filters and more', 'feeds-for-youtube'),
+						'embedFeed'                => __('Embed your feed', 'feeds-for-youtube'),
+						'embedFeedDescription'     => __('Easily add the feed anywhere on your website', 'feeds-for-youtube'),
 						'customizeImgPath'         => SBY_BUILDER_URL . 'assets/img/welcome-1.png',
 						'embedImgPath'             => SBY_BUILDER_URL . 'assets/img/welcome-2.png',
 					),
 					'allFeedsScreen'       => array(
-						'mainHeading'     => __( 'All Feeds', 'instagram-feed' ),
+						'mainHeading'     => __('All Feeds', 'feeds-for-youtube'),
 						'columns'         => array(
-							'nameText'      => __( 'Name', 'instagram-feed' ),
-							'shortcodeText' => __( 'Shortcode', 'instagram-feed' ),
-							'instancesText' => __( 'Instances', 'instagram-feed' ),
-							'actionsText'   => __( 'Actions', 'instagram-feed' ),
+							'nameText'      => __('Name', 'feeds-for-youtube'),
+							'shortcodeText' => __('Shortcode', 'feeds-for-youtube'),
+							'instancesText' => __('Instances', 'feeds-for-youtube'),
+							'actionsText'   => __('Actions', 'feeds-for-youtube'),
 						),
-						'bulkActions'     => __( 'Bulk Actions', 'instagram-feed' ),
+						'bulkActions'     => __('Bulk Actions', 'feeds-for-youtube'),
 						'legacyFeeds'     => array(
-							'heading'               => __( 'Legacy Feeds', 'instagram-feed' ),
-							'toolTip'               => __( 'What are Legacy Feeds?', 'instagram-feed' ),
+							'heading'               => __('Legacy Feeds', 'feeds-for-youtube'),
+							'toolTip'               => __('What are Legacy Feeds?', 'feeds-for-youtube'),
 							'toolTipExpanded'       => array(
-								__( 'Legacy feeds are older feeds from before the version 6 update. You can edit settings for these feeds by using the "Settings" button to the right. These settings will apply to all legacy feeds, just like the settings before version 6, and work in the same way that they used to.', 'instagram-feed' ),
-								__( 'You can also create a new feed, which will now have it\'s own individual settings. Modifying settings for new feeds will not affect other feeds.', 'instagram-feed' ),
+								__('Legacy feeds are older feeds from before the version 6 update. You can edit settings for these feeds by using the "Settings" button to the right. These settings will apply to all legacy feeds, just like the settings before version 6, and work in the same way that they used to.', 'feeds-for-youtube'),
+								__('You can also create a new feed, which will now have it\'s own individual settings. Modifying settings for new feeds will not affect other feeds.', 'feeds-for-youtube'),
 							),
 							'toolTipExpandedAction' => array(
-								__( 'Legacy feeds represent shortcodes of old feeds found on your website before <br/>the version 6 update.', 'instagram-feed' ),
-								__( 'To edit Legacy feed settings, you will need to use the "Settings" button above <br/>or edit their shortcode settings directly. To delete them, simply remove the <br/>shortcode wherever it is being used on your site.', 'instagram-feed' ),
+								__('Legacy feeds represent shortcodes of old feeds found on your website before <br/>the version 6 update.', 'feeds-for-youtube'),
+								__('To edit Legacy feed settings, you will need to use the "Settings" button above <br/>or edit their shortcode settings directly. To delete them, simply remove the <br/>shortcode wherever it is being used on your site.', 'feeds-for-youtube'),
 							),
-							'show'                  => __( 'Show Legacy Feeds', 'instagram-feed' ),
-							'hide'                  => __( 'Hide Legacy Feeds', 'instagram-feed' ),
+							'show'                  => __('Show Legacy Feeds', 'feeds-for-youtube'),
+							'hide'                  => __('Hide Legacy Feeds', 'feeds-for-youtube'),
 						),
 						'socialWallLinks' => self::get_social_wall_links(),
 						'onboarding'      => $this->get_onboarding_text(),
@@ -173,37 +183,40 @@ class SBY_Feed_Builder {
 					'feeds'                => self::get_feed_list(),
 				);
 
-				if ( $newly_retrieved_source_connection_data ) {
+				if ($newly_retrieved_source_connection_data) {
 					$sby_builder['newSourceData'] = $newly_retrieved_source_connection_data;
 				}
-				 if ( isset( $_GET['manualsource'] ) && $_GET['manualsource'] == true ) {
-			        $sby_builder['manualSourcePopupInit'] = true;
-		        }
+				if (isset($_GET['manualsource']) && $_GET['manualsource'] == true) {
+					$sby_builder['manualSourcePopupInit'] = true;
+				}
 
 				$maybe_feed_customizer_data = SBY_Feed_Saver_Manager::maybe_feed_customizer_data();
 
-				if ( $maybe_feed_customizer_data ) {
-					AssetsService::sby_scripts_enqueue( true );
+				if ($maybe_feed_customizer_data) {
+					AssetsService::sby_scripts_enqueue(true);
 					$sby_builder['customizerFeedData']       = $maybe_feed_customizer_data;
 					$sby_builder['customizerSidebarBuilder'] = \SmashBalloon\YouTubeFeed\Builder\Tabs\SBY_Builder_Customizer_Tab::get_customizer_tabs();
 					$sby_builder['wordpressPageLists']       = $this->get_wp_pages();
 
-					if ( ! isset( $_GET['feed_id'] ) || $_GET['feed_id'] === 'legacy' ) {
+					if (! isset($_GET['feed_id']) || $_GET['feed_id'] === 'legacy') {
 						$feed_id                       = 'legacy';
 						$customizer_atts               = $maybe_feed_customizer_data['settings'];
 						$customizer_atts['customizer'] = true;
-					} elseif ( intval( $_GET['feed_id'] ) > 0 ) {
-						$feed_id         = intval( $_GET['feed_id'] );
+					} elseif (intval($_GET['feed_id']) > 0) {
+						$feed_id         = intval($_GET['feed_id']);
 						$customizer_atts = array(
 							'feed'       => $feed_id,
 							'customizer' => true,
 						);
 					}
 
-					if ( ! empty( $feed_id ) ) {
-						$settings_preview = self::add_customizer_att( $customizer_atts );
+					if (! empty($feed_id)) {
+						$settings_preview = self::add_customizer_att($customizer_atts);
 						$shortcode = new ShortcodeService();
-						$sby_builder['feedInitOutput'] = htmlspecialchars( $shortcode->sby_youtube_feed( $settings_preview, true ) );
+						$sby_builder['feedInitOutput'] = htmlspecialchars($shortcode->sby_youtube_feed(
+							$settings_preview,
+							true
+						), ENT_QUOTES | ENT_HTML5);
 					}
 				}
 
@@ -242,11 +255,12 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public function get_wp_pages() {
+	public function get_wp_pages()
+	{
 		$pagesList   = get_pages();
 		$pagesResult = array();
-		if ( is_array( $pagesList ) ) {
-			foreach ( $pagesList as $page ) {
+		if (is_array($pagesList)) {
+			foreach ($pagesList as $page) {
 				array_push(
 					$pagesResult,
 					array(
@@ -267,7 +281,8 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function global_enqueue_ressources_scripts( $is_settings = false ) {
+	public static function global_enqueue_ressources_scripts($is_settings = false)
+	{
 		wp_enqueue_style(
 			'feed-global-style',
 			SBY_PLUGIN_URL . 'admin/builder/assets/css/global.css',
@@ -292,39 +307,39 @@ class SBY_Feed_Builder {
 		);
 
 		// wp_enqueue_script(
-		// 	'sb-dialog-box',
-		// 	SBY_PLUGIN_URL . 'admin/builder/assets/js/confirm-dialog.js',
-		// 	null,
-		// 	SBYVER,
-		// 	true
+		// 'sb-dialog-box',
+		// SBY_PLUGIN_URL . 'admin/builder/assets/js/confirm-dialog.js',
+		// null,
+		// SBYVER,
+		// true
 		// );
 
 		// wp_enqueue_script(
-		// 	'install-plugin-popup',
-		// 	SBY_PLUGIN_URL . 'admin/builder/assets/js/install-plugin-popup.js',
-		// 	null,
-		// 	SBYVER,
-		// 	true
+		// 'install-plugin-popup',
+		// SBY_PLUGIN_URL . 'admin/builder/assets/js/install-plugin-popup.js',
+		// null,
+		// SBYVER,
+		// true
 		// );
 
 		// wp_enqueue_script(
-		// 	'sb-add-source',
-		// 	SBY_PLUGIN_URL . 'admin/builder/assets/js/add-source.js',
-		// 	null,
-		// 	SBYVER,
-		// 	true
+		// 'sb-add-source',
+		// SBY_PLUGIN_URL . 'admin/builder/assets/js/add-source.js',
+		// null,
+		// SBYVER,
+		// true
 		// );
 
 		$newly_retrieved_source_connection_data = SBY_Source::maybe_source_connection_data();
 		$sbi_source                             = array(
 			'sources'              => self::get_source_list(),
-			'sourceConnectionURLs' => SBY_Source::get_connection_urls( $is_settings ),
-			'nonce'                => wp_create_nonce( 'sby-admin' ),
+			'sourceConnectionURLs' => SBY_Source::get_connection_urls($is_settings),
+			'nonce'                => wp_create_nonce('sby-admin'),
 		);
-		if ( $newly_retrieved_source_connection_data ) {
+		if ($newly_retrieved_source_connection_data) {
 			$sbi_source['newSourceData'] = $newly_retrieved_source_connection_data;
 		}
-		if ( isset( $_GET['manualsource'] ) && $_GET['manualsource'] == true ) {
+		if (isset($_GET['manualsource']) && $_GET['manualsource'] == true) {
 			$sbi_source['manualSourcePopupInit'] = true;
 		}
 
@@ -342,165 +357,166 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function get_generic_text() {
+	public static function get_generic_text()
+	{
 		$icons = self::builder_svg_icons();
 		return array(
-			'done'                              => __( 'Done', 'feeds-for-youtube' ),
-			'title'                             => __( 'Settings', 'feeds-for-youtube' ),
-			'dashboard'                         => __( 'Dashboard', 'feeds-for-youtube' ),
-			'addNew'                            => __( 'Add New', 'feeds-for-youtube' ),
-			'addSource'                         => __( 'Add Source', 'feeds-for-youtube' ),
-			'addAnotherSource'                  => __( 'Add another Source', 'feeds-for-youtube' ),
-			'addSourceType'                     => __( 'Add Another Source Type', 'feeds-for-youtube' ),
-			'previous'                          => __( 'Previous', 'feeds-for-youtube' ),
-			'next'                              => __( 'Next', 'feeds-for-youtube' ),
-			'finish'                            => __( 'Finish', 'feeds-for-youtube' ),
-			'new'                               => __( 'New', 'feeds-for-youtube' ),
-			'update'                            => __( 'Update', 'feeds-for-youtube' ),
-			'upgrade'                           => __( 'Upgrade', 'feeds-for-youtube' ),
-			'settings'                          => __( 'Settings', 'feeds-for-youtube' ),
-			'back'                              => __( 'Back', 'feeds-for-youtube' ),
-			'backAllFeeds'                      => __( 'Back to all feeds', 'feeds-for-youtube' ),
-			'createFeed'                        => __( 'Create Feed', 'feeds-for-youtube' ),
-			'add'                               => __( 'Add', 'feeds-for-youtube' ),
-			'change'                            => __( 'Change', 'feeds-for-youtube' ),
-			'getExtention'                      => __( 'Get Extension', 'feeds-for-youtube' ),
-			'viewDemo'                          => __( 'View Demo', 'feeds-for-youtube' ),
-			'includes'                          => __( 'Includes', 'feeds-for-youtube' ),
-			'photos'                            => __( 'Photos', 'feeds-for-youtube' ),
-			'photo'                             => __( 'Photo', 'feeds-for-youtube' ),
-			'apply'                             => __( 'Apply', 'feeds-for-youtube' ),
-			'copy'                              => __( 'Copy', 'feeds-for-youtube' ),
-			'edit'                              => __( 'Edit', 'feeds-for-youtube' ),
-			'duplicate'                         => __( 'Duplicate', 'feeds-for-youtube' ),
-			'delete'                            => __( 'Delete', 'feeds-for-youtube' ),
-			'remove'                            => __( 'Remove', 'feeds-for-youtube' ),
-			'removeSource'                      => __( 'Remove Source', 'feeds-for-youtube' ),
-			'shortcode'                         => __( 'Shortcode', 'feeds-for-youtube' ),
-			'clickViewInstances'                => __( 'Click to view Instances', 'feeds-for-youtube' ),
-			'usedIn'                            => __( 'Used in', 'feeds-for-youtube' ),
-			'place'                             => __( 'place', 'feeds-for-youtube' ),
-			'places'                            => __( 'places', 'feeds-for-youtube' ),
-			'item'                              => __( 'Item', 'feeds-for-youtube' ),
-			'items'                             => __( 'Items', 'feeds-for-youtube' ),
-			'learnMore'                         => __( 'Learn More', 'feeds-for-youtube' ),
-			'location'                          => __( 'Location', 'feeds-for-youtube' ),
-			'page'                              => __( 'Page', 'feeds-for-youtube' ),
-			'copiedClipboard'                   => __( 'Copied to Clipboard', 'feeds-for-youtube' ),
-			'feedImported'                      => __( 'Feed imported successfully', 'feeds-for-youtube' ),
-			'failedToImportFeed'                => __( 'Failed to import feed', 'feeds-for-youtube' ),
-			'timeline'                          => __( 'Timeline', 'feeds-for-youtube' ),
-			'help'                              => __( 'Help', 'feeds-for-youtube' ),
-			'admin'                             => __( 'Admin', 'feeds-for-youtube' ),
-			'member'                            => __( 'Member', 'feeds-for-youtube' ),
-			'reset'                             => __( 'Reset', 'feeds-for-youtube' ),
-			'preview'                           => __( 'Preview', 'feeds-for-youtube' ),
-			'name'                              => __( 'Name', 'feeds-for-youtube' ),
-			'id'                                => __( 'ID', 'feeds-for-youtube' ),
-			'token'                             => __( 'Token', 'feeds-for-youtube' ),
-			'confirm'                           => __( 'Confirm', 'feeds-for-youtube' ),
-			'cancel'                            => __( 'Cancel', 'feeds-for-youtube' ),
-			'clear'                             => __( 'Clear', 'feeds-for-youtube' ),
-			'clearFeedCache'                    => __( 'Clear Feed Cache', 'feeds-for-youtube' ),
-			'saveSettings'                      => __( 'Save Changes', 'feeds-for-youtube' ),
-			'feedName'                          => __( 'Feed Name', 'feeds-for-youtube' ),
-			'shortcodeText'                     => __( 'Shortcode', 'feeds-for-youtube' ),
-			'general'                           => __( 'General', 'feeds-for-youtube' ),
-			'feeds'                             => __( 'Feeds', 'feeds-for-youtube' ),
-			'translation'                       => __( 'Translation', 'feeds-for-youtube' ),
-			'advanced'                          => __( 'Advanced', 'feeds-for-youtube' ),
-			'error'                             => __( 'Error:', 'feeds-for-youtube' ),
-			'errorNotice'                       => __( 'There was an error when trying to connect to Instagram.', 'feeds-for-youtube' ),
-			'errorDirections'                   => '<a href="https://smashballoon.com/instagram-feed/docs/errors/" target="_blank" rel="noopener">' . __( 'Directions on How to Resolve This Issue', 'feeds-for-youtube' ) . '</a>',
-			'errorSource'                       => __( 'Source Invalid', 'feeds-for-youtube' ),
-			'errorEncryption'                   => __( 'Encryption Error', 'feeds-for-youtube' ),
-			'invalid'                           => __( 'Invalid', 'feeds-for-youtube' ),
-			'reconnect'                         => __( 'Reconnect', 'feeds-for-youtube' ),
-			'feed'                              => __( 'feed', 'feeds-for-youtube' ),
-			'sourceNotUsedYet'                  => __( 'Source is not used yet', 'feeds-for-youtube' ),
-			'addImage'                          => __( 'Add Image', 'feeds-for-youtube' ),
-			'businessRequired'                  => __( 'Business Account required', 'feeds-for-youtube' ),
-			'selectedPost'                      => __( 'Selected Post', 'feeds-for-youtube' ),
-			'productLink'                       => __( 'Product Link', 'feeds-for-youtube' ),
-			'enterProductLink'                  => __( 'Add your product URL here', 'feeds-for-youtube' ),
-			'editSources'                       => __( 'Edit Sources', 'feeds-for-youtube' ),
-			'moderateFeed'                      => __( 'Moderate your feed', 'feeds-for-youtube' ),
-			'moderateFeedSaveExit'              => __( 'Save and Exit', 'feeds-for-youtube' ),
-			'moderationMode'                    => __( 'Moderation Mode', 'feeds-for-youtube' ),
-			'moderationModeEnterPostId'         => __( 'Or Enter Post IDs to hide manually', 'feeds-for-youtube' ),
-			'moderationModeTextareaPlaceholder' => __( 'Add words here to hide any posts containing these words', 'feeds-for-youtube' ),
-			'filtersAndModeration'              => __( 'Filters & Moderation', 'feeds-for-youtube' ),
-			'topRated'                          => __( 'Top Rated', 'feeds-for-youtube' ),
-			'mostRecent'                        => __( 'Most recent', 'feeds-for-youtube' ),
-			'moderationModePreview'             => __( 'Moderation Mode Preview', 'feeds-for-youtube' ),
-			'shoppableModePreview'             => __( 'Shoppable Feed Preview', 'feeds-for-youtube' ),
+			'done'                              => __('Done', 'feeds-for-youtube'),
+			'title'                             => __('Settings', 'feeds-for-youtube'),
+			'dashboard'                         => __('Dashboard', 'feeds-for-youtube'),
+			'addNew'                            => __('Add New', 'feeds-for-youtube'),
+			'addSource'                         => __('Add Source', 'feeds-for-youtube'),
+			'addAnotherSource'                  => __('Add another Source', 'feeds-for-youtube'),
+			'addSourceType'                     => __('Add Another Source Type', 'feeds-for-youtube'),
+			'previous'                          => __('Previous', 'feeds-for-youtube'),
+			'next'                              => __('Next', 'feeds-for-youtube'),
+			'finish'                            => __('Finish', 'feeds-for-youtube'),
+			'new'                               => __('New', 'feeds-for-youtube'),
+			'update'                            => __('Update', 'feeds-for-youtube'),
+			'upgrade'                           => __('Upgrade', 'feeds-for-youtube'),
+			'settings'                          => __('Settings', 'feeds-for-youtube'),
+			'back'                              => __('Back', 'feeds-for-youtube'),
+			'backAllFeeds'                      => __('Back to all feeds', 'feeds-for-youtube'),
+			'createFeed'                        => __('Create Feed', 'feeds-for-youtube'),
+			'add'                               => __('Add', 'feeds-for-youtube'),
+			'change'                            => __('Change', 'feeds-for-youtube'),
+			'getExtention'                      => __('Get Extension', 'feeds-for-youtube'),
+			'viewDemo'                          => __('View Demo', 'feeds-for-youtube'),
+			'includes'                          => __('Includes', 'feeds-for-youtube'),
+			'photos'                            => __('Photos', 'feeds-for-youtube'),
+			'photo'                             => __('Photo', 'feeds-for-youtube'),
+			'apply'                             => __('Apply', 'feeds-for-youtube'),
+			'copy'                              => __('Copy', 'feeds-for-youtube'),
+			'edit'                              => __('Edit', 'feeds-for-youtube'),
+			'duplicate'                         => __('Duplicate', 'feeds-for-youtube'),
+			'delete'                            => __('Delete', 'feeds-for-youtube'),
+			'remove'                            => __('Remove', 'feeds-for-youtube'),
+			'removeSource'                      => __('Remove Source', 'feeds-for-youtube'),
+			'shortcode'                         => __('Shortcode', 'feeds-for-youtube'),
+			'clickViewInstances'                => __('Click to view Instances', 'feeds-for-youtube'),
+			'usedIn'                            => __('Used in', 'feeds-for-youtube'),
+			'place'                             => __('place', 'feeds-for-youtube'),
+			'places'                            => __('places', 'feeds-for-youtube'),
+			'item'                              => __('Item', 'feeds-for-youtube'),
+			'items'                             => __('Items', 'feeds-for-youtube'),
+			'learnMore'                         => __('Learn More', 'feeds-for-youtube'),
+			'location'                          => __('Location', 'feeds-for-youtube'),
+			'page'                              => __('Page', 'feeds-for-youtube'),
+			'copiedClipboard'                   => __('Copied to Clipboard', 'feeds-for-youtube'),
+			'feedImported'                      => __('Feed imported successfully', 'feeds-for-youtube'),
+			'failedToImportFeed'                => __('Failed to import feed', 'feeds-for-youtube'),
+			'timeline'                          => __('Timeline', 'feeds-for-youtube'),
+			'help'                              => __('Help', 'feeds-for-youtube'),
+			'admin'                             => __('Admin', 'feeds-for-youtube'),
+			'member'                            => __('Member', 'feeds-for-youtube'),
+			'reset'                             => __('Reset', 'feeds-for-youtube'),
+			'preview'                           => __('Preview', 'feeds-for-youtube'),
+			'name'                              => __('Name', 'feeds-for-youtube'),
+			'id'                                => __('ID', 'feeds-for-youtube'),
+			'token'                             => __('Token', 'feeds-for-youtube'),
+			'confirm'                           => __('Confirm', 'feeds-for-youtube'),
+			'cancel'                            => __('Cancel', 'feeds-for-youtube'),
+			'clear'                             => __('Clear', 'feeds-for-youtube'),
+			'clearFeedCache'                    => __('Clear Feed Cache', 'feeds-for-youtube'),
+			'saveSettings'                      => __('Save Changes', 'feeds-for-youtube'),
+			'feedName'                          => __('Feed Name', 'feeds-for-youtube'),
+			'shortcodeText'                     => __('Shortcode', 'feeds-for-youtube'),
+			'general'                           => __('General', 'feeds-for-youtube'),
+			'feeds'                             => __('Feeds', 'feeds-for-youtube'),
+			'translation'                       => __('Translation', 'feeds-for-youtube'),
+			'advanced'                          => __('Advanced', 'feeds-for-youtube'),
+			'error'                             => __('Error:', 'feeds-for-youtube'),
+			'errorNotice'                       => __('There was an error when trying to connect to Instagram.', 'feeds-for-youtube'),
+			'errorDirections'                   => '<a href="https://smashballoon.com/instagram-feed/docs/errors/" target="_blank" rel="noopener">' . __('Directions on How to Resolve This Issue', 'feeds-for-youtube') . '</a>',
+			'errorSource'                       => __('Source Invalid', 'feeds-for-youtube'),
+			'errorEncryption'                   => __('Encryption Error', 'feeds-for-youtube'),
+			'invalid'                           => __('Invalid', 'feeds-for-youtube'),
+			'reconnect'                         => __('Reconnect', 'feeds-for-youtube'),
+			'feed'                              => __('feed', 'feeds-for-youtube'),
+			'sourceNotUsedYet'                  => __('Source is not used yet', 'feeds-for-youtube'),
+			'addImage'                          => __('Add Image', 'feeds-for-youtube'),
+			'businessRequired'                  => __('Business Account required', 'feeds-for-youtube'),
+			'selectedPost'                      => __('Selected Post', 'feeds-for-youtube'),
+			'productLink'                       => __('Product Link', 'feeds-for-youtube'),
+			'enterProductLink'                  => __('Add your product URL here', 'feeds-for-youtube'),
+			'editSources'                       => __('Edit Sources', 'feeds-for-youtube'),
+			'moderateFeed'                      => __('Moderate your feed', 'feeds-for-youtube'),
+			'moderateFeedSaveExit'              => __('Save and Exit', 'feeds-for-youtube'),
+			'moderationMode'                    => __('Moderation Mode', 'feeds-for-youtube'),
+			'moderationModeEnterPostId'         => __('Or Enter Post IDs to hide manually', 'feeds-for-youtube'),
+			'moderationModeTextareaPlaceholder' => __('Add words here to hide any posts containing these words', 'feeds-for-youtube'),
+			'filtersAndModeration'              => __('Filters & Moderation', 'feeds-for-youtube'),
+			'topRated'                          => __('Top Rated', 'feeds-for-youtube'),
+			'mostRecent'                        => __('Most recent', 'feeds-for-youtube'),
+			'moderationModePreview'             => __('Moderation Mode Preview', 'feeds-for-youtube'),
+			'shoppableModePreview'             => __('Shoppable Feed Preview', 'feeds-for-youtube'),
 
 			'notification'                      => array(
 				'feedSaved'             => array(
 					'type' => 'success',
-					'text' => __( 'Feed saved successfully', 'feeds-for-youtube' ),
+					'text' => __('Feed saved successfully', 'feeds-for-youtube'),
 				),
 				'feedSavedError'        => array(
 					'type' => 'error',
-					'text' => __( 'Error saving Feed', 'feeds-for-youtube' ),
+					'text' => __('Error saving Feed', 'feeds-for-youtube'),
 				),
 				'previewUpdated'        => array(
 					'type' => 'success',
-					'text' => __( 'Preview updated successfully', 'feeds-for-youtube' ),
+					'text' => __('Preview updated successfully', 'feeds-for-youtube'),
 				),
 				'carouselLayoutUpdated' => array(
 					'type' => 'success',
-					'text' => __( 'Carousel updated successfully', 'feeds-for-youtube' ),
+					'text' => __('Carousel updated successfully', 'feeds-for-youtube'),
 				),
 				'unkownError'           => array(
 					'type' => 'error',
-					'text' => __( 'Unknown error occurred', 'feeds-for-youtube' ),
+					'text' => __('Unknown error occurred', 'feeds-for-youtube'),
 				),
 				'cacheCleared'          => array(
 					'type' => 'success',
-					'text' => __( 'Feed cache cleared', 'feeds-for-youtube' ),
+					'text' => __('Feed cache cleared', 'feeds-for-youtube'),
 				),
 				'selectSourceError'     => array(
 					'type' => 'error',
-					'text' => __( 'Please select a source for your feed', 'feeds-for-youtube' ),
+					'text' => __('Please select a source for your feed', 'feeds-for-youtube'),
 				),
 				'commentCacheCleared'   => array(
 					'type' => 'success',
-					'text' => __( 'Comment cache cleared', 'feeds-for-youtube' ),
+					'text' => __('Comment cache cleared', 'feeds-for-youtube'),
 				),
 			),
-			'install'                           => __( 'Install', 'feeds-for-youtube' ),
-			'installed'                         => __( 'Installed', 'feeds-for-youtube' ),
-			'activate'                          => __( 'Activate', 'feeds-for-youtube' ),
-			'installedAndActivated'             => __( 'Installed & Activated', 'feeds-for-youtube' ),
-			'free'                              => __( 'Free', 'feeds-for-youtube' ),
-			'invalidLicenseKey'                 => __( 'Invalid license key', 'feeds-for-youtube' ),
-			'licenseActivated'                  => __( 'License activated', 'feeds-for-youtube' ),
-			'licenseDeactivated'                => __( 'License Deactivated', 'feeds-for-youtube' ),
+			'install'                           => __('Install', 'feeds-for-youtube'),
+			'installed'                         => __('Installed', 'feeds-for-youtube'),
+			'activate'                          => __('Activate', 'feeds-for-youtube'),
+			'installedAndActivated'             => __('Installed & Activated', 'feeds-for-youtube'),
+			'free'                              => __('Free', 'feeds-for-youtube'),
+			'invalidLicenseKey'                 => __('Invalid license key', 'feeds-for-youtube'),
+			'licenseActivated'                  => __('License activated', 'feeds-for-youtube'),
+			'licenseDeactivated'                => __('License Deactivated', 'feeds-for-youtube'),
 			'carouselLayoutUpdated'             => array(
 				'type' => 'success',
-				'text' => __( 'Carousel Layout updated', 'feeds-for-youtube' ),
+				'text' => __('Carousel Layout updated', 'feeds-for-youtube'),
 			),
-			'liteFeedUsers'                     => __( 'Lite Feed Users get 50% OFF', 'feeds-for-youtube' ),
-			'tryDemo'                           => __( 'Try Demo', 'feeds-for-youtube' ),
-			'displayImagesVideos'               => __( 'Display images and videos in posts', 'feeds-for-youtube' ),
-			'viewLikesShares'                   => __( 'View likes, shares and comments', 'feeds-for-youtube' ),
-			'allFeedTypes'                      => __( 'All Feed Types: Photos, Albums, Events and more', 'feeds-for-youtube' ),
-			'abilityToLoad'                     => __( 'Ability to “Load More” posts', 'feeds-for-youtube' ),
-			'andMuchMore'                       => __( 'And Much More!', 'feeds-for-youtube' ),
+			'liteFeedUsers'                     => __('Lite Feed Users get 50% OFF', 'feeds-for-youtube'),
+			'tryDemo'                           => __('Try Demo', 'feeds-for-youtube'),
+			'displayImagesVideos'               => __('Display images and videos in posts', 'feeds-for-youtube'),
+			'viewLikesShares'                   => __('View likes, shares and comments', 'feeds-for-youtube'),
+			'allFeedTypes'                      => __('All Feed Types: Photos, Albums, Events and more', 'feeds-for-youtube'),
+			'abilityToLoad'                     => __('Ability to “Load More” posts', 'feeds-for-youtube'),
+			'andMuchMore'                       => __('And Much More!', 'feeds-for-youtube'),
 			'sbiFreeCTAFeatures'                => array(
-				__( 'Filter posts', 'feeds-for-youtube' ),
-				__( 'Popup photo/video lighbox', 'feeds-for-youtube' ),
-				__( '30 day money back guarantee', 'feeds-for-youtube' ),
-				__( 'Multiple post layout options', 'feeds-for-youtube' ),
-				__( 'Video player (HD, 360, Live)', 'feeds-for-youtube' ),
-				__( 'Fast, friendly and effective support', 'feeds-for-youtube' ),
+				__('Filter posts', 'feeds-for-youtube'),
+				__('Popup photo/video lighbox', 'feeds-for-youtube'),
+				__('30 day money back guarantee', 'feeds-for-youtube'),
+				__('Multiple post layout options', 'feeds-for-youtube'),
+				__('Video player (HD, 360, Live)', 'feeds-for-youtube'),
+				__('Fast, friendly and effective support', 'feeds-for-youtube'),
 			),
-			'ctaShowFeatures'                   => __( 'Show Features', 'feeds-for-youtube' ),
-			'ctaHideFeatures'                   => __( 'Hide Features', 'feeds-for-youtube' ),
+			'ctaShowFeatures'                   => __('Show Features', 'feeds-for-youtube'),
+			'ctaHideFeatures'                   => __('Hide Features', 'feeds-for-youtube'),
 			'redirectLoading'                   => array(
-				'heading'     => __( 'Redirecting to connect.smashballoon.com', 'feeds-for-youtube' ),
-				'description' => __( 'You will be redirected to our app so you can connect your account in 5 seconds', 'feeds-for-youtube' ),
+				'heading'     => __('Redirecting to connect.smashballoon.com', 'feeds-for-youtube'),
+				'description' => __('You will be redirected to our app so you can connect your account in 5 seconds', 'feeds-for-youtube'),
 			),
 		);
 	}
@@ -512,23 +528,24 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 4.0
 	 */
-	public static function select_source_screen_text() {
+	public static function select_source_screen_text()
+	{
 		return array(
-			'mainHeading'               => __( 'Select one or more sources', 'feeds-for-youtube' ),
-			'description'               => __( 'Sources are Instagram accounts your feed will display content from', 'feeds-for-youtube' ),
-			'emptySourceDescription'    => __( 'Looks like you have not added any source.<br/>Use “Add Source” to add a new one.', 'feeds-for-youtube' ),
-			'mainHashtagHeading'        => __( 'Enter Public Hashtags', 'feeds-for-youtube' ),
-			'hashtagDescription'        => __( 'Add one or more hashtags separated by comma', 'feeds-for-youtube' ),
-			'hashtagGetBy'              => __( 'Fetch posts that are', 'feeds-for-youtube' ),
+			'mainHeading'               => __('Select one or more sources', 'feeds-for-youtube'),
+			'description'               => __('Sources are Instagram accounts your feed will display content from', 'feeds-for-youtube'),
+			'emptySourceDescription'    => __('Looks like you have not added any source.<br/>Use “Add Source” to add a new one.', 'feeds-for-youtube'),
+			'mainHashtagHeading'        => __('Enter Public Hashtags', 'feeds-for-youtube'),
+			'hashtagDescription'        => __('Add one or more hashtags separated by comma', 'feeds-for-youtube'),
+			'hashtagGetBy'              => __('Fetch posts that are', 'feeds-for-youtube'),
 
 			'sourcesListPopup'          => array(
 				'user'   => array(
-					'mainHeading' => __( 'Add a source for Timeline', 'feeds-for-youtube' ),
-					'description' => __( 'Select or add an account you want to display the timeline for', 'feeds-for-youtube' ),
+					'mainHeading' => __('Add a source for Timeline', 'feeds-for-youtube'),
+					'description' => __('Select or add an account you want to display the timeline for', 'feeds-for-youtube'),
 				),
 				'tagged' => array(
-					'mainHeading' => __( 'Add a source for Mentions', 'feeds-for-youtube' ),
-					'description' => __( 'Select or add an account you want to display the mentions for', 'feeds-for-youtube' ),
+					'mainHeading' => __('Add a source for Mentions', 'feeds-for-youtube'),
+					'description' => __('Select or add an account you want to display the mentions for', 'feeds-for-youtube'),
 				),
 			),
 
@@ -538,82 +555,82 @@ class SBY_Feed_Builder {
 					longer get mentions for personal accounts. To<br/>
 					enable this for your account, you will need to convert it to<br/>
 					a Business account. Learn More',
-					'instagram-feed'
+					'feeds-for-youtube'
 				),
 			),
-			'updateHeading'             => __( 'Update Source', 'feeds-for-youtube' ),
-			'updateDescription'         => __( 'Select a source from your connected Facebook Pages and Groups. Or, use "Add New" to connect a new one.', 'feeds-for-youtube' ),
-			'noSources'                 => __( 'Please add a source in order to display a feed. Go to the "Settings" tab -> "Sources" section -> Click "Add New" to connect a source.', 'feeds-for-youtube' ),
+			'updateHeading'             => __('Update Source', 'feeds-for-youtube'),
+			'updateDescription'         => __('Select a source from your connected Facebook Pages and Groups. Or, use "Add New" to connect a new one.', 'feeds-for-youtube'),
+			'noSources'                 => __('Please add a source in order to display a feed. Go to the "Settings" tab -> "Sources" section -> Click "Add New" to connect a source.', 'feeds-for-youtube'),
 
 			'multipleTypes'             => array(
 				'user'    => array(
-					'heading'     => __( 'User Timeline', 'feeds-for-youtube' ),
+					'heading'     => __('User Timeline', 'feeds-for-youtube'),
 					'icon'        => 'user',
-					'description' => __( 'Connect an account to show posts for it.', 'feeds-for-youtube' ),
+					'description' => __('Connect an account to show posts for it.', 'feeds-for-youtube'),
 					'actionType'  => 'addSource',
 				),
 				'hashtag' => array(
-					'heading'          => __( 'Hashtag', 'feeds-for-youtube' ),
+					'heading'          => __('Hashtag', 'feeds-for-youtube'),
 					'icon'             => 'hashtag',
-					'tooltip'      => __( 'Add one or more hashtags separated by comma.', 'feeds-for-youtube' ),
+					'tooltip'      => __('Add one or more hashtags separated by comma.', 'feeds-for-youtube'),
 					'businessRequired' => true,
 					'actionType'       => 'inputHashtags',
 				),
 				'tagged'  => array(
-					'heading'          => __( 'Tagged', 'feeds-for-youtube' ),
+					'heading'          => __('Tagged', 'feeds-for-youtube'),
 					'icon'             => 'mention',
-					'description'      => __( 'Connect an account to show tagged posts. This does not give us any permission to manage your Instagram account.', 'feeds-for-youtube' ),
+					'description'      => __('Connect an account to show tagged posts. This does not give us any permission to manage your Instagram account.', 'feeds-for-youtube'),
 					'businessRequired' => true,
 					'actionType'       => 'addSource',
 				),
 			),
 
 			'modal'                     => array(
-				'addNew'                     => __( 'Connect your Instagram Account', 'feeds-for-youtube' ),
-				'selectSourceType'           => __( 'Select Account Type', 'feeds-for-youtube' ),
-				'connectAccount'             => __( 'Connect an Instagram Account', 'feeds-for-youtube' ),
-				'connectAccountDescription'  => __( 'This does not give us permission to manage your Instagram account, it simply allows the plugin to see a list of them and retrieve their public content from the API.', 'feeds-for-youtube' ),
-				'connect'                    => __( 'Connect', 'feeds-for-youtube' ),
-				'enterEventToken'            => __( 'Enter Events Access Token', 'feeds-for-youtube' ),
-				'enterEventTokenDescription' => sprintf( __( 'Due to restrictions by Facebook, you need to create a Facebook app and then paste that app Access Token here. We have a guide to help you with just that, which you can read %1$shere%2$s', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/instagram-feed/page-token/" target="_blank" rel="noopener">', '</a>' ),
-				'alreadyHave'                => __( 'Already have a API Token and Access Key for your account?', 'feeds-for-youtube' ),
-				'addManuallyLink'            => __( 'Add Account Manually', 'feeds-for-youtube' ),
-				'selectAccount'              => __( 'Select an Instagram Account', 'feeds-for-youtube' ),
-				'showing'                    => __( 'Showing', 'feeds-for-youtube' ),
-				'facebook'                   => __( 'Facebook', 'feeds-for-youtube' ),
-				'businesses'                 => __( 'Businesses', 'feeds-for-youtube' ),
-				'groups'                     => __( 'Groups', 'feeds-for-youtube' ),
-				'connectedTo'                => __( 'connected to', 'feeds-for-youtube' ),
-				'addManually'                => __( 'Add a Source Manually', 'feeds-for-youtube' ),
-				'addSource'                  => __( 'Add Source', 'feeds-for-youtube' ),
-				'sourceType'                 => __( 'Source Type', 'feeds-for-youtube' ),
-				'accountID'                  => __( 'Instagram Account ID', 'feeds-for-youtube' ),
-				'fAccountID'                 => __( 'Instagram Account ID', 'feeds-for-youtube' ),
-				'eventAccessToken'           => __( 'Event Access Token', 'feeds-for-youtube' ),
-				'enterID'                    => __( 'Enter ID', 'feeds-for-youtube' ),
-				'accessToken'                => __( 'Instagram Access Token', 'feeds-for-youtube' ),
-				'enterToken'                 => __( 'Enter Token', 'feeds-for-youtube' ),
-				'addApp'                     => __( 'Add Instagram App to your group', 'feeds-for-youtube' ),
-				'addAppDetails'              => __( 'To get posts from your group, Instagram requires the "Smash Balloon Plugin" app to be added in your group settings. Just follow the directions here:', 'feeds-for-youtube' ),
+				'addNew'                     => __('Connect your Instagram Account', 'feeds-for-youtube'),
+				'selectSourceType'           => __('Select Account Type', 'feeds-for-youtube'),
+				'connectAccount'             => __('Connect an Instagram Account', 'feeds-for-youtube'),
+				'connectAccountDescription'  => __('This does not give us permission to manage your Instagram account, it simply allows the plugin to see a list of them and retrieve their public content from the API.', 'feeds-for-youtube'),
+				'connect'                    => __('Connect', 'feeds-for-youtube'),
+				'enterEventToken'            => __('Enter Events Access Token', 'feeds-for-youtube'),
+				'enterEventTokenDescription' => sprintf(__('Due to restrictions by Facebook, you need to create a Facebook app and then paste that app Access Token here. We have a guide to help you with just that, which you can read %1$shere%2$s', 'feeds-for-youtube'), '<a href="https://smashballoon.com/instagram-feed/page-token/" target="_blank" rel="noopener">', '</a>'),
+				'alreadyHave'                => __('Already have a API Token and Access Key for your account?', 'feeds-for-youtube'),
+				'addManuallyLink'            => __('Add Account Manually', 'feeds-for-youtube'),
+				'selectAccount'              => __('Select an Instagram Account', 'feeds-for-youtube'),
+				'showing'                    => __('Showing', 'feeds-for-youtube'),
+				'facebook'                   => __('Facebook', 'feeds-for-youtube'),
+				'businesses'                 => __('Businesses', 'feeds-for-youtube'),
+				'groups'                     => __('Groups', 'feeds-for-youtube'),
+				'connectedTo'                => __('connected to', 'feeds-for-youtube'),
+				'addManually'                => __('Add a Source Manually', 'feeds-for-youtube'),
+				'addSource'                  => __('Add Source', 'feeds-for-youtube'),
+				'sourceType'                 => __('Source Type', 'feeds-for-youtube'),
+				'accountID'                  => __('Instagram Account ID', 'feeds-for-youtube'),
+				'fAccountID'                 => __('Instagram Account ID', 'feeds-for-youtube'),
+				'eventAccessToken'           => __('Event Access Token', 'feeds-for-youtube'),
+				'enterID'                    => __('Enter ID', 'feeds-for-youtube'),
+				'accessToken'                => __('Instagram Access Token', 'feeds-for-youtube'),
+				'enterToken'                 => __('Enter Token', 'feeds-for-youtube'),
+				'addApp'                     => __('Add Instagram App to your group', 'feeds-for-youtube'),
+				'addAppDetails'              => __('To get posts from your group, Instagram requires the "Smash Balloon Plugin" app to be added in your group settings. Just follow the directions here:', 'feeds-for-youtube'),
 				'addAppSteps'                => array(
-					__( 'Go to your group settings page by ', 'feeds-for-youtube' ),
-					sprintf( __( 'Search for "Smash Balloon" and select our app %1$s(see screenshot)%2$s', 'feeds-for-youtube' ), '<a href="JavaScript:void(0);" id="sbi-group-app-tooltip">', '<img class="sbi-group-app-screenshot sb-tr-1" src="' . trailingslashit( SBY_PLUGIN_URL ) . 'admin/assets/img/group-app.png" alt="Thumbnail Layout"></a>' ),
-					__( 'Click "Add" and you are done.', 'feeds-for-youtube' ),
+					__('Go to your group settings page by ', 'feeds-for-youtube'),
+					sprintf(__('Search for "Smash Balloon" and select our app %1$s(see screenshot)%2$s', 'feeds-for-youtube'), '<a href="JavaScript:void(0);" id="sbi-group-app-tooltip">', '<img class="sbi-group-app-screenshot sb-tr-1" src="' . trailingslashit(SBY_PLUGIN_URL) . 'admin/assets/img/group-app.png" alt="Thumbnail Layout"></a>'),
+					__('Click "Add" and you are done.', 'feeds-for-youtube'),
 				),
-				'alreadyExists'              => __( 'Account already exists', 'feeds-for-youtube' ),
-				'alreadyExistsExplanation'   => __( 'The Instagram account you added is already connected as a “Business” account. Would you like to replace it with a “Personal“ account? (Note: Personal accounts cannot be used to display Mentions or Hashtag feeds.)', 'feeds-for-youtube' ),
-				'replaceWithPersonal'        => __( 'Replace with Personal', 'feeds-for-youtube' ),
-				'notAdmin'                   => __( 'For groups you are not an administrator of', 'feeds-for-youtube' ),
-				'disclaimerMentions'         => __( 'Due to Instagram’s limitations, you need to connect a business account to display a Mentions timeline', 'feeds-for-youtube' ),
-				'disclaimerHashtag'          => __( 'Due to Instagram’s limitations, you need to connect a business account to display a Hashtag feed', 'feeds-for-youtube' ),
-				'notSureToolTip'             => __( 'Select "Personal" if displaying a regular feed of posts, as this can display feeds from either a Personal or Business account. For displaying a Hashtag or Tagged feed, you must have an Instagram Business account. If needed, you can convert a Personal account into a Business account by following the directions {link}here{link}.', 'feeds-for-youtube' ),
+				'alreadyExists'              => __('Account already exists', 'feeds-for-youtube'),
+				'alreadyExistsExplanation'   => __('The Instagram account you added is already connected as a “Business” account. Would you like to replace it with a “Personal“ account? (Note: Personal accounts cannot be used to display Mentions or Hashtag feeds.)', 'feeds-for-youtube'),
+				'replaceWithPersonal'        => __('Replace with Personal', 'feeds-for-youtube'),
+				'notAdmin'                   => __('For groups you are not an administrator of', 'feeds-for-youtube'),
+				'disclaimerMentions'         => __('Due to Instagram’s limitations, you need to connect a business account to display a Mentions timeline', 'feeds-for-youtube'),
+				'disclaimerHashtag'          => __('Due to Instagram’s limitations, you need to connect a business account to display a Hashtag feed', 'feeds-for-youtube'),
+				'notSureToolTip'             => __('Select "Personal" if displaying a regular feed of posts, as this can display feeds from either a Personal or Business account. For displaying a Hashtag or Tagged feed, you must have an Instagram Business account. If needed, you can convert a Personal account into a Business account by following the directions {link}here{link}.', 'feeds-for-youtube'),
 			),
 			'footer'                    => array(
-				'heading' => __( 'Add feeds for popular social platforms with <span>our other plugins</span>', 'feeds-for-youtube' ),
+				'heading' => __('Add feeds for popular social platforms with <span>our other plugins</span>', 'feeds-for-youtube'),
 			),
-			'personal'                  => __( 'Personal', 'feeds-for-youtube' ),
-			'business'                  => __( 'Business', 'feeds-for-youtube' ),
-			'notSure'                   => __( "I'm not sure", 'feeds-for-youtube' ),
+			'personal'                  => __('Personal', 'feeds-for-youtube'),
+			'business'                  => __('Business', 'feeds-for-youtube'),
+			'notSure'                   => __("I'm not sure", 'feeds-for-youtube'),
 		);
 	}
 
@@ -624,7 +641,8 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function builder_svg_icons() {
+	public static function builder_svg_icons()
+	{
 		$builder_svg_icons = array(
 			'youtube'             => '<svg viewBox="0 0 14 11" fill="none"><path d="M5.66683 7.5L9.12683 5.5L5.66683 3.5V7.5ZM13.3735 2.28C13.4602 2.59334 13.5202 3.01334 13.5602 3.54667C13.6068 4.08 13.6268 4.54 13.6268 4.94L13.6668 5.5C13.6668 6.96 13.5602 8.03334 13.3735 8.72C13.2068 9.32 12.8202 9.70667 12.2202 9.87334C11.9068 9.96 11.3335 10.02 10.4535 10.06C9.58683 10.1067 8.7935 10.1267 8.06016 10.1267L7.00016 10.1667C4.20683 10.1667 2.46683 10.06 1.78016 9.87334C1.18016 9.70667 0.793496 9.32 0.626829 8.72C0.540163 8.40667 0.480163 7.98667 0.440163 7.45334C0.393496 6.92 0.373496 6.46 0.373496 6.06L0.333496 5.5C0.333496 4.04 0.440163 2.96667 0.626829 2.28C0.793496 1.68 1.18016 1.29334 1.78016 1.12667C2.0935 1.04 2.66683 0.980002 3.54683 0.940002C4.4135 0.893336 5.20683 0.873336 5.94016 0.873336L7.00016 0.833336C9.7935 0.833336 11.5335 0.940003 12.2202 1.12667C12.8202 1.29334 13.2068 1.68 13.3735 2.28Z"/></svg>',
 			'twitter'             => '<svg viewBox="0 0 14 12" fill="none"><path d="M13.9735 1.50001C13.4602 1.73334 12.9069 1.88667 12.3335 1.96001C12.9202 1.60667 13.3735 1.04667 13.5869 0.373338C13.0335 0.706672 12.4202 0.940005 11.7735 1.07334C11.2469 0.500005 10.5069 0.166672 9.66686 0.166672C8.10019 0.166672 6.82019 1.44667 6.82019 3.02667C6.82019 3.25334 6.84686 3.47334 6.89352 3.68001C4.52019 3.56001 2.40686 2.42 1.00019 0.693338C0.753522 1.11334 0.613522 1.60667 0.613522 2.12667C0.613522 3.12 1.11352 4 1.88686 4.5C1.41352 4.5 0.973522 4.36667 0.586856 4.16667V4.18667C0.586856 5.57334 1.57352 6.73334 2.88019 6.99334C2.46067 7.10814 2.02025 7.12412 1.59352 7.04C1.77459 7.60832 2.12921 8.10561 2.60753 8.46196C3.08585 8.81831 3.66382 9.0158 4.26019 9.02667C3.24928 9.82696 1.99619 10.2595 0.706855 10.2533C0.480189 10.2533 0.253522 10.24 0.0268555 10.2133C1.29352 11.0267 2.80019 11.5 4.41352 11.5C9.66686 11.5 12.5535 7.14 12.5535 3.36C12.5535 3.23334 12.5535 3.11334 12.5469 2.98667C13.1069 2.58667 13.5869 2.08 13.9735 1.50001Z"/></svg>',
@@ -743,74 +761,75 @@ class SBY_Feed_Builder {
 	 *
 	 * @return array
 	 */
-	public function install_plugins_popup() {
+	public function install_plugins_popup()
+	{
 		// get the WordPress's core list of installed plugins
-		if ( ! function_exists( 'get_plugins' ) ) {
+		if (! function_exists('get_plugins')) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 		$installed_plugins = get_plugins();
 
 		$is_facebook_installed = false;
 		$facebook_plugin       = 'custom-facebook-feed/custom-facebook-feed.php';
-		if ( isset( $installed_plugins['custom-facebook-feed-pro/custom-facebook-feed.php'] ) ) {
+		if (isset($installed_plugins['custom-facebook-feed-pro/custom-facebook-feed.php'])) {
 			$is_facebook_installed = true;
 			$facebook_plugin       = 'custom-facebook-feed-pro/custom-facebook-feed.php';
-		} elseif ( isset( $installed_plugins['custom-facebook-feed/custom-facebook-feed.php'] ) ) {
+		} elseif (isset($installed_plugins['custom-facebook-feed/custom-facebook-feed.php'])) {
 			$is_facebook_installed = true;
 		}
 
 		$is_twitter_installed = false;
 		$twitter_plugin       = 'custom-twitter-feeds/custom-twitter-feed.php';
-		if ( isset( $installed_plugins['custom-twitter-feeds-pro/custom-twitter-feed.php'] ) ) {
+		if (isset($installed_plugins['custom-twitter-feeds-pro/custom-twitter-feed.php'])) {
 			$is_twitter_installed = true;
 			$twitter_plugin       = 'custom-twitter-feeds-pro/custom-twitter-feed.php';
-		} elseif ( isset( $installed_plugins['custom-twitter-feeds/custom-twitter-feed.php'] ) ) {
+		} elseif (isset($installed_plugins['custom-twitter-feeds/custom-twitter-feed.php'])) {
 			$is_twitter_installed = true;
 		}
 
 		$is_youtube_installed = false;
 		$youtube_plugin       = 'feeds-for-youtube/youtube-feed-pro.php';
-		if ( isset( $installed_plugins['youtube-feed-pro/youtube-feed-pro.php'] ) ) {
+		if (isset($installed_plugins['youtube-feed-pro/youtube-feed-pro.php'])) {
 			$is_youtube_installed = true;
 			$youtube_plugin       = 'youtube-feed-pro/youtube-feed-pro.php';
-		} elseif ( isset( $installed_plugins['feeds-for-youtube/youtube-feed-pro.php'] ) ) {
+		} elseif (isset($installed_plugins['feeds-for-youtube/youtube-feed-pro.php'])) {
 			$is_youtube_installed = true;
 		}
 
 		return array(
 			'facebook' => array(
-				'displayName'         => __( 'Facebook', 'feeds-for-youtube' ),
-				'name'                => __( 'Facebook Feed', 'feeds-for-youtube' ),
-				'author'              => __( 'By Smash Balloon', 'feeds-for-youtube' ),
-				'description'         => __( 'To display a Facebook feed, our Facebook plugin is required. </br> It provides a clean and beautiful way to add your Facebook posts to your website. Grab your visitors attention and keep them engaged with your site longer.', 'feeds-for-youtube' ),
-				'dashboard_permalink' => admin_url( 'admin.php?page=cff-feed-builder' ),
+				'displayName'         => __('Facebook', 'feeds-for-youtube'),
+				'name'                => __('Facebook Feed', 'feeds-for-youtube'),
+				'author'              => __('By Smash Balloon', 'feeds-for-youtube'),
+				'description'         => __('To display a Facebook feed, our Facebook plugin is required. </br> It provides a clean and beautiful way to add your Facebook posts to your website. Grab your visitors attention and keep them engaged with your site longer.', 'feeds-for-youtube'),
+				'dashboard_permalink' => admin_url('admin.php?page=cff-feed-builder'),
 				'svgIcon'             => '<svg viewBox="0 0 14 15"  width="36" height="36"><path d="M7.00016 0.860001C3.3335 0.860001 0.333496 3.85333 0.333496 7.54C0.333496 10.8733 2.7735 13.64 5.96016 14.14V9.47333H4.26683V7.54H5.96016V6.06667C5.96016 4.39333 6.9535 3.47333 8.48016 3.47333C9.20683 3.47333 9.96683 3.6 9.96683 3.6V5.24667H9.12683C8.30016 5.24667 8.04016 5.76 8.04016 6.28667V7.54H9.8935L9.5935 9.47333H8.04016V14.14C9.61112 13.8919 11.0416 13.0903 12.0734 11.88C13.1053 10.6697 13.6704 9.13043 13.6668 7.54C13.6668 3.85333 10.6668 0.860001 7.00016 0.860001Z" fill="rgb(0, 107, 250)"/></svg>',
 				'installed'           => $is_facebook_installed,
-				'activated'           => is_plugin_active( $facebook_plugin ),
+				'activated'           => is_plugin_active($facebook_plugin),
 				'plugin'              => $facebook_plugin,
 				'download_plugin'     => 'https://downloads.wordpress.org/plugin/custom-facebook-feed.zip',
 			),
 			'twitter'  => array(
-				'displayName'         => __( 'Twitter', 'feeds-for-youtube' ),
-				'name'                => __( 'Twitter Feed', 'feeds-for-youtube' ),
-				'author'              => __( 'By Smash Balloon', 'feeds-for-youtube' ),
-				'description'         => __( 'Custom Twitter Feeds is a highly customizable way to display tweets from your Twitter account. Promote your latest content and update your site content automatically.', 'feeds-for-youtube' ),
-				'dashboard_permalink' => admin_url( 'admin.php?page=custom-twitter-feeds' ),
+				'displayName'         => __('Twitter', 'feeds-for-youtube'),
+				'name'                => __('Twitter Feed', 'feeds-for-youtube'),
+				'author'              => __('By Smash Balloon', 'feeds-for-youtube'),
+				'description'         => __('Custom Twitter Feeds is a highly customizable way to display tweets from your Twitter account. Promote your latest content and update your site content automatically.', 'feeds-for-youtube'),
+				'dashboard_permalink' => admin_url('admin.php?page=custom-twitter-feeds'),
 				'svgIcon'             => '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M33.6905 9C32.5355 9.525 31.2905 9.87 30.0005 10.035C31.3205 9.24 32.3405 7.98 32.8205 6.465C31.5755 7.215 30.1955 7.74 28.7405 8.04C27.5555 6.75 25.8905 6 26.0005 6C20.4755 6 17.5955 8.88 17.5955 12.435C17.5955 12.945 17.6555 13.44 17.7605 13.905C12.4205 13.635 7.66555 11.07 4.50055 7.185C3.94555 8.13 3.63055 9.24 3.63055 10.41C3.63055 12.645 4.75555 14.625 6.49555 15.75C5.43055 15.75 4.44055 15.45 3.57055 15V15.045C3.57055 18.165 5.79055 20.775 8.73055 21.36C7.78664 21.6183 6.79569 21.6543 5.83555 21.465C6.24296 22.7437 7.04085 23.8626 8.11707 24.6644C9.19329 25.4662 10.4937 25.9105 11.8355 25.935C9.56099 27.7357 6.74154 28.709 3.84055 28.695C3.33055 28.695 2.82055 28.665 2.31055 28.605C5.16055 30.435 8.55055 31.5 12.1805 31.5C26.0005 31.5 30.4955 21.69 30.4955 13.185C30.4955 12.9 30.4955 12.63 30.4805 12.345C31.7405 11.445 32.8205 10.305 33.6905 9Z" fill="#1B90EF"/></svg>',
 				'installed'           => $is_twitter_installed,
-				'activated'           => is_plugin_active( $twitter_plugin ),
+				'activated'           => is_plugin_active($twitter_plugin),
 				'plugin'              => $twitter_plugin,
 				'download_plugin'     => 'https://downloads.wordpress.org/plugin/custom-twitter-feeds.zip',
 			),
 			'youtube'  => array(
-				'displayName'         => __( 'YouTube', 'feeds-for-youtube' ),
-				'name'                => __( 'YouTube Feeds', 'feeds-for-youtube' ),
-				'author'              => __( 'By Smash Balloon', 'feeds-for-youtube' ),
-				'description'         => __( 'To display a YouTube feed, our YouTube plugin is required. It provides a simple yet powerful way to display videos from YouTube on your website, Increasing engagement with your channel while keeping visitors on your website.', 'feeds-for-youtube' ),
-				'dashboard_permalink' => admin_url( 'admin.php?page=sby-feed-builder' ),
+				'displayName'         => __('YouTube', 'feeds-for-youtube'),
+				'name'                => __('YouTube Feeds', 'feeds-for-youtube'),
+				'author'              => __('By Smash Balloon', 'feeds-for-youtube'),
+				'description'         => __('To display a YouTube feed, our YouTube plugin is required. It provides a simple yet powerful way to display videos from YouTube on your website, Increasing engagement with your channel while keeping visitors on your website.', 'feeds-for-youtube'),
+				'dashboard_permalink' => admin_url('admin.php?page=sby-feed-builder'),
 				'svgIcon'             => '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 22.5L22.785 18L15 13.5V22.5ZM32.34 10.755C32.535 11.46 32.67 12.405 32.76 13.605C32.865 14.805 32.91 15.84 32.91 16.74L33 18C33 21.285 32.76 23.7 32.34 25.245C31.965 26.595 31.095 27.465 29.745 27.84C29.04 28.035 27.75 28.17 25.77 28.26C23.82 28.365 22.035 28.41 20.385 28.41L18 28.5C11.715 28.5 7.8 28.26 6.255 27.84C4.905 27.465 6.035 26.595 3.66 25.245C3.465 24.54 3.33 23.595 3.24 22.395C3.135 21.195 3.09 20.16 3.09 19.26L3 18C3 14.715 3.24 12.3 3.66 10.755C6.035 9.405 4.905 8.535 6.255 8.16C6.96 7.965 8.25 7.83 10.23 7.74C12.18 7.635 13.965 7.59 15.615 7.59L18 7.5C24.285 7.5 28.2 7.74 29.745 8.16C31.095 8.535 31.965 9.405 32.34 10.755Z" fill="#EB2121"/></svg>',
 				'installed'           => $is_youtube_installed,
-				'activated'           => is_plugin_active( $youtube_plugin ),
+				'activated'           => is_plugin_active($youtube_plugin),
 				'plugin'              => $youtube_plugin,
 				'download_plugin'     => 'https://downloads.wordpress.org/plugin/feeds-for-youtube.zip',
 			),
@@ -827,7 +846,8 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function get_smashballoon_info() {
+	public static function get_smashballoon_info()
+	{
 		$smash_info = array(
 			'colorSchemes'   => array(
 				'facebook'  => '#006BFA',
@@ -839,30 +859,30 @@ class SBY_Feed_Builder {
 				'smash'     => '#EB2121',
 			),
 			'upgrade'        => array(
-				'name' => __( 'Upgrade to Pro', 'feeds-for-youtube' ),
+				'name' => __('Upgrade to Pro', 'feeds-for-youtube'),
 				'icon' => 'instagram',
 				'link' => 'https://smashballoon.com/instagram-feed/',
 			),
 			'platforms'      => array(
 				array(
-					'name' => __( 'Facebook Feed', 'feeds-for-youtube' ),
+					'name' => __('Facebook Feed', 'feeds-for-youtube'),
 					'icon' => 'facebook',
-					'link' => 'https://smashballoon.com/instagram-feed/?utm_campaign='. sby_utm_campaign() .'&utm_source=balloon&utm_medium=instagram',
+					'link' => 'https://smashballoon.com/instagram-feed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=balloon&utm_medium=instagram',
 				),
 				array(
-					'name' => __( 'Twitter Feed', 'feeds-for-youtube' ),
+					'name' => __('Twitter Feed', 'feeds-for-youtube'),
 					'icon' => 'twitter',
-					'link' => 'https://smashballoon.com/custom-twitter-feeds/?utm_campaign='. sby_utm_campaign() .'&utm_source=balloon&utm_medium=twitter',
+					'link' => 'https://smashballoon.com/custom-twitter-feeds/?utm_campaign=' . sby_utm_campaign() . '&utm_source=balloon&utm_medium=twitter',
 				),
 				array(
-					'name' => __( 'YouTube Feeds', 'feeds-for-youtube' ),
+					'name' => __('YouTube Feeds', 'feeds-for-youtube'),
 					'icon' => 'youtube',
-					'link' => 'https://smashballoon.com/youtube-feed/?utm_campaign='. sby_utm_campaign() .'&utm_source=balloon&utm_medium=youtube',
+					'link' => 'https://smashballoon.com/youtube-feed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=balloon&utm_medium=youtube',
 				),
 				array(
-					'name' => __( 'Social Wall Plugin', 'feeds-for-youtube' ),
+					'name' => __('Social Wall Plugin', 'feeds-for-youtube'),
 					'icon' => 'smash',
-					'link' => 'https://smashballoon.com/social-wall/?utm_campaign='. sby_utm_campaign() .'&utm_source=balloon&utm_medium=social-wall ',
+					'link' => 'https://smashballoon.com/social-wall/?utm_campaign=' . sby_utm_campaign() . '&utm_source=balloon&utm_medium=social-wall ',
 				),
 			),
 			'socialProfiles' => array(
@@ -883,16 +903,19 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 4.0
 	 */
-	public function get_onboarding_text() {
+	public function get_onboarding_text()
+	{
 		// TODO: return if no legacy feeds
-		$sby_statuses_option = get_option( 'sby_statuses', array() );
+		$sby_statuses_option = get_option('sby_statuses', array());
 
-		if ( ! isset( $sby_statuses_option['legacy_onboarding'] ) ) {
+		if (! isset($sby_statuses_option['legacy_onboarding'])) {
 			return array( 'active' => false );
 		}
 
-		if ( $sby_statuses_option['legacy_onboarding']['active'] === false
-			 || self::onboarding_status() === 'dismissed' ) {
+		if (
+			$sby_statuses_option['legacy_onboarding']['active'] === false
+			 || self::onboarding_status() === 'dismissed'
+		) {
 			return array( 'active' => false );
 		}
 
@@ -902,24 +925,24 @@ class SBY_Feed_Builder {
 			'active'      => true,
 			'type'        => $type,
 			'legacyFeeds' => array(
-				'heading'     => __( 'Legacy Feed Settings', 'feeds-for-youtube' ),
-				'description' => sprintf( __( 'These settings will impact %1$s legacy feeds on your site. You can learn more about what legacy feeds are and how they differ from new feeds %2$shere%3$s.', 'feeds-for-youtube' ), '<span class="cff-fb-count-placeholder"></span>', '<a href="https://smashballoon.com/doc/facebook-legacy-feeds/" target="_blank" rel="noopener">', '</a>' ),
+				'heading'     => __('Legacy Feed Settings', 'feeds-for-youtube'),
+				'description' => sprintf(__('These settings will impact %1$s legacy feeds on your site. You can learn more about what legacy feeds are and how they differ from new feeds %2$shere%3$s.', 'feeds-for-youtube'), '<span class="cff-fb-count-placeholder"></span>', '<a href="https://smashballoon.com/doc/facebook-legacy-feeds/" target="_blank" rel="noopener">', '</a>'),
 			),
-			'getStarted'  => __( 'You can now create and customize feeds individually. Click "Add New" to get started.', 'feeds-for-youtube' ),
+			'getStarted'  => __('You can now create and customize feeds individually. Click "Add New" to get started.', 'feeds-for-youtube'),
 		);
 
-		if ( $type === 'single' ) {
+		if ($type === 'single') {
 			$text['tooltips'] = array(
 				array(
 					'step'    => 1,
-					'heading' => __( 'How you create a feed has changed', 'feeds-for-youtube' ),
-					'p'       => __( 'You can now create and customize feeds individually without using shortcode options.', 'feeds-for-youtube' ) . ' ' . __( 'Click "Add New" to get started.', 'feeds-for-youtube' ),
+					'heading' => __('How you create a feed has changed', 'feeds-for-youtube'),
+					'p'       => __('You can now create and customize feeds individually without using shortcode options.', 'feeds-for-youtube') . ' ' . __('Click "Add New" to get started.', 'feeds-for-youtube'),
 					'pointer' => 'top',
 				),
 				array(
 					'step'    => 2,
-					'heading' => __( 'Your existing feed is here', 'feeds-for-youtube' ),
-					'p'       => __( 'You can edit your existing feed from here, and all changes will only apply to this feed.', 'feeds-for-youtube' ),
+					'heading' => __('Your existing feed is here', 'feeds-for-youtube'),
+					'p'       => __('You can edit your existing feed from here, and all changes will only apply to this feed.', 'feeds-for-youtube'),
 					'pointer' => 'top',
 				),
 			);
@@ -927,19 +950,19 @@ class SBY_Feed_Builder {
 			$text['tooltips'] = array(
 				array(
 					'step'    => 1,
-					'heading' => __( 'How you create a feed has changed', 'feeds-for-youtube' ),
-					'p'       => __( 'You can now create and customize feeds individually without using shortcode options.', 'feeds-for-youtube' ) . ' ' . __( 'Click "Add New" to get started.', 'feeds-for-youtube' ),
+					'heading' => __('How you create a feed has changed', 'feeds-for-youtube'),
+					'p'       => __('You can now create and customize feeds individually without using shortcode options.', 'feeds-for-youtube') . ' ' . __('Click "Add New" to get started.', 'feeds-for-youtube'),
 					'pointer' => 'top',
 				),
 				array(
 					'step'    => 2,
-					'heading' => __( 'Your existing feeds are under "Legacy" feeds', 'feeds-for-youtube' ),
-					'p'       => __( 'You can edit the settings for any existing "legacy" feed (i.e. any feed created prior to this update) here.', 'feeds-for-youtube' ) . ' ' . __( 'This works just like the old settings page and affects all legacy feeds on your site.', 'feeds-for-youtube' ),
+					'heading' => __('Your existing feeds are under "Legacy" feeds', 'feeds-for-youtube'),
+					'p'       => __('You can edit the settings for any existing "legacy" feed (i.e. any feed created prior to this update) here.', 'feeds-for-youtube') . ' ' . __('This works just like the old settings page and affects all legacy feeds on your site.', 'feeds-for-youtube'),
 				),
 				array(
 					'step'    => 3,
-					'heading' => __( 'Existing feeds work as normal', 'feeds-for-youtube' ),
-					'p'       => __( 'You don\'t need to update or change any of your existing feeds. They will continue to work as usual.', 'feeds-for-youtube' ) . ' ' . __( 'This update only affects how new feeds are created and customized.', 'feeds-for-youtube' ),
+					'heading' => __('Existing feeds work as normal', 'feeds-for-youtube'),
+					'p'       => __('You don\'t need to update or change any of your existing feeds. They will continue to work as usual.', 'feeds-for-youtube') . ' ' . __('This update only affects how new feeds are created and customized.', 'feeds-for-youtube'),
 				),
 			);
 		}
@@ -947,9 +970,10 @@ class SBY_Feed_Builder {
 		return $text;
 	}
 
-	public function get_customizer_onboarding_text() {
+	public function get_customizer_onboarding_text()
+	{
 
-		if ( self::onboarding_status( 'customizer' ) === 'dismissed' ) {
+		if (self::onboarding_status('customizer') === 'dismissed') {
 			return array( 'active' => false );
 		}
 
@@ -959,20 +983,20 @@ class SBY_Feed_Builder {
 			'tooltips' => array(
 				array(
 					'step'    => 1,
-					'heading' => __( 'Embedding a Feed', 'feeds-for-youtube' ),
-					'p'       => __( 'After you are done customizing the feed, click here to add it to a page or a widget.', 'feeds-for-youtube' ),
+					'heading' => __('Embedding a Feed', 'feeds-for-youtube'),
+					'p'       => __('After you are done customizing the feed, click here to add it to a page or a widget.', 'feeds-for-youtube'),
 					'pointer' => 'top',
 				),
 				array(
 					'step'    => 2,
-					'heading' => __( 'Customize', 'feeds-for-youtube' ),
-					'p'       => __( 'Change your feed layout, color scheme, or customize individual feed sections here.', 'feeds-for-youtube' ),
+					'heading' => __('Customize', 'feeds-for-youtube'),
+					'p'       => __('Change your feed layout, color scheme, or customize individual feed sections here.', 'feeds-for-youtube'),
 					'pointer' => 'top',
 				),
 				array(
 					'step'    => 3,
-					'heading' => __( 'Settings', 'feeds-for-youtube' ),
-					'p'       => __( 'Update your feed source, filter your posts, or change advanced settings here.', 'feeds-for-youtube' ),
+					'heading' => __('Settings', 'feeds-for-youtube'),
+					'p'       => __('Update your feed source, filter your posts, or change advanced settings here.', 'feeds-for-youtube'),
 					'pointer' => 'top',
 				),
 			),
@@ -988,176 +1012,177 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public function get_customize_screens_text() {
+	public function get_customize_screens_text()
+	{
 		$text = array(
 			'common'              => array(
-				'preview'       => __( 'Preview', 'feeds-for-youtube' ),
-				'help'          => __( 'Help', 'feeds-for-youtube' ),
-				'embed'         => __( 'Embed', 'feeds-for-youtube' ),
-				'save'          => __( 'Save', 'feeds-for-youtube' ),
-				'sections'      => __( 'Sections', 'feeds-for-youtube' ),
-				'enable'        => __( 'Enable', 'feeds-for-youtube' ),
-				'background'    => __( 'Background', 'feeds-for-youtube' ),
-				'text'          => __( 'Text', 'feeds-for-youtube' ),
-				'inherit'       => __( 'Inherit from Theme', 'feeds-for-youtube' ),
-				'size'          => __( 'Size', 'feeds-for-youtube' ),
-				'color'         => __( 'Color', 'feeds-for-youtube' ),
-				'height'        => __( 'Height', 'feeds-for-youtube' ),
-				'placeholder'   => __( 'Placeholder', 'feeds-for-youtube' ),
-				'select'        => __( 'Select', 'feeds-for-youtube' ),
-				'enterText'     => __( 'Enter Text', 'feeds-for-youtube' ),
-				'hoverState'    => __( 'Hover State', 'feeds-for-youtube' ),
-				'sourceCombine' => __( 'Combine sources from multiple platforms using our Social Wall plugin', 'feeds-for-youtube' ),
+				'preview'       => __('Preview', 'feeds-for-youtube'),
+				'help'          => __('Help', 'feeds-for-youtube'),
+				'embed'         => __('Embed', 'feeds-for-youtube'),
+				'save'          => __('Save', 'feeds-for-youtube'),
+				'sections'      => __('Sections', 'feeds-for-youtube'),
+				'enable'        => __('Enable', 'feeds-for-youtube'),
+				'background'    => __('Background', 'feeds-for-youtube'),
+				'text'          => __('Text', 'feeds-for-youtube'),
+				'inherit'       => __('Inherit from Theme', 'feeds-for-youtube'),
+				'size'          => __('Size', 'feeds-for-youtube'),
+				'color'         => __('Color', 'feeds-for-youtube'),
+				'height'        => __('Height', 'feeds-for-youtube'),
+				'placeholder'   => __('Placeholder', 'feeds-for-youtube'),
+				'select'        => __('Select', 'feeds-for-youtube'),
+				'enterText'     => __('Enter Text', 'feeds-for-youtube'),
+				'hoverState'    => __('Hover State', 'feeds-for-youtube'),
+				'sourceCombine' => __('Combine sources from multiple platforms using our Social Wall plugin', 'feeds-for-youtube'),
 			),
 
 			'tabs'                => array(
-				'customize' => __( 'Customize', 'feeds-for-youtube' ),
-				'settings'  => __( 'Settings', 'feeds-for-youtube' ),
+				'customize' => __('Customize', 'feeds-for-youtube'),
+				'settings'  => __('Settings', 'feeds-for-youtube'),
 			),
 			'overview'            => array(
-				'feedLayout'  => __( 'Feed Layout', 'feeds-for-youtube' ),
-				'colorScheme' => __( 'Color Scheme', 'feeds-for-youtube' ),
-				'header'      => __( 'Header', 'feeds-for-youtube' ),
-				'posts'       => __( 'Posts', 'feeds-for-youtube' ),
-				'likeBox'     => __( 'Like Box', 'feeds-for-youtube' ),
-				'loadMore'    => __( 'Load More Button', 'feeds-for-youtube' ),
+				'feedLayout'  => __('Feed Layout', 'feeds-for-youtube'),
+				'colorScheme' => __('Color Scheme', 'feeds-for-youtube'),
+				'header'      => __('Header', 'feeds-for-youtube'),
+				'posts'       => __('Posts', 'feeds-for-youtube'),
+				'likeBox'     => __('Like Box', 'feeds-for-youtube'),
+				'loadMore'    => __('Load More Button', 'feeds-for-youtube'),
 			),
 			'feedLayoutScreen'    => array(
-				'layout'     => __( 'Layout', 'feeds-for-youtube' ),
-				'list'       => __( 'List', 'feeds-for-youtube' ),
-				'grid'       => __( 'Grid', 'feeds-for-youtube' ),
-				'masonry'    => __( 'Masonry', 'feeds-for-youtube' ),
-				'carousel'   => __( 'Carousel', 'feeds-for-youtube' ),
-				'feedHeight' => __( 'Feed Height', 'feeds-for-youtube' ),
-				'number'     => __( 'Number of Posts', 'feeds-for-youtube' ),
-				'columns'    => __( 'Columns', 'feeds-for-youtube' ),
-				'desktop'    => __( 'Desktop', 'feeds-for-youtube' ),
-				'tablet'     => __( 'Tablet', 'feeds-for-youtube' ),
-				'mobile'     => __( 'Mobile', 'feeds-for-youtube' ),
+				'layout'     => __('Layout', 'feeds-for-youtube'),
+				'list'       => __('List', 'feeds-for-youtube'),
+				'grid'       => __('Grid', 'feeds-for-youtube'),
+				'masonry'    => __('Masonry', 'feeds-for-youtube'),
+				'carousel'   => __('Carousel', 'feeds-for-youtube'),
+				'feedHeight' => __('Feed Height', 'feeds-for-youtube'),
+				'number'     => __('Number of Posts', 'feeds-for-youtube'),
+				'columns'    => __('Columns', 'feeds-for-youtube'),
+				'desktop'    => __('Desktop', 'feeds-for-youtube'),
+				'tablet'     => __('Tablet', 'feeds-for-youtube'),
+				'mobile'     => __('Mobile', 'feeds-for-youtube'),
 				'bottomArea' => array(
-					'heading'     => __( 'Tweak Post Styles', 'feeds-for-youtube' ),
-					'description' => __( 'Change post background, border radius, shadow etc.', 'feeds-for-youtube' ),
+					'heading'     => __('Tweak Post Styles', 'feeds-for-youtube'),
+					'description' => __('Change post background, border radius, shadow etc.', 'feeds-for-youtube'),
 				),
 			),
 			'colorSchemeScreen'   => array(
-				'scheme'        => __( 'Scheme', 'feeds-for-youtube' ),
-				'light'         => __( 'Light', 'feeds-for-youtube' ),
-				'dark'          => __( 'Dark', 'feeds-for-youtube' ),
-				'custom'        => __( 'Custom', 'feeds-for-youtube' ),
-				'customPalette' => __( 'Custom Palette', 'feeds-for-youtube' ),
-				'background2'   => __( 'Background 2', 'feeds-for-youtube' ),
-				'text2'         => __( 'Text 2', 'feeds-for-youtube' ),
-				'link'          => __( 'Link', 'feeds-for-youtube' ),
+				'scheme'        => __('Scheme', 'feeds-for-youtube'),
+				'light'         => __('Light', 'feeds-for-youtube'),
+				'dark'          => __('Dark', 'feeds-for-youtube'),
+				'custom'        => __('Custom', 'feeds-for-youtube'),
+				'customPalette' => __('Custom Palette', 'feeds-for-youtube'),
+				'background2'   => __('Background 2', 'feeds-for-youtube'),
+				'text2'         => __('Text 2', 'feeds-for-youtube'),
+				'link'          => __('Link', 'feeds-for-youtube'),
 				'bottomArea'    => array(
-					'heading'     => __( 'Overrides', 'feeds-for-youtube' ),
-					'description' => __( 'Colors that have been overridden from individual post element settings will not change. To change them, you will have to reset overrides.', 'feeds-for-youtube' ),
-					'ctaButton'   => __( 'Reset Overrides.', 'feeds-for-youtube' ),
+					'heading'     => __('Overrides', 'feeds-for-youtube'),
+					'description' => __('Colors that have been overridden from individual post element settings will not change. To change them, you will have to reset overrides.', 'feeds-for-youtube'),
+					'ctaButton'   => __('Reset Overrides.', 'feeds-for-youtube'),
 				),
 			),
 			'headerScreen'        => array(
-				'headerType'     => __( 'Header Type', 'feeds-for-youtube' ),
-				'visual'         => __( 'Visual', 'feeds-for-youtube' ),
-				'coverPhoto'     => __( 'Cover Photo', 'feeds-for-youtube' ),
-				'nameAndAvatar'  => __( 'Name and avatar', 'feeds-for-youtube' ),
-				'about'          => __( 'About (bio and Likes)', 'feeds-for-youtube' ),
-				'displayOutside' => __( 'Display outside scrollable area', 'feeds-for-youtube' ),
-				'icon'           => __( 'Icon', 'feeds-for-youtube' ),
-				'iconImage'      => __( 'Icon Image', 'feeds-for-youtube' ),
-				'iconColor'      => __( 'Icon Color', 'feeds-for-youtube' ),
+				'headerType'     => __('Header Type', 'feeds-for-youtube'),
+				'visual'         => __('Visual', 'feeds-for-youtube'),
+				'coverPhoto'     => __('Cover Photo', 'feeds-for-youtube'),
+				'nameAndAvatar'  => __('Name and avatar', 'feeds-for-youtube'),
+				'about'          => __('About (bio and Likes)', 'feeds-for-youtube'),
+				'displayOutside' => __('Display outside scrollable area', 'feeds-for-youtube'),
+				'icon'           => __('Icon', 'feeds-for-youtube'),
+				'iconImage'      => __('Icon Image', 'feeds-for-youtube'),
+				'iconColor'      => __('Icon Color', 'feeds-for-youtube'),
 			),
 			// all Lightbox in common
 			// all Load More in common
 			'likeBoxScreen'       => array(
-				'small'                     => __( 'Small', 'feeds-for-youtube' ),
-				'large'                     => __( 'Large', 'feeds-for-youtube' ),
-				'coverPhoto'                => __( 'Cover Photo', 'feeds-for-youtube' ),
-				'customWidth'               => __( 'Custom Width', 'feeds-for-youtube' ),
-				'defaultSetTo'              => __( 'By default, it is set to auto', 'feeds-for-youtube' ),
-				'width'                     => __( 'Width', 'feeds-for-youtube' ),
-				'customCTA'                 => __( 'Custom CTA', 'feeds-for-youtube' ),
-				'customCTADescription'      => __( 'This toggles the custom CTA like "Show now" and "Contact"', 'feeds-for-youtube' ),
-				'showFans'                  => __( 'Show Fans', 'feeds-for-youtube' ),
-				'showFansDescription'       => __( 'Show visitors which of their friends follow your page', 'feeds-for-youtube' ),
-				'displayOutside'            => __( 'Display outside scrollable area', 'feeds-for-youtube' ),
-				'displayOutsideDescription' => __( 'Make the like box fixed by moving it outside the scrollable area', 'feeds-for-youtube' ),
+				'small'                     => __('Small', 'feeds-for-youtube'),
+				'large'                     => __('Large', 'feeds-for-youtube'),
+				'coverPhoto'                => __('Cover Photo', 'feeds-for-youtube'),
+				'customWidth'               => __('Custom Width', 'feeds-for-youtube'),
+				'defaultSetTo'              => __('By default, it is set to auto', 'feeds-for-youtube'),
+				'width'                     => __('Width', 'feeds-for-youtube'),
+				'customCTA'                 => __('Custom CTA', 'feeds-for-youtube'),
+				'customCTADescription'      => __('This toggles the custom CTA like "Show now" and "Contact"', 'feeds-for-youtube'),
+				'showFans'                  => __('Show Fans', 'feeds-for-youtube'),
+				'showFansDescription'       => __('Show visitors which of their friends follow your page', 'feeds-for-youtube'),
+				'displayOutside'            => __('Display outside scrollable area', 'feeds-for-youtube'),
+				'displayOutsideDescription' => __('Make the like box fixed by moving it outside the scrollable area', 'feeds-for-youtube'),
 			),
 			'postsScreen'         => array(
-				'thumbnail'           => __( 'Thumbnail', 'feeds-for-youtube' ),
-				'half'                => __( 'Half width', 'feeds-for-youtube' ),
-				'full'                => __( 'Full width', 'feeds-for-youtube' ),
-				'useFull'             => __( 'Use full width layout when post width is less than 500px', 'feeds-for-youtube' ),
-				'postStyle'           => __( 'Post Style', 'feeds-for-youtube' ),
-				'editIndividual'      => __( 'Edit Individual Elements', 'feeds-for-youtube' ),
+				'thumbnail'           => __('Thumbnail', 'feeds-for-youtube'),
+				'half'                => __('Half width', 'feeds-for-youtube'),
+				'full'                => __('Full width', 'feeds-for-youtube'),
+				'useFull'             => __('Use full width layout when post width is less than 500px', 'feeds-for-youtube'),
+				'postStyle'           => __('Post Style', 'feeds-for-youtube'),
+				'editIndividual'      => __('Edit Individual Elements', 'feeds-for-youtube'),
 				'individual'          => array(
-					'description'                => __( 'Hide or show individual elements of a post or edit their options', 'feeds-for-youtube' ),
-					'name'                       => __( 'Name', 'feeds-for-youtube' ),
-					'edit'                       => __( 'Edit', 'feeds-for-youtube' ),
-					'postAuthor'                 => __( 'Post Author', 'feeds-for-youtube' ),
-					'postText'                   => __( 'Post Text', 'feeds-for-youtube' ),
-					'date'                       => __( 'Date', 'feeds-for-youtube' ),
-					'photosVideos'               => __( 'Photos/Videos', 'feeds-for-youtube' ),
-					'likesShares'                => __( 'Likes, Shares and Comments', 'feeds-for-youtube' ),
-					'eventTitle'                 => __( 'Event Title', 'feeds-for-youtube' ),
-					'eventDetails'               => __( 'Event Details', 'feeds-for-youtube' ),
-					'postAction'                 => __( 'Post Action Links', 'feeds-for-youtube' ),
-					'sharedPostText'             => __( 'Shared Post Text', 'feeds-for-youtube' ),
-					'sharedLinkBox'              => __( 'Shared Link Box', 'feeds-for-youtube' ),
-					'postTextDescription'        => __( 'The main text of the Instagram post', 'feeds-for-youtube' ),
-					'maxTextLength'              => __( 'Maximum Text Length', 'feeds-for-youtube' ),
-					'characters'                 => __( 'Characters', 'feeds-for-youtube' ),
-					'linkText'                   => __( 'Link text to Instagram post', 'feeds-for-youtube' ),
-					'postDateDescription'        => __( 'The date of the post', 'feeds-for-youtube' ),
-					'format'                     => __( 'Format', 'feeds-for-youtube' ),
-					'custom'                     => __( 'Custom', 'feeds-for-youtube' ),
-					'learnMoreFormats'           => '<a href="https://smashballoon.com/doc/date-formatting-reference/" target="_blank" rel="noopener">' . __( 'Learn more about custom formats', 'feeds-for-youtube' ) . '</a>',
-					'addTextBefore'              => __( 'Add text before date', 'feeds-for-youtube' ),
-					'addTextBeforeEG'            => __( 'E.g. Posted', 'feeds-for-youtube' ),
-					'addTextAfter'               => __( 'Add text after date', 'feeds-for-youtube' ),
-					'addTextAfterEG'             => __( 'E.g. - posted date', 'feeds-for-youtube' ),
-					'timezone'                   => __( 'Timezone', 'feeds-for-youtube' ),
-					'tzDescription'              => __( 'Timezone settings are global across all feeds. To update it use the global settings.', 'feeds-for-youtube' ),
-					'tzCTAText'                  => __( 'Go to Global Settings', 'feeds-for-youtube' ),
-					'photosVideosDescription'    => __( 'Any photos or videos in your posts', 'feeds-for-youtube' ),
-					'useOnlyOne'                 => __( 'Use only one image per post', 'feeds-for-youtube' ),
-					'postActionLinksDescription' => __( 'The "View on Instagram" and "Share" links at the bottom of each post', 'feeds-for-youtube' ),
-					'viewOnFBLink'               => __( 'View on Instagram link', 'feeds-for-youtube' ),
-					'viewOnFBLinkDescription'    => __( 'Toggle "View on Instagram" link below each post', 'feeds-for-youtube' ),
-					'customizeText'              => __( 'Customize Text', 'feeds-for-youtube' ),
-					'shareLink'                  => __( 'Share Link', 'feeds-for-youtube' ),
-					'shareLinkDescription'       => __( 'Toggle "Share" link below each post', 'feeds-for-youtube' ),
-					'likesSharesDescription'     => __( 'The comments box displayed at the bottom of each timeline post', 'feeds-for-youtube' ),
-					'iconTheme'                  => __( 'Icon Theme', 'feeds-for-youtube' ),
-					'auto'                       => __( 'Auto', 'feeds-for-youtube' ),
-					'light'                      => __( 'Light', 'feeds-for-youtube' ),
-					'dark'                       => __( 'Dark', 'feeds-for-youtube' ),
-					'expandComments'             => __( 'Expand comments box by default', 'feeds-for-youtube' ),
-					'hideComment'                => __( 'Hide comment avatars', 'feeds-for-youtube' ),
-					'showLightbox'               => __( 'Show comments in lightbox', 'feeds-for-youtube' ),
-					'eventTitleDescription'      => __( 'The title of an event', 'feeds-for-youtube' ),
-					'eventDetailsDescription'    => __( 'The information associated with an event', 'feeds-for-youtube' ),
-					'textSize'                   => __( 'Text Size', 'feeds-for-youtube' ),
-					'textColor'                  => __( 'Text Color', 'feeds-for-youtube' ),
-					'sharedLinkBoxDescription'   => __( "The link info box that's created when a link is shared in a Instagram post", 'feeds-for-youtube' ),
-					'boxStyle'                   => __( 'Box Style', 'feeds-for-youtube' ),
-					'removeBackground'           => __( 'Remove background/border', 'feeds-for-youtube' ),
-					'linkTitle'                  => __( 'Link Title', 'feeds-for-youtube' ),
-					'linkURL'                    => __( 'Link URL', 'feeds-for-youtube' ),
-					'linkDescription'            => __( 'Link Description', 'feeds-for-youtube' ),
-					'chars'                      => __( 'chars', 'feeds-for-youtube' ),
-					'sharedPostDescription'      => __( 'The description text associated with shared photos, videos, or links', 'feeds-for-youtube' ),
+					'description'                => __('Hide or show individual elements of a post or edit their options', 'feeds-for-youtube'),
+					'name'                       => __('Name', 'feeds-for-youtube'),
+					'edit'                       => __('Edit', 'feeds-for-youtube'),
+					'postAuthor'                 => __('Post Author', 'feeds-for-youtube'),
+					'postText'                   => __('Post Text', 'feeds-for-youtube'),
+					'date'                       => __('Date', 'feeds-for-youtube'),
+					'photosVideos'               => __('Photos/Videos', 'feeds-for-youtube'),
+					'likesShares'                => __('Likes, Shares and Comments', 'feeds-for-youtube'),
+					'eventTitle'                 => __('Event Title', 'feeds-for-youtube'),
+					'eventDetails'               => __('Event Details', 'feeds-for-youtube'),
+					'postAction'                 => __('Post Action Links', 'feeds-for-youtube'),
+					'sharedPostText'             => __('Shared Post Text', 'feeds-for-youtube'),
+					'sharedLinkBox'              => __('Shared Link Box', 'feeds-for-youtube'),
+					'postTextDescription'        => __('The main text of the Instagram post', 'feeds-for-youtube'),
+					'maxTextLength'              => __('Maximum Text Length', 'feeds-for-youtube'),
+					'characters'                 => __('Characters', 'feeds-for-youtube'),
+					'linkText'                   => __('Link text to Instagram post', 'feeds-for-youtube'),
+					'postDateDescription'        => __('The date of the post', 'feeds-for-youtube'),
+					'format'                     => __('Format', 'feeds-for-youtube'),
+					'custom'                     => __('Custom', 'feeds-for-youtube'),
+					'learnMoreFormats'           => '<a href="https://smashballoon.com/doc/date-formatting-reference/" target="_blank" rel="noopener">' . __('Learn more about custom formats', 'feeds-for-youtube') . '</a>',
+					'addTextBefore'              => __('Add text before date', 'feeds-for-youtube'),
+					'addTextBeforeEG'            => __('E.g. Posted', 'feeds-for-youtube'),
+					'addTextAfter'               => __('Add text after date', 'feeds-for-youtube'),
+					'addTextAfterEG'             => __('E.g. - posted date', 'feeds-for-youtube'),
+					'timezone'                   => __('Timezone', 'feeds-for-youtube'),
+					'tzDescription'              => __('Timezone settings are global across all feeds. To update it use the global settings.', 'feeds-for-youtube'),
+					'tzCTAText'                  => __('Go to Global Settings', 'feeds-for-youtube'),
+					'photosVideosDescription'    => __('Any photos or videos in your posts', 'feeds-for-youtube'),
+					'useOnlyOne'                 => __('Use only one image per post', 'feeds-for-youtube'),
+					'postActionLinksDescription' => __('The "View on Instagram" and "Share" links at the bottom of each post', 'feeds-for-youtube'),
+					'viewOnFBLink'               => __('View on Instagram link', 'feeds-for-youtube'),
+					'viewOnFBLinkDescription'    => __('Toggle "View on Instagram" link below each post', 'feeds-for-youtube'),
+					'customizeText'              => __('Customize Text', 'feeds-for-youtube'),
+					'shareLink'                  => __('Share Link', 'feeds-for-youtube'),
+					'shareLinkDescription'       => __('Toggle "Share" link below each post', 'feeds-for-youtube'),
+					'likesSharesDescription'     => __('The comments box displayed at the bottom of each timeline post', 'feeds-for-youtube'),
+					'iconTheme'                  => __('Icon Theme', 'feeds-for-youtube'),
+					'auto'                       => __('Auto', 'feeds-for-youtube'),
+					'light'                      => __('Light', 'feeds-for-youtube'),
+					'dark'                       => __('Dark', 'feeds-for-youtube'),
+					'expandComments'             => __('Expand comments box by default', 'feeds-for-youtube'),
+					'hideComment'                => __('Hide comment avatars', 'feeds-for-youtube'),
+					'showLightbox'               => __('Show comments in lightbox', 'feeds-for-youtube'),
+					'eventTitleDescription'      => __('The title of an event', 'feeds-for-youtube'),
+					'eventDetailsDescription'    => __('The information associated with an event', 'feeds-for-youtube'),
+					'textSize'                   => __('Text Size', 'feeds-for-youtube'),
+					'textColor'                  => __('Text Color', 'feeds-for-youtube'),
+					'sharedLinkBoxDescription'   => __("The link info box that's created when a link is shared in a Instagram post", 'feeds-for-youtube'),
+					'boxStyle'                   => __('Box Style', 'feeds-for-youtube'),
+					'removeBackground'           => __('Remove background/border', 'feeds-for-youtube'),
+					'linkTitle'                  => __('Link Title', 'feeds-for-youtube'),
+					'linkURL'                    => __('Link URL', 'feeds-for-youtube'),
+					'linkDescription'            => __('Link Description', 'feeds-for-youtube'),
+					'chars'                      => __('chars', 'feeds-for-youtube'),
+					'sharedPostDescription'      => __('The description text associated with shared photos, videos, or links', 'feeds-for-youtube'),
 				),
-				'postType'            => __( 'Post Type', 'feeds-for-youtube' ),
-				'boxed'               => __( 'boxed', 'feeds-for-youtube' ),
-				'regular'             => __( 'Regular', 'feeds-for-youtube' ),
-				'indvidualProperties' => __( 'Indvidual Properties', 'feeds-for-youtube' ),
-				'backgroundColor'     => __( 'Background Color', 'feeds-for-youtube' ),
-				'borderRadius'        => __( 'Border Radius', 'feeds-for-youtube' ),
-				'boxShadow'           => __( 'Box Shadow', 'feeds-for-youtube' ),
+				'postType'            => __('Post Type', 'feeds-for-youtube'),
+				'boxed'               => __('boxed', 'feeds-for-youtube'),
+				'regular'             => __('Regular', 'feeds-for-youtube'),
+				'indvidualProperties' => __('Indvidual Properties', 'feeds-for-youtube'),
+				'backgroundColor'     => __('Background Color', 'feeds-for-youtube'),
+				'borderRadius'        => __('Border Radius', 'feeds-for-youtube'),
+				'boxShadow'           => __('Box Shadow', 'feeds-for-youtube'),
 			),
 			'shoppableFeedScreen' => array(
-				'heading1'     => __( 'Make your Instagram Feed Shoppable', 'feeds-for-youtube' ),
-				'description1' => __( 'This feature links the post to the one specificed in your caption.<br/><br/>Don’t want to add links to the caption? You can add links manually to each post.<br/><br/>Enable it to get started.', 'feeds-for-youtube' ),
-				'heading2'     => __( 'Tap “Add” or “Update” on an<br/>image to add/update it’s URL', 'feeds-for-youtube' ),
+				'heading1'     => __('Make your Instagram Feed Shoppable', 'feeds-for-youtube'),
+				'description1' => __('This feature links the post to the one specificed in your caption.<br/><br/>Don’t want to add links to the caption? You can add links manually to each post.<br/><br/>Enable it to get started.', 'feeds-for-youtube'),
+				'heading2'     => __('Tap “Add” or “Update” on an<br/>image to add/update it’s URL', 'feeds-for-youtube'),
 
 			),
 		);
@@ -1176,10 +1201,10 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-
-	public static function get_source_list( $page = 1 ) {
+	public static function get_source_list($page = 1)
+	{
 		$args['page'] = $page;
-		$source_data  = SBY_Db::source_query( $args );
+		$source_data  = SBY_Db::source_query($args);
 		return;
 	}
 
@@ -1190,14 +1215,15 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 4.0
 	 */
-	public static function get_links_with_utm() {
+	public static function get_links_with_utm()
+	{
 		$license_key = null;
-		if ( get_option( 'sby_license_key' ) ) {
-			$license_key = get_option( 'sby_license_key' );
+		if (get_option('sby_license_key')) {
+			$license_key = get_option('sby_license_key');
 		}
-		$all_access_bundle       = sprintf( 'https://smashballoon.com/all-access/?edd_license_key=%s&upgrade=true&utm_campaign=%s&utm_source=all-feeds&utm_medium=footer-banner&utm_content=learn-more', $license_key, sby_utm_campaign() );
-		$all_access_bundle_popup = sprintf( 'https://smashballoon.com/all-access/?edd_license_key=%s&upgrade=true&utm_campaign=%s&utm_source=balloon&utm_medium=all-access', $license_key, sby_utm_campaign() );
-		$sourceCombineCTA        = sprintf( 'https://smashballoon.com/social-wall/?edd_license_key=%s&upgrade=true&utm_campaign=%s&utm_source=customizer&utm_medium=sources&utm_content=social-wall', $license_key, sby_utm_campaign() );
+		$all_access_bundle       = sprintf('https://smashballoon.com/all-access/?edd_license_key=%s&upgrade=true&utm_campaign=%s&utm_source=all-feeds&utm_medium=footer-banner&utm_content=learn-more', $license_key, sby_utm_campaign());
+		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?edd_license_key=%s&upgrade=true&utm_campaign=%s&utm_source=balloon&utm_medium=all-access', $license_key, sby_utm_campaign());
+		$sourceCombineCTA        = sprintf('https://smashballoon.com/social-wall/?edd_license_key=%s&upgrade=true&utm_campaign=%s&utm_source=customizer&utm_medium=sources&utm_content=social-wall', $license_key, sby_utm_campaign());
 
 		return array(
 			'allAccessBundle'  => $all_access_bundle,
@@ -1207,21 +1233,22 @@ class SBY_Feed_Builder {
 				'twitterProfile'  => 'https://twitter.com/smashballoon',
 			),
 			'sourceCombineCTA' => $sourceCombineCTA,
-			'multifeedCTA'     => 'https://smashballoon.com/extensions/multifeed/?utm_campaign='. sby_utm_campaign() .'&utm_source=customizer&utm_medium=sources&utm_content=multifeed',
-			'doc'              => 'https://smashballoon.com/docs/instagram/?utm_campaign='. sby_utm_campaign() .'&utm_source=support&utm_medium=view-documentation-button&utm_content=view-documentation',
-			'blog'             => 'https://smashballoon.com/blog/?utm_campaign='. sby_utm_campaign() .'&utm_source=support&utm_medium=view-blog-button&utm_content=view-blog',
-			'gettingStarted'   => 'https://smashballoon.com/docs/getting-started/?instagram&utm_campaign='. sby_utm_campaign() .'&utm_source=support&utm_medium=getting-started-button&utm_content=getting-started',
+			'multifeedCTA'     => 'https://smashballoon.com/extensions/multifeed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=customizer&utm_medium=sources&utm_content=multifeed',
+			'doc'              => 'https://smashballoon.com/docs/instagram/?utm_campaign=' . sby_utm_campaign() . '&utm_source=support&utm_medium=view-documentation-button&utm_content=view-documentation',
+			'blog'             => 'https://smashballoon.com/blog/?utm_campaign=' . sby_utm_campaign() . '&utm_source=support&utm_medium=view-blog-button&utm_content=view-blog',
+			'gettingStarted'   => 'https://smashballoon.com/docs/getting-started/?instagram&utm_campaign=' . sby_utm_campaign() . '&utm_source=support&utm_medium=getting-started-button&utm_content=getting-started',
 		);
 	}
 
-	public static function get_social_wall_links() {
+	public static function get_social_wall_links()
+	{
 		return array(
-			'<a href="' . esc_url( admin_url( 'admin.php?page=sbi-feed-builder' ) ) . '">' . __( 'All Feeds', 'feeds-for-youtube' ) . '</a>',
-			'<a href="' . esc_url( admin_url( 'admin.php?page=sby-feed-builder-settings' ) ) . '">' . __( 'Settings', 'feeds-for-youtube' ) . '</a>',
-			'<a href="' . esc_url( admin_url( 'admin.php?page=sbi-oembeds-manager' ) ) . '">' . __( 'oEmbeds', 'feeds-for-youtube' ) . '</a>',
-			'<a href="' . esc_url( admin_url( 'admin.php?page=sbi-extensions-manager' ) ) . '">' . __( 'Extensions', 'feeds-for-youtube' ) . '</a>',
-			'<a href="' . esc_url( admin_url( 'admin.php?page=sbi-about-us' ) ) . '">' . __( 'About Us', 'feeds-for-youtube' ) . '</a>',
-			'<a href="' . esc_url( admin_url( 'admin.php?page=sbi-support' ) ) . '">' . __( 'Support', 'feeds-for-youtube' ) . '</a>',
+			'<a href="' . esc_url(admin_url('admin.php?page=sbi-feed-builder')) . '">' . __('All Feeds', 'feeds-for-youtube') . '</a>',
+			'<a href="' . esc_url(admin_url('admin.php?page=sby-feed-builder-settings')) . '">' . __('Settings', 'feeds-for-youtube') . '</a>',
+			'<a href="' . esc_url(admin_url('admin.php?page=sbi-oembeds-manager')) . '">' . __('oEmbeds', 'feeds-for-youtube') . '</a>',
+			'<a href="' . esc_url(admin_url('admin.php?page=sbi-extensions-manager')) . '">' . __('Extensions', 'feeds-for-youtube') . '</a>',
+			'<a href="' . esc_url(admin_url('admin.php?page=sbi-about-us')) . '">' . __('About Us', 'feeds-for-youtube') . '</a>',
+			'<a href="' . esc_url(admin_url('admin.php?page=sbi-support')) . '">' . __('Support', 'feeds-for-youtube') . '</a>',
 		);
 	}
 
@@ -1232,63 +1259,63 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function get_feed_list( $feeds_args = array() ) {
-		if ( ! empty( $_GET['feed_id'] ) ) {
+	public static function get_feed_list($feeds_args = array())
+	{
+		if (! empty($_GET['feed_id'])) {
 			return array();
 		}
-		$feeds_data = SBY_Db::feeds_query( $feeds_args );
+		$feeds_data = SBY_Db::feeds_query($feeds_args);
 
 		$i = 0;
-		foreach ( $feeds_data as $single_feed ) {
+		foreach ($feeds_data as $single_feed) {
 			$args  = array(
 				'feed_id'       => '*' . $single_feed['id'],
 				'html_location' => array( 'content' ),
 			);
-			$count = Feed_Locator::count( $args );
+			$count = Feed_Locator::count($args);
 
-			$content_locations = Feed_Locator::instagram_feed_locator_query( $args );
+			$content_locations = Feed_Locator::instagram_feed_locator_query($args);
 
 			// if this is the last page, add in the header footer and sidebar locations
-			if ( count( $content_locations ) < SBY_Db::RESULTS_PER_PAGE ) {
-
+			if (count($content_locations) < SBY_Db::RESULTS_PER_PAGE) {
 				$args            = array(
 					'feed_id'       => '*' . $single_feed['id'],
 					'html_location' => array( 'header', 'footer', 'sidebar' ),
 					'group_by'      => 'html_location',
 				);
-				$other_locations = Feed_Locator::instagram_feed_locator_query( $args );
+				$other_locations = Feed_Locator::instagram_feed_locator_query($args);
 
 				$locations = array();
 
-				$combined_locations = array_merge( $other_locations, $content_locations );
+				$combined_locations = array_merge($other_locations, $content_locations);
 			} else {
 				$combined_locations = $content_locations;
 			}
 
-			foreach ( $combined_locations as $location ) {
-				$page_text = get_the_title( $location['post_id'] );
-				if ( $location['html_location'] === 'header' ) {
-					$html_location = __( 'Header', 'feeds-for-youtube' );
-				} elseif ( $location['html_location'] === 'footer' ) {
-					$html_location = __( 'Footer', 'feeds-for-youtube' );
-				} elseif ( $location['html_location'] === 'sidebar' ) {
-					$html_location = __( 'Sidebar', 'feeds-for-youtube' );
+			foreach ($combined_locations as $location) {
+				$page_text = get_the_title($location['post_id']);
+				if ($location['html_location'] === 'header') {
+					$html_location = __('Header', 'feeds-for-youtube');
+				} elseif ($location['html_location'] === 'footer') {
+					$html_location = __('Footer', 'feeds-for-youtube');
+				} elseif ($location['html_location'] === 'sidebar') {
+					$html_location = __('Sidebar', 'feeds-for-youtube');
 				} else {
-					$html_location = __( 'Content', 'feeds-for-youtube' );
+					$html_location = __('Content', 'feeds-for-youtube');
 				}
-				$shortcode_atts = json_decode( $location['shortcode_atts'], true );
-				$shortcode_atts = is_array( $shortcode_atts ) ? $shortcode_atts : array();
+				$shortcode_atts = json_decode($location['shortcode_atts'], true);
+				$shortcode_atts = is_array($shortcode_atts) ? $shortcode_atts : array();
 
 				$full_shortcode_string = '[instagram-feed';
-				foreach ( $shortcode_atts as $key => $value ) {
-					if ( ! empty( $value ) ) {
-						$full_shortcode_string .= ' ' . esc_html( $key ) . '="' . esc_html( $value ) . '"';
+				foreach ($shortcode_atts as $key => $value) {
+					if (! empty($value)) {
+						$full_shortcode_string .= ' ' . esc_html($key) . '="' . esc_html($value) . '"';
 					}
 				}
 				$full_shortcode_string .= ']';
 
 				$locations[] = array(
-					'link'          => esc_url( get_the_permalink( $location['post_id'] ) ),
+					'link'          => esc_url(get_the_permalink($location['post_id'])),
 					'page_text'     => $page_text,
 					'html_location' => $html_location,
 					'shortcode'     => $full_shortcode_string,
@@ -1296,7 +1323,7 @@ class SBY_Feed_Builder {
 			}
 			$feeds_data[ $i ]['instance_count']   = $count;
 			$feeds_data[ $i ]['location_summary'] = $locations;
-			$settings                             = json_decode( $feeds_data[ $i ]['settings'], true );
+			$settings                             = json_decode($feeds_data[ $i ]['settings'], true);
 
 			$settings['feed'] = $single_feed['id'];
 
@@ -1316,14 +1343,15 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 4.0
 	 */
-	public function get_legacy_feed_list() {
-		if ( ! empty( $_GET['feed_id'] ) ) {
+	public function get_legacy_feed_list()
+	{
+		if (! empty($_GET['feed_id'])) {
 			return array();
 		}
-		$sbi_statuses = get_option( 'sbi_statuses', array() );
+		$sbi_statuses = get_option('sbi_statuses', array());
 		$sources_list = self::get_source_list();
 
-		if ( empty( $sbi_statuses['support_legacy_shortcode'] ) ) {
+		if (empty($sbi_statuses['support_legacy_shortcode'])) {
 			return array();
 		}
 
@@ -1332,97 +1360,95 @@ class SBY_Feed_Builder {
 			'group_by'      => 'shortcode_atts',
 			'page'          => 1,
 		);
-		$feeds_data = \SB_Instagram_Feed_Locator::legacy_instagram_feed_locator_query( $args );
+		$feeds_data = \SB_Instagram_Feed_Locator::legacy_instagram_feed_locator_query($args);
 
-		if ( empty( $feeds_data ) ) {
+		if (empty($feeds_data)) {
 			$args       = array(
 				'html_location' => array( 'header', 'footer', 'sidebar', 'content' ),
 				'group_by'      => 'shortcode_atts',
 				'page'          => 1,
 			);
-			$feeds_data = \SB_Instagram_Feed_Locator::legacy_instagram_feed_locator_query( $args );
+			$feeds_data = \SB_Instagram_Feed_Locator::legacy_instagram_feed_locator_query($args);
 		}
 
-		$feed_saver = new SBI_Feed_Saver( 'legacy' );
+		$feed_saver = new SBI_Feed_Saver('legacy');
 		$settings   = $feed_saver->get_feed_settings();
 
 		$default_type = 'timeline';
 
-		if ( isset( $settings['feedtype'] ) ) {
+		if (isset($settings['feedtype'])) {
 			$default_type = $settings['feedtype'];
-
-		} elseif ( isset( $settings['type'] ) ) {
-			if ( strpos( $settings['type'], ',' ) === false ) {
+		} elseif (isset($settings['type'])) {
+			if (strpos($settings['type'], ',') === false) {
 				$default_type = $settings['type'];
 			}
 		}
 		$i       = 0;
 		$reindex = false;
-		foreach ( $feeds_data as $single_feed ) {
+		foreach ($feeds_data as $single_feed) {
 			$args              = array(
 				'shortcode_atts' => $single_feed['shortcode_atts'],
 				'html_location'  => array( 'content' ),
 			);
-			$content_locations = \SB_Instagram_Feed_Locator::instagram_feed_locator_query( $args );
+			$content_locations = \SB_Instagram_Feed_Locator::instagram_feed_locator_query($args);
 
-			$count = \SB_Instagram_Feed_Locator::count( $args );
-			if ( count( $content_locations ) < SBY_Db::RESULTS_PER_PAGE ) {
-
+			$count = \SB_Instagram_Feed_Locator::count($args);
+			if (count($content_locations) < SBY_Db::RESULTS_PER_PAGE) {
 				$args            = array(
 					'feed_id'       => $single_feed['feed_id'],
 					'html_location' => array( 'header', 'footer', 'sidebar' ),
 					'group_by'      => 'html_location',
 				);
-				$other_locations = \SB_Instagram_Feed_Locator::instagram_feed_locator_query( $args );
+				$other_locations = \SB_Instagram_Feed_Locator::instagram_feed_locator_query($args);
 
-				$combined_locations = array_merge( $other_locations, $content_locations );
+				$combined_locations = array_merge($other_locations, $content_locations);
 			} else {
 				$combined_locations = $content_locations;
 			}
 
 			$locations = array();
-			foreach ( $combined_locations as $location ) {
-				$page_text = get_the_title( $location['post_id'] );
-				if ( $location['html_location'] === 'header' ) {
-					$html_location = __( 'Header', 'feeds-for-youtube' );
-				} elseif ( $location['html_location'] === 'footer' ) {
-					$html_location = __( 'Footer', 'feeds-for-youtube' );
-				} elseif ( $location['html_location'] === 'sidebar' ) {
-					$html_location = __( 'Sidebar', 'feeds-for-youtube' );
+			foreach ($combined_locations as $location) {
+				$page_text = get_the_title($location['post_id']);
+				if ($location['html_location'] === 'header') {
+					$html_location = __('Header', 'feeds-for-youtube');
+				} elseif ($location['html_location'] === 'footer') {
+					$html_location = __('Footer', 'feeds-for-youtube');
+				} elseif ($location['html_location'] === 'sidebar') {
+					$html_location = __('Sidebar', 'feeds-for-youtube');
 				} else {
-					$html_location = __( 'Content', 'feeds-for-youtube' );
+					$html_location = __('Content', 'feeds-for-youtube');
 				}
-				$shortcode_atts = json_decode( $location['shortcode_atts'], true );
-				$shortcode_atts = is_array( $shortcode_atts ) ? $shortcode_atts : array();
+				$shortcode_atts = json_decode($location['shortcode_atts'], true);
+				$shortcode_atts = is_array($shortcode_atts) ? $shortcode_atts : array();
 
 				$full_shortcode_string = '[instagram-feed';
-				foreach ( $shortcode_atts as $key => $value ) {
-					if ( ! empty( $value ) ) {
-						if ( is_array( $value ) ) {
-							$value = implode( ',', $value );
+				foreach ($shortcode_atts as $key => $value) {
+					if (! empty($value)) {
+						if (is_array($value)) {
+							$value = implode(',', $value);
 						}
-						$full_shortcode_string .= ' ' . esc_html( $key ) . '="' . esc_html( $value ) . '"';
+						$full_shortcode_string .= ' ' . esc_html($key) . '="' . esc_html($value) . '"';
 					}
 				}
 				$full_shortcode_string .= ']';
 
 				$locations[] = array(
-					'link'          => esc_url( get_the_permalink( $location['post_id'] ) ),
+					'link'          => esc_url(get_the_permalink($location['post_id'])),
 					'page_text'     => $page_text,
 					'html_location' => $html_location,
 					'shortcode'     => $full_shortcode_string,
 				);
 			}
-			$shortcode_atts = json_decode( $feeds_data[ $i ]['shortcode_atts'], true );
-			$shortcode_atts = is_array( $shortcode_atts ) ? $shortcode_atts : array();
+			$shortcode_atts = json_decode($feeds_data[ $i ]['shortcode_atts'], true);
+			$shortcode_atts = is_array($shortcode_atts) ? $shortcode_atts : array();
 
 			$full_shortcode_string = '[instagram-feed';
-			foreach ( $shortcode_atts as $key => $value ) {
-				if ( ! empty( $value ) ) {
-					if ( is_array( $value ) ) {
-						$value = implode( ',', $value );
+			foreach ($shortcode_atts as $key => $value) {
+				if (! empty($value)) {
+					if (is_array($value)) {
+						$value = implode(',', $value);
 					}
-					$full_shortcode_string .= ' ' . esc_html( $key ) . '="' . esc_html( $value ) . '"';
+					$full_shortcode_string .= ' ' . esc_html($key) . '="' . esc_html($value) . '"';
 				}
 			}
 			$full_shortcode_string .= ']';
@@ -1430,60 +1456,60 @@ class SBY_Feed_Builder {
 			$feeds_data[ $i ]['shortcode']        = $full_shortcode_string;
 			$feeds_data[ $i ]['instance_count']   = $count;
 			$feeds_data[ $i ]['location_summary'] = $locations;
-			$feeds_data[ $i ]['feed_name']        = self::get_legacy_feed_name( $sources_list, $feeds_data[ $i ]['feed_id'] );
+			$feeds_data[ $i ]['feed_name']        = self::get_legacy_feed_name($sources_list, $feeds_data[ $i ]['feed_id']);
 			$feeds_data[ $i ]['feed_type']        = $default_type;
 
-			if ( isset( $shortcode_atts['feedtype'] ) ) {
+			if (isset($shortcode_atts['feedtype'])) {
 				$feeds_data[ $i ]['feed_type'] = $shortcode_atts['feedtype'];
-
-			} elseif ( isset( $shortcode_atts['type'] ) ) {
-				if ( strpos( $shortcode_atts['type'], ',' ) === false ) {
+			} elseif (isset($shortcode_atts['type'])) {
+				if (strpos($shortcode_atts['type'], ',') === false) {
 					$feeds_data[ $i ]['feed_type'] = $shortcode_atts['type'];
 				}
 			}
 
-			if ( isset( $feeds_data[ $i ]['id'] ) ) {
-				unset( $feeds_data[ $i ]['id'] );
+			if (isset($feeds_data[ $i ]['id'])) {
+				unset($feeds_data[ $i ]['id']);
 			}
 
-			if ( isset( $feeds_data[ $i ]['html_location'] ) ) {
-				unset( $feeds_data[ $i ]['html_location'] );
+			if (isset($feeds_data[ $i ]['html_location'])) {
+				unset($feeds_data[ $i ]['html_location']);
 			}
 
-			if ( isset( $feeds_data[ $i ]['last_update'] ) ) {
-				unset( $feeds_data[ $i ]['last_update'] );
+			if (isset($feeds_data[ $i ]['last_update'])) {
+				unset($feeds_data[ $i ]['last_update']);
 			}
 
-			if ( isset( $feeds_data[ $i ]['post_id'] ) ) {
-				unset( $feeds_data[ $i ]['post_id'] );
+			if (isset($feeds_data[ $i ]['post_id'])) {
+				unset($feeds_data[ $i ]['post_id']);
 			}
 
-			if ( ! empty( $shortcode_atts['feed'] ) ) {
+			if (! empty($shortcode_atts['feed'])) {
 				$reindex = true;
-				unset( $feeds_data[ $i ] );
+				unset($feeds_data[ $i ]);
 			}
 
-			if ( isset( $feeds_data[ $i ]['shortcode_atts'] ) ) {
-				unset( $feeds_data[ $i ]['shortcode_atts'] );
+			if (isset($feeds_data[ $i ]['shortcode_atts'])) {
+				unset($feeds_data[ $i ]['shortcode_atts']);
 			}
 
 			$i++;
 		}
 
-		if ( $reindex ) {
-			$feeds_data = array_values( $feeds_data );
+		if ($reindex) {
+			$feeds_data = array_values($feeds_data);
 		}
 
 		// if there were no feeds found in the locator table we still want the legacy settings to be available
 		// if it appears as though they had used version 3.x or under at some point.
-		if ( empty( $feeds_data )
-			 && ! is_array( $sbi_statuses['support_legacy_shortcode'] )
-			 && ( $sbi_statuses['support_legacy_shortcode'] ) ) {
-
+		if (
+			empty($feeds_data)
+			 && ! is_array($sbi_statuses['support_legacy_shortcode'])
+			 && ( $sbi_statuses['support_legacy_shortcode'] )
+		) {
 			$feeds_data = array(
 				array(
-					'feed_id'          => __( 'Legacy Feed', 'feeds-for-youtube' ) . ' ' . __( '(unknown location)', 'feeds-for-youtube' ),
-					'feed_name'        => __( 'Legacy Feed', 'feeds-for-youtube' ) . ' ' . __( '(unknown location)', 'feeds-for-youtube' ),
+					'feed_id'          => __('Legacy Feed', 'feeds-for-youtube') . ' ' . __('(unknown location)', 'feeds-for-youtube'),
+					'feed_name'        => __('Legacy Feed', 'feeds-for-youtube') . ' ' . __('(unknown location)', 'feeds-for-youtube'),
 					'shortcode'        => '[youtube-feed]',
 					'feed_type'        => '',
 					'instance_count'   => false,
@@ -1495,9 +1521,10 @@ class SBY_Feed_Builder {
 		return $feeds_data;
 	}
 
-	public static function get_legacy_feed_name( $sources_list, $source_id ) {
-		foreach ( $sources_list as $source ) {
-			if ( $source['account_id'] === $source_id ) {
+	public static function get_legacy_feed_name($sources_list, $source_id)
+	{
+		foreach ($sources_list as $source) {
+			if ($source['account_id'] === $source_id) {
 				return $source['username'];
 			}
 		}
@@ -1511,12 +1538,13 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function onboarding_status( $type = 'newuser' ) {
-		$onboarding_statuses = get_user_meta( get_current_user_id(), 'sby_onboarding', true );
+	public static function onboarding_status($type = 'newuser')
+	{
+		$onboarding_statuses = get_user_meta(get_current_user_id(), 'sby_onboarding', true);
 		$status              = false;
-		if ( ! empty( $onboarding_statuses ) ) {
-			$statuses = maybe_unserialize( $onboarding_statuses );
-			$status   = isset( $statuses[ $type ] ) ? $statuses[ $type ] : false;
+		if (! empty($onboarding_statuses)) {
+			$statuses = maybe_unserialize($onboarding_statuses);
+			$status   = isset($statuses[ $type ]) ? $statuses[ $type ] : false;
 		}
 
 		return $status;
@@ -1527,10 +1555,11 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function update_onboarding_meta( $value, $type = 'newuser' ) {
-		$onboarding_statuses = get_user_meta( get_current_user_id(), 'sbi_onboarding', true );
-		if ( ! empty( $onboarding_statuses ) ) {
-			$statuses          = maybe_unserialize( $onboarding_statuses );
+	public static function update_onboarding_meta($value, $type = 'newuser')
+	{
+		$onboarding_statuses = get_user_meta(get_current_user_id(), 'sbi_onboarding', true);
+		if (! empty($onboarding_statuses)) {
+			$statuses          = maybe_unserialize($onboarding_statuses);
 			$statuses[ $type ] = $value;
 		} else {
 			$statuses = array(
@@ -1538,9 +1567,9 @@ class SBY_Feed_Builder {
 			);
 		}
 
-		$statuses = maybe_serialize( $statuses );
+		$statuses = maybe_serialize($statuses);
 
-		update_user_meta( get_current_user_id(), 'sbi_onboarding', $statuses );
+		update_user_meta(get_current_user_id(), 'sbi_onboarding', $statuses);
 	}
 
 	/**
@@ -1548,21 +1577,23 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public static function after_dismiss_onboarding() {
-		check_ajax_referer( 'sby-admin', 'nonce' );
+	public static function after_dismiss_onboarding()
+	{
+		check_ajax_referer('sby-admin', 'nonce');
 
-		if ( sby_current_user_can( 'manage_instagram_feed_options' ) ) {
+		if (sby_current_user_can('manage_instagram_feed_options')) {
 			$type = 'newuser';
-			if ( isset( $_POST['was_active'] ) ) {
-				$type = sanitize_text_field( $_POST['was_active'] );
+			if (isset($_POST['was_active'])) {
+				$type = sanitize_text_field($_POST['was_active']);
 			}
-			self::update_onboarding_meta( 'dismissed', $type );
+			self::update_onboarding_meta('dismissed', $type);
 		}
 		wp_send_json_success();
 	}
 
-	public static function add_customizer_att( $atts ) {
-		if ( ! is_array( $atts ) ) {
+	public static function add_customizer_att($atts)
+	{
+		if (! is_array($atts)) {
 			$atts = array();
 		}
 		$atts['feedtype'] = 'customizer';
@@ -1574,7 +1605,8 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public function feed_builder() {
+	public function feed_builder()
+	{
 		include_once SBY_BUILDER_DIR . 'templates/builder.php';
 	}
 
@@ -1585,41 +1617,39 @@ class SBY_Feed_Builder {
 	 *
 	 * @since 2.0
 	 */
-	public function get_feed_types() {
+	public function get_feed_types()
+	{
 		$feed_types = array(
 			array(
 				'type'        => 'user',
-				'title'       => __( 'User Timeline', 'feeds-for-youtube' ),
-				'description' => __( 'Fetch posts from your Instagram profile', 'feeds-for-youtube' ),
+				'title'       => __('User Timeline', 'feeds-for-youtube'),
+				'description' => __('Fetch posts from your Instagram profile', 'feeds-for-youtube'),
 				'icon'        => 'usertimelineIcon',
 			),
 			array(
 				'type'             => 'hashtag',
-				'title'            => __( 'Public Hashtag', 'feeds-for-youtube' ),
-				'description'      => __( 'Fetch posts from a public Instagram hashtag', 'feeds-for-youtube' ),
-				'tooltip'          => __( 'Hashtag feeds require a connected Instagram business account', 'feeds-for-youtube' ),
+				'title'            => __('Public Hashtag', 'feeds-for-youtube'),
+				'description'      => __('Fetch posts from a public Instagram hashtag', 'feeds-for-youtube'),
+				'tooltip'          => __('Hashtag feeds require a connected Instagram business account', 'feeds-for-youtube'),
 				'businessRequired' => true,
 				'icon'             => 'publichashtagIcon',
 			),
 			array(
 				'type'             => 'tagged',
-				'title'            => __( 'Tagged Posts', 'feeds-for-youtube' ),
-				'description'      => __( 'Display posts your Instagram account has been tagged in', 'feeds-for-youtube' ),
-				'tooltip'          => __( 'Tagged posts feeds require a connected Instagram business account', 'feeds-for-youtube' ),
+				'title'            => __('Tagged Posts', 'feeds-for-youtube'),
+				'description'      => __('Display posts your Instagram account has been tagged in', 'feeds-for-youtube'),
+				'tooltip'          => __('Tagged posts feeds require a connected Instagram business account', 'feeds-for-youtube'),
 				'businessRequired' => true,
 				'icon'             => 'taggedpostsIcon',
 			),
 			array(
 				'type'        => 'socialwall',
-				'title'       => __( 'Social Wall', 'feeds-for-youtube' ) . '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.94901 13.7934L6.86234 11.2401C7.90901 10.8534 8.88901 10.3334 9.79568 9.72677L7.94901 13.7934ZM2.95568 7.33344L0.402344 6.24677L4.46901 4.4001C3.86234 5.30677 3.34234 6.28677 2.95568 7.33344ZM13.6023 0.593436C13.6023 0.593436 10.3023 -0.820564 6.52901 2.95344C5.06901 4.41344 4.19568 6.0201 3.62901 7.42677C3.44234 7.92677 3.56901 8.47344 3.93568 8.84677L5.35568 10.2601C5.72234 10.6334 6.26901 10.7534 6.76901 10.5668C8.44804 9.92657 9.97256 8.93825 11.2423 7.66677C15.0157 3.89344 13.6023 0.593436 13.6023 0.593436ZM8.88901 5.30677C8.36901 4.78677 8.36901 3.9401 8.88901 3.4201C9.40901 2.9001 10.2557 2.9001 10.7757 3.4201C11.289 3.9401 11.2957 4.78677 10.7757 5.30677C10.2557 5.82677 9.40901 5.82677 8.88901 5.30677ZM4.02247 13.0001L5.78234 11.2401C5.55568 11.1801 5.33568 11.0801 5.13568 10.9401L3.08247 13.0001H4.02247ZM1.1958 13.0001H2.1358L4.64901 10.4934L3.70234 9.55344L1.1958 12.0601V13.0001ZM1.1958 11.1134L3.25568 9.0601C3.11568 8.8601 3.01568 8.64677 2.95568 8.41344L1.1958 10.1734V11.1134Z" fill="#FE544F"/></svg>',
-				'description' => __( 'Create a feed with sources from different social platforms', 'feeds-for-youtube' ),
+				'title'       => __('Social Wall', 'feeds-for-youtube') . '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.94901 13.7934L6.86234 11.2401C7.90901 10.8534 8.88901 10.3334 9.79568 9.72677L7.94901 13.7934ZM2.95568 7.33344L0.402344 6.24677L4.46901 4.4001C3.86234 5.30677 3.34234 6.28677 2.95568 7.33344ZM13.6023 0.593436C13.6023 0.593436 10.3023 -0.820564 6.52901 2.95344C5.06901 4.41344 4.19568 6.0201 3.62901 7.42677C3.44234 7.92677 3.56901 8.47344 3.93568 8.84677L5.35568 10.2601C5.72234 10.6334 6.26901 10.7534 6.76901 10.5668C8.44804 9.92657 9.97256 8.93825 11.2423 7.66677C15.0157 3.89344 13.6023 0.593436 13.6023 0.593436ZM8.88901 5.30677C8.36901 4.78677 8.36901 3.9401 8.88901 3.4201C9.40901 2.9001 10.2557 2.9001 10.7757 3.4201C11.289 3.9401 11.2957 4.78677 10.7757 5.30677C10.2557 5.82677 9.40901 5.82677 8.88901 5.30677ZM4.02247 13.0001L5.78234 11.2401C5.55568 11.1801 5.33568 11.0801 5.13568 10.9401L3.08247 13.0001H4.02247ZM1.1958 13.0001H2.1358L4.64901 10.4934L3.70234 9.55344L1.1958 12.0601V13.0001ZM1.1958 11.1134L3.25568 9.0601C3.11568 8.8601 3.01568 8.64677 2.95568 8.41344L1.1958 10.1734V11.1134Z" fill="#FE544F"/></svg>',
+				'description' => __('Create a feed with sources from different social platforms', 'feeds-for-youtube'),
 				'icon'        => 'socialwall1Icon',
 			),
 		);
 
 		return $feed_types;
 	}
-
-
 }
-

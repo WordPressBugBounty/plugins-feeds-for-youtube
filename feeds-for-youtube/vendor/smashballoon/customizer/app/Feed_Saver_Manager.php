@@ -7,7 +7,6 @@
  */
 namespace Smashballoon\Customizer;
 
-/** @internal */
 class Feed_Saver_Manager
 {
     private $saver;
@@ -26,7 +25,7 @@ class Feed_Saver_Manager
      */
     public function hooks()
     {
-        add_action('wp_ajax_sbc_feed_saver_manager_fly_preview', array('Smashballoon\\Customizer\\Feed_Saver_Manager', 'feed_customizer_fly_preview'));
+        add_action('wp_ajax_sbc_feed_saver_manager_fly_preview', array('Smashballoon\Customizer\Feed_Saver_Manager', 'feed_customizer_fly_preview'));
     }
     /**
      * Used To check if it's customizer Screens
@@ -72,19 +71,19 @@ class Feed_Saver_Manager
         }
         // if there are only one video element shown as string
         // convert it to an array
-        if (!\is_array($settings['include'])) {
+        if (!is_array($settings['include'])) {
             $settings['include'] = array($settings['include']);
         }
-        if (!\is_array($settings['hoverinclude'])) {
+        if (!is_array($settings['hoverinclude'])) {
             $settings['hoverinclude'] = array($settings['hoverinclude']);
         }
         // If api is not added then remove stats and views from settings if were added before
         if (!$api_key_activated) {
             $hover_settings = $settings['hoverinclude'];
-            if ($key = \array_search('view', $hover_settings) !== \false) {
+            if ($key = array_search('view', $hover_settings) !== \false) {
                 unset($hover_settings[$key]);
             }
-            if ($key = \array_search('stats', $hover_settings) !== \false) {
+            if ($key = array_search('stats', $hover_settings) !== \false) {
                 unset($hover_settings[$key]);
             }
             $settings['hoverinclude'] = $hover_settings;
@@ -133,7 +132,7 @@ class Feed_Saver_Manager
      */
     public function import_feed($json, $name = null)
     {
-        $settings_data = \json_decode($json, \true);
+        $settings_data = json_decode($json, \true);
         $return = [];
         $this->saver->set_data($settings_data);
         if (!empty($name)) {

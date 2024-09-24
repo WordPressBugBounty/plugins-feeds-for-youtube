@@ -301,7 +301,7 @@ class SBY_Tracking {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'youtube-feed' )
+			'display'  => __( 'Once Weekly', 'feeds-for-youtube' )
 		);
 		return $schedules;
 	}

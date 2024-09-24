@@ -86,7 +86,6 @@ abstract class SBY_Admin_Abstract {
 	}
 
 	public function settings_init() {
-		$text_domain = $this->vars->text_domain();
 		/**
 		 * Configure Tab
 		 */
@@ -101,18 +100,18 @@ abstract class SBY_Admin_Abstract {
 		$locator_html = '';
 		if ( Feed_Locator::count_unique() > -1 ) {
 			$locator_html .= '<div class="sby_locations_link">';
-			$locator_html .= '<a href="?page=' . $this->slug .'&amp;tab=allfeeds"><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-search fa-w-16 fa-2x"><path fill="currentColor" d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" class=""></path></svg> ' . __( 'Feed Finder', $text_domain ) . '</a>';
+			$locator_html .= '<a href="?page=' . $this->slug .'&amp;tab=allfeeds"><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-search fa-w-16 fa-2x"><path fill="currentColor" d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" class=""></path></svg> ' . __( 'Feed Finder', 'feeds-for-youtube' ) . '</a>';
 			$locator_html .= '</div>';
 		}
 		$args = array(
 			'name' => 'type',
 			'section' => 'sbspf_types',
 			'callback' => 'types',
-			'title' => '<label>' . __( 'Select a Feed Type', $text_domain ) .'</label>',
+			'title' => '<label>' . __( 'Select a Feed Type', 'feeds-for-youtube' ) .'</label>',
 			'shortcode' => array(
 				'key' => 'type',
 				'example' => 'channel',
-				'description' => __( 'Type of feed to display', $text_domain ) . ' e.g. channel, playlist, search, favorites, live',
+				'description' => __( 'Type of feed to display', 'feeds-for-youtube' ) . ' e.g. channel, playlist, search, favorites, live',
 				'after_description' => $locator_html,
 				'display_section' => 'configure'
 			),
@@ -125,7 +124,7 @@ abstract class SBY_Admin_Abstract {
 			'name' => 'cache',
 			'section' => 'sbspf_types',
 			'callback' => 'cache',
-			'title' => __( 'Check for new posts', $text_domain )
+			'title' => __( 'Check for new posts', 'feeds-for-youtube' )
 		);
 		$this->add_settings_field( $args );
 
@@ -133,7 +132,7 @@ abstract class SBY_Admin_Abstract {
 		 * Customize Tab
 		 */
 		$args = array(
-			'title' => __( 'General', $text_domain ),
+			'title' => __( 'General', 'feeds-for-youtube' ),
 			'id' => 'sbspf_general',
 			'tab' => 'customize',
 			'save_after' => 'true'
@@ -159,11 +158,11 @@ abstract class SBY_Admin_Abstract {
 			'callback' => 'text',
 			'min' => 1,
 			'size' => 4,
-			'title' => __( 'Width of Feed', $text_domain ),
+			'title' => __( 'Width of Feed', 'feeds-for-youtube' ),
 			'shortcode' => array(
 				'key' => 'width',
 				'example' => '300px',
-				'description' => __( 'The width of your feed. Any number with a unit like "px" or "%".', $text_domain ),
+				'description' => __( 'The width of your feed. Any number with a unit like "px" or "%".', 'feeds-for-youtube' ),
 				'display_section' => 'customize'
 			),
 			'select_name' => 'widthunit',
@@ -171,10 +170,10 @@ abstract class SBY_Admin_Abstract {
 			'hidden' => array(
 				'callback' => 'checkbox',
 				'name' => 'width_responsive',
-				'label' => __( 'Set to be 100% width on mobile?', $text_domain ),
+				'label' => __( 'Set to be 100% width on mobile?', 'feeds-for-youtube' ),
 				'before' => '<div id="sbspf_width_options">',
 				'after' => '</div>',
-				'tooltip_info' =>  __( 'If you set a width on the feed then this will be used on mobile as well as desktop. Check this setting to set the feed width to be 100% on mobile so that it is responsive.', $text_domain )
+				'tooltip_info' =>  __( 'If you set a width on the feed then this will be used on mobile as well as desktop. Check this setting to set the feed width to be 100% on mobile so that it is responsive.', 'feeds-for-youtube' )
 			),
 		);
 		$this->add_settings_field( $args );
@@ -196,11 +195,11 @@ abstract class SBY_Admin_Abstract {
 			'callback' => 'text',
 			'min' => 1,
 			'size' => 4,
-			'title' => __( 'Height of Feed', $text_domain ),
+			'title' => __( 'Height of Feed', 'feeds-for-youtube' ),
 			'shortcode' => array(
 				'key' => 'height',
 				'example' => '500px',
-				'description' => __( 'The height of your feed. Any number with a unit like "px" or "em".', $text_domain ),
+				'description' => __( 'The height of your feed. Any number with a unit like "px" or "em".', 'feeds-for-youtube' ),
 				'display_section' => 'customize'
 			),
 			'select_name' => 'heightunit',
@@ -213,18 +212,18 @@ abstract class SBY_Admin_Abstract {
 			'default' => '',
 			'section' => 'sbspf_general',
 			'callback' => 'color',
-			'title' => __( 'Background Color', $text_domain ),
+			'title' => __( 'Background Color', 'feeds-for-youtube' ),
 			'shortcode' => array(
 				'key' => 'background',
 				'example' => '#f00',
-				'description' => __( 'Background color for the feed. Any hex color code.', $text_domain ),
+				'description' => __( 'Background color for the feed. Any hex color code.', 'feeds-for-youtube' ),
 				'display_section' => 'customize'
 			),
 		);
 		$this->add_settings_field( $args );
 
 		$args = array(
-			'title' => __( 'Layout', $text_domain ),
+			'title' => __( 'Layout', 'feeds-for-youtube' ),
 			'id' => 'sbspf_layout',
 			'tab' => 'customize',
 			'save_after' => 'true'
@@ -235,12 +234,12 @@ abstract class SBY_Admin_Abstract {
 			'name' => 'layout',
 			'section' => 'sbspf_layout',
 			'callback' => 'layout',
-			'title' => __( 'Layout Type', $text_domain ),
+			'title' => __( 'Layout Type', 'feeds-for-youtube' ),
 			'layouts' => $this->layouts,
 			'shortcode' => array(
 				'key' => 'layout',
 				'example' => 'list',
-				'description' => __( 'How your posts are display visually.', $text_domain ),
+				'description' => __( 'How your posts are display visually.', 'feeds-for-youtube' ),
 				'display_section' => 'layout'
 			)
 		);
@@ -625,7 +624,7 @@ abstract class SBY_Admin_Abstract {
 					  <?php endif; endforeach; ?>
                   </div>
 					<?php if ( empty( $selected ) ) : ?>
-                  <p class="sbspf_no_accounts" style="margin-top: -3px; margin-right: 10px;"><?php _e( 'Connect an account above', $this->vars->text_domain() ); ?></p>
+                  <p class="sbspf_no_accounts" style="margin-top: -3px; margin-right: 10px;"><?php _e( 'Connect an account above', 'feeds-for-youtube' ); ?></p>
 				<?php endif; ?>
 
 				<?php endif; ?>
@@ -681,7 +680,7 @@ abstract class SBY_Admin_Abstract {
                       <div class="sbspf_sub_option_setting">
 						  <?php if ( $option['callback'] !== 'checkbox' ) :
 							  if ( isset( $option['shortcode'] ) ) : ?>
-                                <label title="<?php echo __( 'Click for shortcode option', $this->vars->text_domain() ); ?>"><?php echo $option['label']; ?></label><code class="sbspf_shortcode"> <?php echo $option['name'] . "\n"; ?>
+                                <label title="<?php echo __( 'Click for shortcode option', 'feeds-for-youtube' ); ?>"><?php echo $option['label']; ?></label><code class="sbspf_shortcode"> <?php echo $option['name'] . "\n"; ?>
                                   Eg: <?php echo $option['name']; ?>=<?php echo $option['shortcode']['example']; ?></code><br>
 							  <?php else: ?>
                                 <label><?php echo $option['label']; ?></label><br>
@@ -718,40 +717,40 @@ abstract class SBY_Admin_Abstract {
       <div class="sbspf_cache_settings_wrap">
         <div class="sbspf_row">
           <input type="radio" name="<?php echo $this->option_name.'[caching_type]'; ?>" class="sbspf_caching_type_input" id="sbspf_caching_type_page" value="page"<?php if ( $type_selected === 'page' ) echo ' checked'?>>
-          <label class="sbspf_radio_label" for="sbspf_caching_type_page"><?php _e ( 'When the page loads', $this->vars->text_domain() ); ?></label>
+          <label class="sbspf_radio_label" for="sbspf_caching_type_page"><?php _e ( 'When the page loads', 'feeds-for-youtube' ); ?></label>
           <a class="sbspf_tooltip_link" href="JavaScript:void(0);" style="position: relative; top: 2px;"><?php echo $this->default_tooltip_text() ?></a>
           <p class="sbspf_tooltip sbspf_more_info"><?php echo sprintf( __( "Your %s data is temporarily cached by the plugin in your WordPress database. There are two ways that you can set the plugin to check for new data:<br><br>
                 <b>1. When the page loads</b><br>Selecting this option means that when the cache expires then the plugin will check %s for new posts the next time that the feed is loaded. You can choose how long this data should be cached for with a minimum time of 15 minutes. If you set the time to 60 minutes then the plugin will clear the cached data after that length of time, and the next time the page is viewed it will check for new data. <b>Tip:</b> If you're experiencing an issue with the plugin not updating automatically then try enabling the setting labeled <b>'Cron Clear Cache'</b> which is located on the 'Customize' tab.<br><br>
-                <b>2. In the background</b><br>Selecting this option means that the plugin will check for new data in the background so that the feed is updated behind the scenes. You can select at what time and how often the plugin should check for new data using the settings below. <b>Please note</b> that the plugin will initially check for data from YouTube when the page first loads, but then after that will check in the background on the schedule selected - unless the cache is cleared.", $this->vars->text_domain() ), $social_network, $social_network ); ?>
+                <b>2. In the background</b><br>Selecting this option means that the plugin will check for new data in the background so that the feed is updated behind the scenes. You can select at what time and how often the plugin should check for new data using the settings below. <b>Please note</b> that the plugin will initially check for data from YouTube when the page first loads, but then after that will check in the background on the schedule selected - unless the cache is cleared.", 'feeds-for-youtube' ), $social_network, $social_network ); ?>
           </p>
         </div>
         <div class="sbspf_row sbspf-caching-page-options" style="display: none;">
-			<?php _e ( 'Every', $this->vars->text_domain() ); ?>:
+			<?php _e ( 'Every', 'feeds-for-youtube' ); ?>:
           <input name="<?php echo $this->option_name.'[caching_time]'; ?>" type="text" value="<?php echo esc_attr( $caching_time ); ?>" size="4">
           <select name="<?php echo $this->option_name.'[caching_time_unit]'; ?>">
-            <option value="minutes"<?php if ( $cache_time_unit_selected === 'minutes' ) echo ' selected'?>><?php _e ( 'Minutes', $this->vars->text_domain() ); ?></option>
-            <option value="hours"<?php if ( $cache_time_unit_selected === 'hours' ) echo ' selected'?>><?php _e ( 'Hours', $this->vars->text_domain() ); ?></option>
-            <option value="days"<?php if ( $cache_time_unit_selected === 'days' ) echo ' selected'?>><?php _e ( 'Days', $this->vars->text_domain() ); ?></option>
+            <option value="minutes"<?php if ( $cache_time_unit_selected === 'minutes' ) echo ' selected'?>><?php _e ( 'Minutes', 'feeds-for-youtube' ); ?></option>
+            <option value="hours"<?php if ( $cache_time_unit_selected === 'hours' ) echo ' selected'?>><?php _e ( 'Hours', 'feeds-for-youtube' ); ?></option>
+            <option value="days"<?php if ( $cache_time_unit_selected === 'days' ) echo ' selected'?>><?php _e ( 'Days', 'feeds-for-youtube' ); ?></option>
           </select>
-          <a class="sbspf_tooltip_link" href="JavaScript:void(0);"><?php _e ( 'What does this mean?', $this->vars->text_domain() ); ?></a>
-          <p class="sbspf_tooltip sbspf_more_info"><?php echo sprintf( __("Your %s posts are temporarily cached by the plugin in your WordPress database. You can choose how long the posts should be cached for. If you set the time to 1 hour then the plugin will clear the cache after that length of time and check %s for posts again.", $this->vars->text_domain() ), $social_network, $social_network ); ?></p>
+          <a class="sbspf_tooltip_link" href="JavaScript:void(0);"><?php _e ( 'What does this mean?', 'feeds-for-youtube' ); ?></a>
+          <p class="sbspf_tooltip sbspf_more_info"><?php echo sprintf( __("Your %s posts are temporarily cached by the plugin in your WordPress database. You can choose how long the posts should be cached for. If you set the time to 1 hour then the plugin will clear the cache after that length of time and check %s for posts again.", 'feeds-for-youtube' ), $social_network, $social_network ); ?></p>
         </div>
 
         <div class="sbspf_row">
           <input type="radio" name="<?php echo $this->option_name.'[caching_type]'; ?>" id="sbspf_caching_type_cron" class="sbspf_caching_type_input" value="background" <?php if ( $type_selected === 'background' ) echo ' checked'?>>
-          <label class="sbspf_radio_label" for="sbspf_caching_type_cron"><?php _e ( 'In the background', $this->vars->text_domain() ); ?></label>
+          <label class="sbspf_radio_label" for="sbspf_caching_type_cron"><?php _e ( 'In the background', 'feeds-for-youtube' ); ?></label>
         </div>
         <div class="sbspf_row sbspf-caching-cron-options" style="display: block;">
 
           <select name="<?php echo $this->option_name.'[cache_cron_interval]'; ?>" id="sbspf_cache_cron_interval">
-            <option value="30mins"<?php if ( $cache_cron_interval_selected === '30mins' ) echo ' selected'?>><?php _e ( 'Every 30 minutes', $this->vars->text_domain() ); ?></option>
-            <option value="1hour"<?php if ( $cache_cron_interval_selected === '1hour' ) echo ' selected'?>><?php _e ( 'Every hour', $this->vars->text_domain() ); ?></option>
-            <option value="12hours"<?php if ( $cache_cron_interval_selected === '12hours' ) echo ' selected'?>><?php _e ( 'Every 12 hours', $this->vars->text_domain() ); ?></option>
-            <option value="24hours"<?php if ( $cache_cron_interval_selected === '24hours' ) echo ' selected'?>><?php _e ( 'Every 24 hours', $this->vars->text_domain() ); ?></option>
+            <option value="30mins"<?php if ( $cache_cron_interval_selected === '30mins' ) echo ' selected'?>><?php _e ( 'Every 30 minutes', 'feeds-for-youtube' ); ?></option>
+            <option value="1hour"<?php if ( $cache_cron_interval_selected === '1hour' ) echo ' selected'?>><?php _e ( 'Every hour', 'feeds-for-youtube' ); ?></option>
+            <option value="12hours"<?php if ( $cache_cron_interval_selected === '12hours' ) echo ' selected'?>><?php _e ( 'Every 12 hours', 'feeds-for-youtube' ); ?></option>
+            <option value="24hours"<?php if ( $cache_cron_interval_selected === '24hours' ) echo ' selected'?>><?php _e ( 'Every 24 hours', 'feeds-for-youtube' ); ?></option>
           </select>
 
           <div id="sbspf-caching-time-settings" style="">
-			  <?php _e ( 'at', $this->vars->text_domain() ); ?>
+			  <?php _e ( 'at', 'feeds-for-youtube' ); ?>
             <select name="<?php echo $this->option_name.'[cache_cron_time]'; ?>" style="width: 80px">
               <option value="1"<?php if ( (int)$cache_cron_time === 1 ) echo ' selected'?>>1:00</option>
               <option value="2"<?php if ( (int)$cache_cron_time === 2 ) echo ' selected'?>>2:00</option>
@@ -768,8 +767,8 @@ abstract class SBY_Admin_Abstract {
             </select>
 
             <select name="<?php echo $this->option_name.'[cache_cron_am_pm]'; ?>" style="width: 50px">
-              <option value="am"<?php if ( $cache_cron_am_pm === 'am' ) echo ' selected'?>><?php _e ( 'AM', $this->vars->text_domain() ); ?></option>
-              <option value="pm"<?php if ( $cache_cron_am_pm === 'pm' ) echo ' selected'?>><?php _e ( 'PM', $this->vars->text_domain() ); ?></option>
+              <option value="am"<?php if ( $cache_cron_am_pm === 'am' ) echo ' selected'?>><?php _e ( 'AM', 'feeds-for-youtube' ); ?></option>
+              <option value="pm"<?php if ( $cache_cron_am_pm === 'pm' ) echo ' selected'?>><?php _e ( 'PM', 'feeds-for-youtube' ); ?></option>
             </select>
           </div>
 
@@ -781,12 +780,12 @@ abstract class SBY_Admin_Abstract {
 				}
 				//
 				$schedule = wp_get_schedule( 'sbspf_feed_update' );
-				if ( $schedule == '30mins' ) $schedule = __( 'every 30 minutes', $this->vars->text_domain() );
-				if ( $schedule == 'twicedaily' ) $schedule = __( 'every 12 hours', $this->vars->text_domain() );
+				if ( $schedule == '30mins' ) $schedule = __( 'every 30 minutes', 'feeds-for-youtube' );
+				if ( $schedule == 'twicedaily' ) $schedule = __( 'every 12 hours', 'feeds-for-youtube' );
 				$sbspf_next_cron_event = wp_next_scheduled( 'sbspf_feed_update' );
-				echo '<p class="sbspf-caching-sched-notice"><span><b>' . __( 'Next check', $this->vars->text_domain() ) . ': ' . date( $time_format, $sbspf_next_cron_event + sbspf_get_utc_offset() ) . ' (' . $schedule . ')</b> - ' . __( 'Note: Saving the settings on this page will clear the cache and reset this schedule', $this->vars->text_domain() ) . '</span></p>';
+				echo '<p class="sbspf-caching-sched-notice"><span><b>' . __( 'Next check', 'feeds-for-youtube' ) . ': ' . date( $time_format, $sbspf_next_cron_event + sbspf_get_utc_offset() ) . ' (' . $schedule . ')</b> - ' . __( 'Note: Saving the settings on this page will clear the cache and reset this schedule', 'feeds-for-youtube' ) . '</span></p>';
 			} else {
-				echo '<p style="font-size: 11px; color: #666;">' . __( 'Nothing currently scheduled', $this->vars->text_domain() ) . '</p>';
+				echo '<p style="font-size: 11px; color: #666;">' . __( 'Nothing currently scheduled', 'feeds-for-youtube' ) . '</p>';
 			}
 			?>
         </div>
@@ -818,7 +817,7 @@ abstract class SBY_Admin_Abstract {
 						  ?>
                       <div class="sbspf_layout_setting">
 						  <?php if ( $option['callback'] !== 'checkbox' ) : ?>
-                            <label title="<?php echo __( 'Click for shortcode option', $this->vars->text_domain() ); ?>"><?php echo $option['label']; ?></label><code class="sbspf_shortcode"> <?php echo $option['name'] . "\n"; ?>
+                            <label title="<?php echo __( 'Click for shortcode option', 'feeds-for-youtube' ); ?>"><?php echo $option['label']; ?></label><code class="sbspf_shortcode"> <?php echo $option['name'] . "\n"; ?>
                               Eg: <?php echo $option['name']; ?>=<?php echo $option['shortcode']['example']; ?></code><br>
 						  <?php else:
 							  $option['shortcode_example'] = $option['shortcode']['example'];
@@ -984,6 +983,6 @@ abstract class SBY_Admin_Abstract {
 	}
 
 	public function default_tooltip_text() {
-		return '<span class="screen-reader-text">' . __( 'What does this mean?', $this->vars->text_domain() ) . '</span>' . sby_admin_icon( 'question-circle' );
+		return '<span class="screen-reader-text">' . __( 'What does this mean?', 'feeds-for-youtube' ) . '</span>' . sby_admin_icon( 'question-circle' );
 	}
 }

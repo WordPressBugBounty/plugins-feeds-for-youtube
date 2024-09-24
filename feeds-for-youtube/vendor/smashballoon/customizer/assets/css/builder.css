@@ -2032,7 +2032,7 @@ body.folded .sb-customizer-sidebar{
 Controls Style
 */
 .sb-control-label[data-title="true"]{
-    font-weight: 600;
+    font-weight: 500;
 }
 .sb-control-label {
     display: flex;
@@ -2161,14 +2161,11 @@ Controls Style
     padding: 0px;
 }
 .sb-control-elem-ctn[data-layout="block"] input[type="number"] {
-    height: 36px;
+    height: 40px;
     background: #FFFFFF;
     border-radius: 1px 0 0 1px !important;
-    /*border-right-color: #F3F4F5 !important;*/
 }
-.sb-control-elem-ctn[data-layout="block"] [data-contains-suffix="true"] input[type="number"]{
-    border-right-color: #F3F4F5 !important;
-}
+
 .sb-control-elem-ctn[data-child="true"]{
     padding-left: 70px;
 }
@@ -2782,6 +2779,7 @@ Controls Style
 
 /* Preview */
 .sb-customizer-preview {
+    height: 100vh;
     min-height: 100px;
     width: calc(100% - 375px);
     float: right;
@@ -3088,7 +3086,6 @@ Welcome Screen Empty State
     left: 0;
     top: 2px;
     z-index: 98;
-    text-align: center;
     justify-content: center;
     align-items: flex-start;
     padding-top: 100px;
@@ -3139,15 +3136,7 @@ Welcome Screen Empty State
     border-bottom: 1px solid rgba(255, 255, 255, 0.21);
     padding-bottom: 24px;
 }
-.sbc-lb-video-header.no-subscribe-bar {
-    justify-content: flex-end;
-    margin: 0;
-    border-bottom: 0px solid rgba(255, 255, 255, 0.21);
-    padding-bottom: 0px;
-}
-.sbc-lb-video-header.no-subscribe-bar svg {
-    transform: translate(0px, 30px);
-}
+
 .sbc-lb-video-header-left {
     width: 490px;
     display: flex;
@@ -4525,12 +4514,20 @@ Feed Instance Popup
     margin-top: 128px;
 }
 
+.sb_youtube:not(.sby_layout_list) .sby-comment-container{
+    display: none;
+
+}
+
+.sb_youtube.sby_layout_gallery .sby_player_outer_wrap .sby-comment-container {
+    display: block;
+}
 
 .sby_layout_list .sby_item:not(:first-child) .sby-player-info .sby-channel-info-bar {
     display: none;
 }
 
-[data-sby-pro="false"] .sbc-lb-video-header .sbc-lb-video-header-left {
+[data-sby-pro="false"] .sby_lb-dataContainer .sby_lb-caption{
     display: none;
 }
 [data-sby-pro="false"] .sbc-lb-video-header {
@@ -4570,4 +4567,34 @@ Feed Instance Popup
 }
 .sbc-cta-icon {
     margin-right: 8px;
+}
+
+
+
+.sb-bold-label .sb-control-label {
+    font-weight: 600;
+}
+
+.sb-input-button-with-icon input{
+    margin-right: 4px;
+}
+
+.sb-input-button-with-icon .sb-control-elem-description {
+    margin-top: 10px;
+}
+
+.sb-input-button-with-icon .sb-control-input-info{
+    line-height: normal;
+    font-weight: 600;
+    padding: 6px 20px 6px 12px;
+    border-left: 1px solid #D0D1D7;
+}
+
+.sb-input-button-with-icon .sb-control-input-info .sb-control-btn-icon{
+    line-height: 1;
+}
+
+.sb-input-button-with-icon .sb-control-input-info svg{
+
+    margin-right: 5px; 
 }

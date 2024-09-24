@@ -5,7 +5,7 @@ Support Website: http://smashballoon/youtube-feed/
 Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Tested up to: 6.6
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -166,9 +166,14 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+= 2.2.3 =
+* Fix: Plugin hardening.
+* Tweak: Improved translation support for multiple languages.
+* Tweak: Added support for Borlabs 3.0 and our GDPR features.
+
 = 2.2.2 =
 * Fix: Plugin hardening.
-* Fix: Fixed missing CSS file that would effect Elementor users.
+* Fix: Fixed missing CSS file that would affect Elementor users.
 
 = 2.2.1 =
 * Fix: Fixed an issue with the feed type selection that was causing confusion.

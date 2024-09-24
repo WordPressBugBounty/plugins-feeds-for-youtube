@@ -33,8 +33,8 @@ class MenuService extends ServiceProvider {
 		$cap = current_user_can( 'manage_options' ) ? 'manage_options' : 'manage_youtube_feed_options';
 
 		add_menu_page(
-			__('YouTube Feed', 'feed-for-youtube'),
-			__('YouTube Feed', 'feed-for-youtube') . $this->alert_html(),
+			__('YouTube Feed', 'feeds-for-youtube'),
+			__('YouTube Feed', 'feeds-for-youtube') . $this->alert_html(),
 			$cap,
 			SBY_MENU_SLUG,
 			null,
@@ -44,8 +44,8 @@ class MenuService extends ServiceProvider {
 
 		add_submenu_page(
 			SBY_MENU_SLUG,
-			__( 'All Feeds', 'youtube-feed' ),
-			__( 'All Feeds', 'youtube-feed' ),
+			__( 'All Feeds', 'feeds-for-youtube' ),
+			__( 'All Feeds', 'feeds-for-youtube' ),
 			$cap,
 			SBY_MENU_SLUG,
 			array( $this->builder, 'feed_builder' ),

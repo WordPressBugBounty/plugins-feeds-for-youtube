@@ -29,7 +29,7 @@ class AssetsService extends ServiceProvider {
 
 		if ( ! empty( $js ) ) {
 			echo "\r\n";
-			echo "jQuery( document ).ready(function($) {";
+			echo "if (typeof jQuery !== 'undefined') {  jQuery( document ).ready(function($) {";
 			echo "\r\n";
 			echo "window.sbyCustomJS = function(){";
 			echo "\r\n";
@@ -37,7 +37,7 @@ class AssetsService extends ServiceProvider {
 			echo "\r\n";
 			echo "}";
 			echo "\r\n";
-			echo "});";
+			echo "})};";
 		}
 
 		echo "\r\n";
@@ -47,6 +47,8 @@ class AssetsService extends ServiceProvider {
 
 	public function sby_custom_css() {
 		global $sby_settings;
+
+		$css = '';
 
 		$css = isset( $sby_settings['custom_css'] ) ? trim( $sby_settings['custom_css'] ) : '';
 
@@ -104,10 +106,12 @@ class AssetsService extends ServiceProvider {
 		$enqueue_in_head = isset($global_settings['enqueue_js_in_head']) ? $global_settings['enqueue_js_in_head'] : false;
 		wp_register_script( 'sby_scripts', $js_file, array('jquery'), SBYVER, !$enqueue_in_head );
 
+		$css_file_name = 'sb-youtube.min.css';
+
 		if ( !empty( $sby_settings['enqueue_css_in_shortcode'] ) ) {
-			wp_register_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/sb-youtube.min.css', array(), SBYVER );
+			wp_register_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/' . $css_file_name, array(), SBYVER );
 		} else {
-			wp_enqueue_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/sb-youtube.min.css', array(), SBYVER );
+			wp_enqueue_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/' . $css_file_name, array(), SBYVER );
 		}
 
 		$data = array(

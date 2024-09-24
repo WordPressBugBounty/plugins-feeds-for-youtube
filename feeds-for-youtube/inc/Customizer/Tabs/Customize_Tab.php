@@ -100,6 +100,19 @@ class Customize_Tab extends Tab {
 	}
 
 	/**
+ * Checks if the extension popup should be shown based on the current license status.
+	 * 
+	 * @param string $slug
+	 * 
+	 * @return bool|string
+	 * 
+	 * @since 2.3.3
+	*/
+	private static function is_pro_check_extension_popup($slug) {
+		return sby_is_pro() && !sby_license_notices_active() ? false : $slug;
+	}
+
+	/**
 	 * Get Customize Tab Feed Layout Section
 	 * @since 6.0
 	 * @return array
@@ -1314,6 +1327,50 @@ class Customize_Tab extends Tab {
 
 		$controls[] = array(
 			'type'    => 'switcher',
+			'id'      => 'enablecomments',
+			'label'   => __( 'Comments', 'feeds-for-youtube' ),
+			'description' => __( '', 'feeds-for-youtube' ),
+			'labelStrong' => 'true',
+			'descriptionPosition' => 'bottom',
+			'checkExtensionPopup' => self::is_pro_check_extension_popup('comments'),
+			'stacked' => 'true',
+			'options' => array(
+				'enabled'  => true,
+				'disabled' => false,
+			),
+			'class' => 'enable-comments'
+		);
+
+		$controls[] = array(
+			'type'                => 'number',
+			'id'                  => 'numcomments',
+			'condition'           => array(
+				'enablecomments' => array( true ),
+			),
+			'conditionHide'       => true,
+			'strongHeading'       => false,
+			'stacked'             => 'true',
+			'placeholder'         => '20',
+			'child'               => true,
+			'fieldSuffixAction'   => 'clearCommentCache',
+			'checkExtensionDimmed'	=> self::is_pro_check_extension_popup('comments'),
+			'checkExtensionPopup' => self::is_pro_check_extension_popup('comments'),
+			'fieldSuffix'         => 'Clear Cache',
+			'heading'             => __( 'No. of Comments', 'feeds-for-youtube' ),
+			'description'         => __( 'Clearing cache will remove all the saved comments in the database', 'feeds-for-youtube' ),
+			'buttonIcon'        => 'update',
+			'descriptionPosition' => 'bottom',
+			'class' => 'sb-input-button-with-icon'
+		);
+
+		$controls[] = array(
+			'type'      => 'separator',
+			'top'       => 15,
+			'bottom'    => 0,
+		);
+
+		$controls[] = array(
+			'type'    => 'switcher',
 			'id'      => 'enablesubscriberlink',
 			'label'   => __( 'Subscribe Link', 'feeds-for-youtube' ),
 			'description' => __( 'Shows a subscribe link below the video', 'feeds-for-youtube' ),
@@ -1330,22 +1387,11 @@ class Customize_Tab extends Tab {
 
 		$controls[] = array(
 			'type'          => 'colorpicker',
-			'id'            => 'subscribelinkcolorbg',
-			'layout'        => 'half',
-			'strongHeading' => 'false',
-			'heading'       => __( 'Background', 'feeds-for-youtube' ),
-			'style'         => array( '.sbc-channel-subscribe-btn button' => 'background:{{value}};', '.sby-player-info .sby-channel-info-bar .sby-channel-subscribe-btn a' => 'background:{{value}};' ),
-			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
-			'stacked'       => 'true',
-		);
-
-		$controls[] = array(
-			'type'          => 'colorpicker',
 			'id'            => 'subscribebtnprimarycolor',
 			'layout'        => 'half',
 			'strongHeading' => 'false',
-			'heading'       => __( 'Text Primary', 'feeds-for-youtube' ),
-			'style'         => array( '[id^=sb_youtube_].sb_youtube .sby-video-header-info h5, [id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-name' => 'color:{{value}};' ),
+			'heading'       => __( 'Channel Name', 'feeds-for-youtube' ),
+			'style'         => array( '[id^=sb_youtube_].sb_youtube .sby-video-header-info h5, [id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-name, .sby_lb-dataContainer .sby-lb-channel-header .sby-lb-channel-name-with-subs span:first-child' => 'color:{{value}};' ),
 			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
 			'stacked'       => 'true',
 		);
@@ -1354,17 +1400,29 @@ class Customize_Tab extends Tab {
 			'id'            => 'subscribebtnsecondarycolor',
 			'layout'        => 'half',
 			'strongHeading' => 'false',
-			'heading'       => __( 'Text Secondary', 'feeds-for-youtube' ),
-			'style'         => array( '[id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-subscriber-count, [id^=sb_youtube_].sb_youtube .sby-video-header-info .sby-video-header-meta' => 'color:{{value}};', '[id^=sb_youtube_].sb_youtube .sby-video-header-meta span:last-child::after' => 'background:{{value}}' ),
+			'heading'       => __( 'Subscriber Count', 'feeds-for-youtube' ),
+			'style'         => array( '[id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-subscriber-count, [id^=sb_youtube_].sb_youtube .sby-video-header-info .sby-video-header-meta, .sby_lb-dataContainer .sby-lb-channel-header .sby-lb-channel-name-with-subs span:nth-child(2)' => 'color:{{value}};', '[id^=sb_youtube_].sb_youtube .sby-video-header-meta span:last-child::after' => 'background:{{value}}' ),
 			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
 			'stacked'       => 'true',
 		);
+
+		$controls[] = array(
+			'type'          => 'colorpicker',
+			'id'            => 'subscribelinkcolorbg',
+			'layout'        => 'half',
+			'strongHeading' => 'false',
+			'heading'       => __( 'Button Background', 'feeds-for-youtube' ),
+			'style'         => array( '.sbc-channel-subscribe-btn button' => 'background:{{value}};', '.sby-player-info .sby-channel-info-bar .sby-channel-subscribe-btn a' => 'background:{{value}};' ),
+			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
+			'stacked'       => 'true',
+		);
+
 		$controls[] = array(
 			'type'          => 'colorpicker',
 			'id'            => 'subscribebtntextcolor',
 			'layout'        => 'half',
 			'strongHeading' => 'false',
-			'heading'       => __( 'Button', 'feeds-for-youtube' ),
+			'heading'       => __( 'Button Text', 'feeds-for-youtube' ),
 			'style'         => array( '.sbc-channel-subscribe-btn button' => 'color:{{value}};', '.sby-player-info .sby-channel-info-bar .sby-channel-subscribe-btn a' => 'color:{{value}};' ),
 			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
 			'stacked'       => 'true',

@@ -575,7 +575,7 @@ class AdminAjaxService extends ServiceProvider {
 			$output .= sprintf(
 				"<button class='sby-install-plugin-btn sbc-btn-orange' id='sby_install_op_plugin' data-plugin-atts='%s'>%s</button></div></div></div>",
 				wp_json_encode( $plugin_install_data ),
-				__('Install', 'custom-twitter-feeds')
+				__('Install', 'feeds-for-youtube')
 			);
 		}
 		if ( $plugin['installed'] && ! $plugin['activated'] ) {
@@ -584,13 +584,13 @@ class AdminAjaxService extends ServiceProvider {
 			$output .= sprintf(
 				"<button class='sby-install-plugin-btn sb-ot-installed sbc-btn-orange' id='sby_install_op_plugin' data-plugin-atts='%s'>%s</button></div></div></div>",
 				wp_json_encode( $plugin_install_data ),
-				__('Activate', 'custom-twitter-feeds')
+				__('Activate', 'feeds-for-youtube')
 			);
 		}
 		if ( $plugin['installed'] && $plugin['activated'] ) {
 			$output .= sprintf(
 				"<button class='sby-install-plugin-btn sby-btn-orange' id='sby_install_op_plugin' disabled='disabled'>%s</button></div></div></div>",
-				__('Plugin installed & activated', 'custom-twitter-feeds')
+				__('Plugin installed & activated', 'feeds-for-youtube')
 			);
 		}
 
@@ -710,7 +710,7 @@ class AdminAjaxService extends ServiceProvider {
 			wp_send_json_error();
 		}
 
-		$error = esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'custom-twitter-feeds' );
+		$error = esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'feeds-for-youtube' );
 
 		if ( empty( $_POST['plugin'] ) ) {
 			wp_send_json_error( $error );
@@ -776,7 +776,7 @@ class AdminAjaxService extends ServiceProvider {
 			if ( ! is_wp_error( $activated ) ) {
 				wp_send_json_success(
 					array(
-						'msg'          => 'plugin' === $type ? esc_html__( 'Plugin installed & activated.', 'custom-twitter-feeds' ) : esc_html__( 'Addon installed & activated.', 'custom-twitter-feeds' ),
+						'msg'          => 'plugin' === $type ? esc_html__( 'Plugin installed & activated.', 'feeds-for-youtube' ) : esc_html__( 'Addon installed & activated.', 'feeds-for-youtube' ),
 						'is_activated' => true,
 						'basename'     => $plugin_basename,
 					)
@@ -784,7 +784,7 @@ class AdminAjaxService extends ServiceProvider {
 			} else {
 				wp_send_json_success(
 					array(
-						'msg'          => 'plugin' === $type ? esc_html__( 'Plugin installed.', 'custom-twitter-feeds' ) : esc_html__( 'Addon installed.', 'custom-twitter-feeds' ),
+						'msg'          => 'plugin' === $type ? esc_html__( 'Plugin installed.', 'feeds-for-youtube' ) : esc_html__( 'Addon installed.', 'feeds-for-youtube' ),
 						'is_activated' => false,
 						'basename'     => $plugin_basename,
 					)
@@ -820,14 +820,14 @@ class AdminAjaxService extends ServiceProvider {
 			$activate = activate_plugins( $_POST['plugin'] );
 			if ( ! is_wp_error( $activate ) ) {
 				if ( 'plugin' === $type ) {
-					wp_send_json_success( esc_html__( 'Plugin activated.', 'custom-twitter-feeds' ) );
+					wp_send_json_success( esc_html__( 'Plugin activated.', 'feeds-for-youtube' ) );
 				} else {
-					wp_send_json_success( esc_html__( 'Addon activated.', 'custom-twitter-feeds' ) );
+					wp_send_json_success( esc_html__( 'Addon activated.', 'feeds-for-youtube' ) );
 				}
 			}
 		}
 
-		wp_send_json_error( esc_html__( 'Could not activate addon. Please activate from the Plugins page.', 'custom-twitter-feeds' ) );
+		wp_send_json_error( esc_html__( 'Could not activate addon. Please activate from the Plugins page.', 'feeds-for-youtube' ) );
 	}
 
 	private function sby_do_background_tasks( $feed_details ) {

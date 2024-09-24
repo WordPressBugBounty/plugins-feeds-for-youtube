@@ -511,10 +511,10 @@ class SBY_Feed
 		if ( empty( $this->channels_data[ $term ] ) ) {
 			if ( $connected_account_for_term['expires'] < time() + 5 ) {
 				$error_message = '<p><b>' . __( 'Reconnect to YouTube to show this feed.', 'feeds-for-youtube' ) . '</b></p>';
-				$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', SBY_TEXT_DOMAIN ) . '</p>';
+				$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', 'feeds-for-youtube' ) . '</p>';
 
 				if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-					$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area' ) . '</a>';
+					$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area', 'feeds-for-youtube' ) . '</a>';
 				}
 				global $sby_posts_manager;
 
@@ -1086,10 +1086,10 @@ class SBY_Feed
 			$connected_account_for_term = sby_get_first_connected_account();
 			if ( $connected_account_for_term['expires'] < time() + 5 ) {
 				$error_message = '<p><b>' . __( 'Reconnect to YouTube to show this feed.', 'feeds-for-youtube' ) . '</b></p>';
-				$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', SBY_TEXT_DOMAIN ) . '</p>';
+				$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', 'feeds-for-youtube' ) . '</p>';
 
 				if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-					$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area' ) . '</a>';
+					$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area', 'feeds-for-youtube' ) . '</a>';
 				}
 				global $sby_posts_manager;
 
@@ -1151,10 +1151,10 @@ class SBY_Feed
 					$connected_account_for_term = sby_get_first_connected_account();
 					if ( $connected_account_for_term['expires'] < time() + 5 ) {
 						$error_message = '<p><b>' . __( 'Reconnect to YouTube to show this feed.', 'feeds-for-youtube' ) . '</b></p>';
-						$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', SBY_TEXT_DOMAIN ) . '</p>';
+						$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', 'feeds-for-youtube' ) . '</p>';
 		
 						if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-							$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area' ) . '</a>';
+							$error_message .= '<a href="' . admin_url( 'admin.php?page=youtube-feed-settings' ) . '" target="blank" rel="noopener nofollow">' . __( 'Reconnect in the YouTube Feeds Settings Area', 'feeds-for-youtube' ) . '</a>';
 						}
 						global $sby_posts_manager;
 		
@@ -1373,8 +1373,7 @@ class SBY_Feed
 			if ( ! $this->feed_exists( $settings['feed'] ) ) {
 				$error_title = sprintf( __( 'Error: No feed found with the ID %s.', 'feeds-for-youtube' ),
 					$settings['feed'] );
-				$error_description = __( 'Go to the All Feeds page and select an ID from an existing feed.',
-					'feeds-for-youtube' );
+				$error_description = __( 'Go to the All Feeds page and select an ID from an existing feed.', 'feeds-for-youtube' );
 			}
 
 			$sby_posts_manager->add_frontend_error( 'noposts', sprintf($error_template, $error_title, $error_description) );
@@ -1537,7 +1536,7 @@ class SBY_Feed
 			ob_start();
 			$html = ob_get_contents();
 			ob_get_clean();		?>
-            <p><?php _e( 'No posts found.', SBY_TEXT_DOMAIN ); ?></p>
+            <p><?php _e( 'No posts found.', 'feeds-for-youtube' ); ?></p>
 			<?php
 			$html = ob_get_contents();
 			ob_get_clean();

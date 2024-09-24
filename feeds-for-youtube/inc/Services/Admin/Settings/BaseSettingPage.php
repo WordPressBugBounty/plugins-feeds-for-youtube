@@ -62,7 +62,7 @@ abstract class BaseSettingPage extends ServiceProvider {
 		wp_enqueue_script(
 			'sby-settings',
 			$script_file,
-			null,
+			array( 'wp-i18n' ),
 			SBYVER,
 			true
 		);
@@ -72,6 +72,8 @@ abstract class BaseSettingPage extends ServiceProvider {
 			'sby_settings',
 			$this->get_settings_object()
 		);
+
+		wp_set_script_translations('sby-settings', 'feeds-for-youtube', SBY_PLUGIN_DIR . 'languages/');
 	}
 
 	public function register_menu_page() {

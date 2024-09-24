@@ -75,6 +75,7 @@ class SBY_Feed_Templates_Settings {
         $settings['showheader'] = false;
         $settings['videocardstyle'] = 'regular';
         
+        $settings = self::enable_comments_for_template( $settings, true );
         $settings = self::get_default_loadmore_button_settings( $settings );
         $settings = self::get_default_subscribe_button_settings( $settings );
         
@@ -105,7 +106,6 @@ class SBY_Feed_Templates_Settings {
         $settings['headerstyle'] = 'text';
         $settings['customheadertext'] = 'We are on YouTube';
         $settings['customheadersize'] = 'medium';
-        
         $settings = self::get_default_loadmore_button_settings( $settings );
         $settings = self::get_default_subscribe_button_settings( $settings );
         
@@ -141,7 +141,8 @@ class SBY_Feed_Templates_Settings {
         $settings['boxedbgcolor'] = '#ffffff';
         $settings['boxborderradius'] = '4';
         $settings['enableboxshadow'] = true;
-        
+
+       $settings = self::enable_comments_for_template( $settings, true );
         $settings = self::get_default_loadmore_button_settings( $settings );
         $settings = self::get_default_subscribe_button_settings( $settings );
         
@@ -168,7 +169,8 @@ class SBY_Feed_Templates_Settings {
         $settings['headerstyle'] = 'standard';
 
         $settings['videocardstyle'] = 'regular';
-        
+
+        $settings = self::enable_comments_for_template( $settings, false );
         $settings = self::get_default_loadmore_button_settings( $settings );
         $settings = self::get_default_subscribe_button_settings( $settings );
         
@@ -195,6 +197,7 @@ class SBY_Feed_Templates_Settings {
         $settings['showheader'] = false;
         $settings['videocardstyle'] = 'regular';
         
+        $settings = self::enable_comments_for_template( $settings, false );
         $settings = self::get_default_loadmore_button_settings( $settings );
         $settings = self::get_default_subscribe_button_settings( $settings );
         
@@ -221,6 +224,7 @@ class SBY_Feed_Templates_Settings {
 
         $settings['videocardstyle'] = 'regular';
         
+        $settings = self::enable_comments_for_template( $settings, true );
         $settings = self::get_default_loadmore_button_settings( $settings );
         $settings = self::get_default_subscribe_button_settings( $settings );
         
@@ -252,7 +256,6 @@ class SBY_Feed_Templates_Settings {
         $settings = self::get_default_subscribe_button_settings( $settings );
         
         $settings['videocardstyle'] = 'regular';
-
         return $settings;
     }
     
@@ -278,7 +281,8 @@ class SBY_Feed_Templates_Settings {
         
         $settings = self::get_default_loadmore_button_settings( $settings );
         $settings = self::get_default_subscribe_button_settings( $settings );
-        
+        $settings = self::enable_comments_for_template( $settings, false );
+
         return $settings;
     }
 
@@ -298,6 +302,7 @@ class SBY_Feed_Templates_Settings {
         $settings['carouselarrows'] = true;
         $settings['carouselpag'] = true;
         $settings['carouselautoplay'] = true;
+        $settings = self::enable_comments_for_template( $settings, true );
         
         return $settings;
     }
@@ -335,4 +340,20 @@ class SBY_Feed_Templates_Settings {
         
         return $settings;
     }
+
+      /**
+     * Enables comments for the template settings if the conditions are met.
+     * 
+     * @since 2.3.3
+     * 
+     * @param array $settings
+     * @param bool $flag
+     * @return array $settings
+     */
+    private static function enable_comments_for_template($settings, $flag) {
+        if( sby_is_pro() && !sby_license_notices_active()) {
+            $settings['enablecomments'] = $flag;
+        }
+        return $settings;
+}
 }

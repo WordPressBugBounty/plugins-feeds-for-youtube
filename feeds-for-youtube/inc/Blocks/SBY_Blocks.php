@@ -7,6 +7,7 @@ use Smashballoon\Customizer\Feed_Builder;
 use SmashBalloon\YouTubeFeed\Helpers\Util;
 use SmashBalloon\YouTubeFeed\Services\AssetsService;
 use SmashBalloon\YouTubeFeed\Services\LicenseNotification;
+use Smashballoon\Framework\Packages\Blocks\RecommendedBlocks;
 
 /**
  * Instagram Feed block with live preview.
@@ -43,6 +44,8 @@ class SBY_Blocks {
 	 */
 	public function load() {
 		$this->hooks();
+		$recommended_blocks = new RecommendedBlocks();
+		$recommended_blocks->setup();
 	}
 
 	/**
@@ -110,10 +113,10 @@ class SBY_Blocks {
 		$shortcode_settings = '';
 
 		$i18n = array(
-			'addSettings'         => esc_html__( 'Add Settings', SBY_TEXT_DOMAIN ),
-			'shortcodeSettings'   => esc_html__( 'Shortcode Settings', SBY_TEXT_DOMAIN ),
-			'example'             => esc_html__( 'Example', SBY_TEXT_DOMAIN ),
-			'preview'             => esc_html__( 'Apply Changes', SBY_TEXT_DOMAIN ),
+			'addSettings'         => esc_html__( 'Add Settings', 'feeds-for-youtube' ),
+			'shortcodeSettings'   => esc_html__( 'Shortcode Settings', 'feeds-for-youtube' ),
+			'example'             => esc_html__( 'Example', 'feeds-for-youtube' ),
+			'preview'             => esc_html__( 'Apply Changes', 'feeds-for-youtube' ),
 
 		);
 
@@ -210,7 +213,7 @@ class SBY_Blocks {
 		$output .= sprintf(
 					'<a href="%s" class="sby-btn sby-btn-blue">%s '. $icons['chevronRight'] .'</a>', 
 					admin_url('admin.php?page=sby-feed-builder'), 
-					__('Create a YouTube Feeds', SBY_TEXT_DOMAIN)
+					__('Create a YouTube Feeds', 'feeds-for-youtube')
 				);
 		$output .= '</div>
 			<div class="sby-lepd-footer">
