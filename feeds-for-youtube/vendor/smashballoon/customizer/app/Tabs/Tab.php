@@ -2,6 +2,7 @@
 
 namespace Smashballoon\Customizer\Tabs;
 
+/** @internal */
 abstract class Tab
 {
     protected $id;

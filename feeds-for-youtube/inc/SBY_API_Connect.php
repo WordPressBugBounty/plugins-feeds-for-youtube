@@ -207,6 +207,8 @@ class SBY_API_Connect
 			$channel_param = 'mine=true';
 			if ( isset( $params['channel_name'] ) ) {
 				$channel_param = 'forUsername=' . $params['channel_name'];
+			} elseif ( !empty( $params['channel_handle']  ) ){
+				$channel_param = 'forHandle=' . $params['channel_handle'];
 			} elseif ( isset( $params['channel_id'] ) ) {
 				$channel_param = 'id=' . $params['channel_id'];
 			}

@@ -34,10 +34,10 @@ class DebugReportingService extends ServiceProvider {
 			$atts = array( 'feed' => $feed );
 		}
 
-		$settings_obj = new SBY_Settings_Pro( $atts, sby_get_database_settings() );
+		$settings_obj = sby_is_pro_version() ? new SBY_Settings_Pro( $atts, sby_get_database_settings() ) : new SBY_Settings( $atts, sby_get_database_settings() );
 
 		$settings = $settings_obj->get_settings();
-		$public_settings_keys = SBY_Settings_Pro::get_public_db_settings_keys();
+		$public_settings_keys = sby_is_pro_version() ? SBY_Settings_Pro::get_public_db_settings_keys() : SBY_Settings::get_public_db_settings_keys();
 
 		?>
 		<p>Settings</p>

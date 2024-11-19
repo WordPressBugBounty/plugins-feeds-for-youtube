@@ -21,6 +21,7 @@ abstract class BaseSettingPage extends ServiceProvider {
 	protected $template_file = "";
 	protected $menu_position = 0;
 	protected $has_page_restriction = false;
+	protected $menu_position_free_version = 0;
 
 	public function register() {
 		if ( true === $this->has_menu ) {

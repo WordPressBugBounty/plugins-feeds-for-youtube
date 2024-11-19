@@ -3,7 +3,8 @@
 Plugin Name: Feeds for YouTube
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.2.3
+Version: 2.2.4
+Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
 Text Domain: feeds-for-youtube
@@ -53,7 +54,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.2.3' );
+    define( 'SBYVER', '2.2.4' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.0' );
@@ -563,7 +564,7 @@ if ( ! function_exists( 'sby_init' ) ) {
         load_plugin_textdomain( 'feeds-for-youtube', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
     }
 
-    add_action( 'plugins_loaded', 'sby_text_domain' );
+    add_action( 'init', 'sby_text_domain' );
 
     //BUILDER CODE
     function sby_builder_pro() {

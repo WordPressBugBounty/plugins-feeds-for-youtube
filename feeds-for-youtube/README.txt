@@ -4,8 +4,9 @@ Contributors: smashballoon, craig-at-smash-balloon, am, smub
 Support Website: http://smashballoon/youtube-feed/
 Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
-Tested up to: 6.6
-Stable tag: 2.2.3
+Requires PHP: 7.4
+Tested up to: 6.7
+Stable tag: 2.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -166,6 +167,9 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+= 2.2.4 =
+* Tweak: Added support for our new [Feed Analytics](https://smashballoon.com/?utm_campaign=youtube-free-readme&utm_source=changelog&utm_medium=feedanalyticsannouncement) product. Get insights as to how your feeds are being used by site visitors.
+
 = 2.2.3 =
 * Fix: Plugin hardening.
 * Tweak: Improved translation support for multiple languages.

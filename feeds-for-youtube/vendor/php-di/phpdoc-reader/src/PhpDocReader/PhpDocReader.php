@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+
 namespace SmashBalloon\YoutubeFeed\Vendor\PhpDocReader;
 
 use SmashBalloon\YoutubeFeed\Vendor\PhpDocReader\PhpParser\UseStatementParser;
@@ -11,6 +11,7 @@ use ReflectionProperty;
 use Reflector;
 /**
  * PhpDoc reader
+ * @internal
  */
 class PhpDocReader
 {

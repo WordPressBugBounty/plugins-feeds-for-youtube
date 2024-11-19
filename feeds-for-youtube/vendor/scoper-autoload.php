@@ -4,7 +4,7 @@
 
 $loader = (static function () {
     // Backup the autoloaded Composer files
-    $existingComposerAutoloadFiles = isset($GLOBALS['__composer_autoload_files']) ? $GLOBALS['__composer_autoload_files'] : [];
+    $existingComposerAutoloadFiles = $GLOBALS['__composer_autoload_files'] ?? [];
 
     $loader = require_once __DIR__.'/autoload.php';
     // Ensure InstalledVersions is available
@@ -29,6 +29,6 @@ if (!function_exists('humbug_phpscoper_expose_class')) {
         }
     }
 }
-humbug_phpscoper_expose_class('ComposerAutoloaderInit2c160231bd8dba80bd059e9887f9c7ac', 'SmashBalloon\YoutubeFeed\Vendor\ComposerAutoloaderInit2c160231bd8dba80bd059e9887f9c7ac');
+humbug_phpscoper_expose_class('ComposerAutoloaderInit2c8bb191b09a29bd10e1ae794534fbbe', 'SmashBalloon\YoutubeFeed\Vendor\ComposerAutoloaderInit2c8bb191b09a29bd10e1ae794534fbbe');
 
 return $loader;

@@ -2,6 +2,9 @@
 
 namespace SmashBalloon\YouTubeFeed\Helpers;
 
+use SmashBalloon\YouTubeFeed\Pro\SBY_API_Connect_Pro;
+use SmashBalloon\YouTubeFeed\SBY_API_Connect;
+
 class Util {
 	public static function isPro() {
 		return defined( 'SBY_PRO' ) && SBY_PRO === true;
@@ -210,35 +213,64 @@ class Util {
 	 * Make API request to get channel ID from YouTube handle
 	 */
 	public static function get_channel_id_by_api_request( $url ) {
-		$api_register_url = SBY_API_URL . 'auth/register?url=' . get_home_url();
-		$api_url = SBY_API_URL . 'youtube/handle?channel_url=' . $url;
+		$response = new \stdClass();
+		$path = parse_url($url, PHP_URL_PATH);
+		$basename = basename($path); // This will give you the username part
 
-		// Get Authorization Token
-		$request = wp_remote_post( $api_register_url );
-		if ( is_wp_error( $request ) ) {
-			return;
-		}
-		$response = json_decode( wp_remote_retrieve_body( $request ) );
-		if ( $response->success && empty( $response->token ) || ! $response->success && empty( $response->data->token ) ) {
-			error_log('returning due to empty token');
-			return;
-		}
-		if ( $response->success ) {
-			$api_token = $response->token;
-		} else {
-			$api_token = $response->data->token;
+		if( !empty($basename) ) {
+				$username = strpos($basename, '@') === 0 ? substr($basename, 1) : $basename;
+			
+				$params = array(
+					'channel_handle' => $username
+				);
+
+				$connected_account = sby_get_first_connected_account();
+				$sby_api_connect = new SBY_API_Connect($connected_account, 'channels', $params );
+				$sby_api_connect->connect();
+
+				$data = $sby_api_connect->get_data();
+
+
+				if ( ! $sby_api_connect->is_youtube_error() ) {
+					$channelId = !empty($data['items'][0]['id']) ? $data['items'][0]['id'] : '';
+					$response->channel_id = $channelId;
+			}
 		}
 
-		// Get Channel ID
-		$request = wp_remote_get( $api_url, array(
-			'headers' => array(
-				'Authorization' => 'Bearer ' . $api_token,
-			),
-		));
-		if ( is_wp_error( $request ) ) {
-			return;
+		if( empty($response->channel_id)) {
+			$api_register_url = SBY_API_URL . 'auth/register?url=' . get_home_url();
+			$api_url = SBY_API_URL . 'youtube/handle?channel_url=' . $url;
+
+			// Get Authorization Token
+			$request = wp_remote_post( $api_register_url );
+			if ( is_wp_error( $request ) ) {
+				return;
+			}
+			$response = json_decode( wp_remote_retrieve_body( $request ) );
+			if ( $response->success && empty( $response->token ) || ! $response->success && empty( $response->data->token ) ) {
+				error_log('returning due to empty token');
+				return;
+			}
+			if ( $response->success ) {
+				$api_token = $response->token;
+			} else {
+				$api_token = $response->data->token;
+			}
+
+			// Get Channel ID
+			$request = wp_remote_get( $api_url, array(
+				'headers' => array(
+					'Authorization' => 'Bearer ' . $api_token,
+				),
+			));
+
+			if ( is_wp_error( $request ) ) {
+				return;
+			}
+
+			$response = json_decode( wp_remote_retrieve_body( $request ) );
+
 		}
-		$response = json_decode( wp_remote_retrieve_body( $request ) );
 
 		self::cache_saved_channel_id( $url, $response );
 

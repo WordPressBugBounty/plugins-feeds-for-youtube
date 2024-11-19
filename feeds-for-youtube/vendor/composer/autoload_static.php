@@ -4,10 +4,10 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac
+class ComposerStaticInit2c8bb191b09a29bd10e1ae794534fbbe
 {
     public static $files = array (
-        'sb_ytf_bbf73f3db644d3dced353b837903e74c' => __DIR__ . '/..' . '/php-di/php-di/src/DI/functions.php',
+        'sb_ytf_b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
         'sb_ytf_b1eb330aa001ae4915f07005b4e993c2' => __DIR__ . '/..' . '/smashballoon/framework/Utilities/functions.php',
     );
 
@@ -19,8 +19,8 @@ class ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac
             'Smashballoon\\Customizer\\' => 24,
             'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' => 46,
             'SmashBalloon\\YoutubeFeed\\Vendor\\PhpDocReader\\' => 45,
+            'SmashBalloon\\YoutubeFeed\\Vendor\\Laravel\\SerializableClosure\\' => 60,
             'SmashBalloon\\YoutubeFeed\\Vendor\\Invoker\\' => 40,
-            'SmashBalloon\\YoutubeFeed\\Vendor\\Interop\\Container\\' => 50,
             'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' => 35,
             'SmashBalloon\\YouTubeFeed\\' => 25,
         ),
@@ -47,17 +47,17 @@ class ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac
         array (
             0 => __DIR__ . '/..' . '/php-di/phpdoc-reader/src/PhpDocReader',
         ),
+        'SmashBalloon\\YoutubeFeed\\Vendor\\Laravel\\SerializableClosure\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel/serializable-closure/src',
+        ),
         'SmashBalloon\\YoutubeFeed\\Vendor\\Invoker\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-di/invoker/src',
         ),
-        'SmashBalloon\\YoutubeFeed\\Vendor\\Interop\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
-        ),
         'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' => 
         array (
-            0 => __DIR__ . '/..' . '/php-di/php-di/src/DI',
+            0 => __DIR__ . '/..' . '/php-di/php-di/src',
         ),
         'SmashBalloon\\YouTubeFeed\\' => 
         array (
@@ -72,9 +72,9 @@ class ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit2c160231bd8dba80bd059e9887f9c7ac::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2c8bb191b09a29bd10e1ae794534fbbe::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2c8bb191b09a29bd10e1ae794534fbbe::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit2c8bb191b09a29bd10e1ae794534fbbe::$classMap;
 
         }, null, ClassLoader::class);
     }

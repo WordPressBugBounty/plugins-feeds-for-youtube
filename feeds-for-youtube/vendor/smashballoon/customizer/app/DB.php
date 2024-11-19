@@ -7,6 +7,7 @@
  */
 namespace Smashballoon\Customizer;
 
+/** @internal */
 class DB
 {
     const RESULTS_PER_PAGE = 20;
@@ -15,8 +16,8 @@ class DB
     public function __construct()
     {
         global $wpdb;
-        $this->sources_table = apply_filters('sb_customizer_sources_table', $wpdb->prefix . $this->sources_table);
-        $this->feeds_table = apply_filters('sb_customizer_feeds_table', $wpdb->prefix . $this->feeds_table);
+        $this->sources_table = \apply_filters('sb_customizer_sources_table', $wpdb->prefix . $this->sources_table);
+        $this->feeds_table = \apply_filters('sb_customizer_feeds_table', $wpdb->prefix . $this->feeds_table);
     }
     /**
      * Set Feeds Table
@@ -52,7 +53,7 @@ class DB
             $page = (int) $args['page'] - 1;
             unset($args['page']);
         }
-        $offset = max(0, $page * self::RESULTS_PER_PAGE);
+        $offset = \max(0, $page * self::RESULTS_PER_PAGE);
         if (empty($args)) {
             $limit = (int) self::RESULTS_PER_PAGE;
             $sql = "SELECT s.id, s.account_id, s.account_type, s.privilege, s.access_token, s.username, s.info, s.error, s.expires, count(f.id) as used_in\n\t\t\t\tFROM {$sources_table_name} s\n\t\t\t\tLEFT JOIN {$feeds_table_name} f ON f.settings LIKE CONCAT('%', s.account_id, '%')\n\t\t\t\tGROUP BY s.id, s.account_id\n\t\t\t\tLIMIT {$limit}\n\t\t\t\tOFFSET {$offset};\n\t\t\t\t";
@@ -63,7 +64,7 @@ class DB
             $i = 0;
             foreach ($results as $result) {
                 if ((int) $result['used_in'] > 0) {
-                    $account_id = sanitize_key($result['account_id']);
+                    $account_id = \sanitize_key($result['account_id']);
                     $sql = "SELECT *\n\t\t\t\t\t\tFROM {$feeds_table_name}\n\t\t\t\t\t\tWHERE settings LIKE CONCAT('%', {$account_id}, '%')\n\t\t\t\t\t\tGROUP BY id\n\t\t\t\t\t\tLIMIT 100;\n\t\t\t\t\t\t";
                     $results[$i]['instances'] = $wpdb->get_results($sql, \ARRAY_A);
                 }
@@ -72,7 +73,7 @@ class DB
             return $results;
         }
         if (!empty($args['expiring'])) {
-            $sql = $wpdb->prepare("\n\t\t\tSELECT * FROM {$sources_table_name}\n\t\t\tWHERE account_type = 'personal'\n\t\t\tAND expires < %s\n\t\t\tAND last_updated < %s\n\t\t\tORDER BY expires ASC\n\t\t\tLIMIT 5;\n\t\t ", gmdate('Y-m-d H:i:s', time() + SBI_REFRESH_THRESHOLD_OFFSET), gmdate('Y-m-d H:i:s', time() - SBI_MINIMUM_INTERVAL));
+            $sql = $wpdb->prepare("\n\t\t\tSELECT * FROM {$sources_table_name}\n\t\t\tWHERE account_type = 'personal'\n\t\t\tAND expires < %s\n\t\t\tAND last_updated < %s\n\t\t\tORDER BY expires ASC\n\t\t\tLIMIT 5;\n\t\t ", \gmdate('Y-m-d H:i:s', \time() + SBI_REFRESH_THRESHOLD_OFFSET), \gmdate('Y-m-d H:i:s', \time() - SBI_MINIMUM_INTERVAL));
             return $wpdb->get_results($sql, \ARRAY_A);
         }
         if (!empty($args['username'])) {
@@ -84,16 +85,16 @@ class DB
         if (!isset($args['id'])) {
             return \false;
         }
-        if (is_array($args['id'])) {
+        if (\is_array($args['id'])) {
             $id_array = array();
             foreach ($args['id'] as $id) {
-                $id_array[] = esc_sql($id);
+                $id_array[] = \esc_sql($id);
             }
-        } elseif (strpos($args['id'], ',') !== \false) {
-            $id_array = explode(',', str_replace(' ', '', esc_sql($args['id'])));
+        } elseif (\strpos($args['id'], ',') !== \false) {
+            $id_array = \explode(',', \str_replace(' ', '', \esc_sql($args['id'])));
         }
         if (isset($id_array)) {
-            $id_string = "'" . implode("' , '", array_map('esc_sql', $id_array)) . "'";
+            $id_string = "'" . \implode("' , '", \array_map('esc_sql', $id_array)) . "'";
         }
         if (!empty($args['all_business'])) {
             $id_string = empty($id_string) ? '0' : $id_string;
@@ -107,10 +108,12 @@ class DB
             } else {
                 $sql = $wpdb->prepare("\n\t\t\tSELECT * FROM {$sources_table_name}\n\t\t\tWHERE account_id = %s\n\t\t\tAND privilege = %s;\n\t\t ", $args['id'], $privilege);
             }
-        } else if (isset($id_string)) {
-            $sql = "\n\t\t\t\tSELECT * FROM {$sources_table_name}\n\t\t\t\tWHERE account_id IN ({$id_string});\n\t\t\t\t";
         } else {
-            $sql = $wpdb->prepare("\n\t\t\t\tSELECT * FROM {$sources_table_name}\n\t\t\t\tWHERE account_id = %s;\n\t\t\t    ", $args['id']);
+            if (isset($id_string)) {
+                $sql = "\n\t\t\t\tSELECT * FROM {$sources_table_name}\n\t\t\t\tWHERE account_id IN ({$id_string});\n\t\t\t\t";
+            } else {
+                $sql = $wpdb->prepare("\n\t\t\t\tSELECT * FROM {$sources_table_name}\n\t\t\t\tWHERE account_id = %s;\n\t\t\t    ", $args['id']);
+            }
         }
         return $wpdb->get_results($sql, \ARRAY_A);
     }
@@ -251,13 +254,13 @@ class DB
             $data['expires'] = '2100-12-30 00:00:00';
             $format[] = '%s';
         }
-        $data['last_updated'] = gmdate('Y-m-d H:i:s');
+        $data['last_updated'] = \gmdate('Y-m-d H:i:s');
         $format[] = '%s';
         if (isset($to_insert['author'])) {
             $data['author'] = $to_insert['author'];
             $format[] = '%d';
         } else {
-            $data['author'] = get_current_user_id();
+            $data['author'] = \get_current_user_id();
             $format[] = '%d';
         }
         return $wpdb->insert($sources_table_name, $data, $format);
@@ -294,7 +297,7 @@ class DB
             $page = (int) $args['page'] - 1;
             unset($args['page']);
         }
-        $offset = max(0, $page * self::RESULTS_PER_PAGE);
+        $offset = \max(0, $page * self::RESULTS_PER_PAGE);
         if (isset($args['id'])) {
             $sql = $wpdb->prepare("\n\t\t\tSELECT * FROM {$feeds_table_name}\n\t\t\tWHERE id = %d;\n\t\t ", $args['id']);
         } else {
@@ -334,7 +337,7 @@ class DB
         } else {
             return \false;
         }
-        $data['last_modified'] = gmdate('Y-m-d H:i:s');
+        $data['last_modified'] = \gmdate('Y-m-d H:i:s');
         $format[] = '%s';
         $affected = $wpdb->update($feeds_table_name, $data, $where, $format, $where_format);
         return $affected;
@@ -361,9 +364,9 @@ class DB
                 $format[] = '%s';
             }
         }
-        $data['last_modified'] = gmdate('Y-m-d H:i:s');
+        $data['last_modified'] = \gmdate('Y-m-d H:i:s');
         $format[] = '%s';
-        $data['author'] = get_current_user_id();
+        $data['author'] = \get_current_user_id();
         $format[] = '%d';
         $wpdb->insert($feeds_table_name, $data, $format);
         return $wpdb->insert_id;
@@ -378,13 +381,13 @@ class DB
      */
     public function create_tables($include_charset_collate = \true, $skip_sources = \false)
     {
-        if (!function_exists('dbDelta')) {
+        if (!\function_exists('dbDelta')) {
             require_once \ABSPATH . '/wp-admin/includes/upgrade.php';
         }
         global $wpdb;
         $max_index_length = 191;
         $charset_collate = '';
-        if ($include_charset_collate && method_exists($wpdb, 'get_charset_collate')) {
+        if ($include_charset_collate && \method_exists($wpdb, 'get_charset_collate')) {
             // get_charset_collate introduced in WP 3.5
             $charset_collate = $wpdb->get_charset_collate();
         }

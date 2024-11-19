@@ -1,5 +1,6 @@
 let xss = require("xss");
 var sby_js_exists = (typeof sby_js_exists !== 'undefined') ? true : false;
+
 if(!sby_js_exists) {
 
     /**
@@ -1769,7 +1770,26 @@ if(!sby_js_exists) {
                         'onStateChange': function(data) {
                             $self.find('.sby_player_outer_wrap').removeClass('sby_player_loading').find('.sby_video_thumbnail').css('z-index', -1).find('.sby_loader').hide().addClass('sby_hidden');
                             feed.afterStateChange(playerID,videoID,data,$('#' + playerID).closest('.sby_video_thumbnail_wrap'));
+
+
                             if (data.data !== 1) return;
+
+                            let feedID;
+
+                            if(feed.el) {
+                                const shortcodeAttr = feed.el.getAttribute('data-shortcode-atts');
+                                if(shortcodeAttr) {
+                                    feedID = JSON.parse(shortcodeAttr)?.feed;
+                                }
+                            }
+
+                            document.dispatchEvent(new CustomEvent('sby-video-interaction', {
+                                detail: {
+                                    videoID: videoID,
+                                    feedID: feedID
+                                }
+                            }));
+
                             if (typeof feed.players !== 'undefined') {
                                 $self.find('.sby_item').each(function() {
                                     var itemVidID = feed.getVideoID($(this));
@@ -1932,6 +1952,9 @@ if(!sby_js_exists) {
                                 'onStateChange': function(data) {
                                     var videoID = data.target.getVideoData()['video_id'];
                                     if (data.data !== 1) return;
+                                    document.dispatchEvent(videoInteractionEvent, {
+                                        videoID: videoID,
+                                    })
                                     $self.find('.sby_item').each(function() {
                                         var itemVidID = jQuery(this).attr('data-video-id');
 
@@ -2576,7 +2599,13 @@ if(!sby_js_exists) {
                 if ($(this.el).find('#sby_blank').length) {
                     return false;
                 }
-                return this.playerEagerLoaded() || (this.playerAPIReady && this.settings.consentGiven) || (window.sbyAPIReady && this.settings.consentGiven);
+
+                const concentGiven = this.settings.consentGiven
+
+                // Fix for elementor builder for list view. Where video would not load on hocer.
+                const elementorCheck = window.sby.feeds[this.index].playerAPIReady && concentGiven;
+
+                return this.playerEagerLoaded() || (this.playerAPIReady && concentGiven) || (window.sbyAPIReady && concentGiven) || elementorCheck;
             },
             playVideoInPlayer: function(videoID,playerID) {
                 if (typeof this.player !== 'undefined' && typeof this.player.loadVideoById !== 'undefined') {

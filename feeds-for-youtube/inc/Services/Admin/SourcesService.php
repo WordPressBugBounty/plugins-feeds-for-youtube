@@ -23,6 +23,10 @@ class SourcesService extends ServiceProvider {
 	 * @var GoogleAPIResponseStruct
 	 */
 	private $api_verification_data;
+	/**
+	 * @var DataFactory
+	 */
+	private $data_factory;
 
 	public function __construct(SBY_Settings $settings, SBY_API_Connect $connect, DataFactory $data_factory) {
 		$this->settings = $settings;

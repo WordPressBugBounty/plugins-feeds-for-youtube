@@ -93,7 +93,7 @@ class SBY_Feed
 
 	private $do_page_cache_all;
 
-	private $channel_id_avatars;
+	protected $channel_id_avatars;
 	/**
 	 * SBY_Feed constructor.
 	 *

@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+
 namespace SmashBalloon\YoutubeFeed\Vendor\PhpDocReader\PhpParser;
 
 /**
@@ -10,6 +10,7 @@ namespace SmashBalloon\YoutubeFeed\Vendor\PhpDocReader\PhpParser;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Christian Kaps <christian.kaps@mohiva.com>
+ * @internal
  */
 class TokenParser
 {

@@ -116,10 +116,9 @@ class SBY_Elementor_Base
 
 	public function register_frontend_styles()
 	{
-		$sby_pro = !sby_is_pro() ? '-free' : ''; 
 		wp_register_style(
 			'sby-styles',
-			SBY_PLUGIN_URL . 'css/sb-youtube'. $sby_pro .'.min.css',
+			SBY_PLUGIN_URL . 'css/sb-youtube.min.css',
 			array(),
 			SBYVER
 		);

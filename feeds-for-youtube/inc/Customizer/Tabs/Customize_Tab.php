@@ -260,6 +260,7 @@ class Customize_Tab extends Tab {
 				'id'            => 'colsmobile',
 				'icon'          => 'mobile',
 				'layout'        => 'half',
+				'ajaxAction'    => 'feedFlyPreview',
 				'strongHeading' => 'false',
 				'stacked'       => 'true',
 				'condition'     => array( 'layout' => array( 'grid', 'gallery', 'carousel' ) ),

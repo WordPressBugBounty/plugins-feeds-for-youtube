@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+
 namespace SmashBalloon\YoutubeFeed\Vendor\PhpDocReader\PhpParser;
 
 use SplFileObject;
@@ -10,6 +10,7 @@ use SplFileObject;
  * Class taken and adapted from doctrine/annotations to avoid pulling the whole package.
  *
  * Authors: Fabien Potencier <fabien@symfony.com> and Christian Kaps <christian.kaps@mohiva.com>
+ * @internal
  */
 class UseStatementParser
 {

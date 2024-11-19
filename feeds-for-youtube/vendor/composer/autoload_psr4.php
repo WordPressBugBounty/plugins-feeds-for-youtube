@@ -11,8 +11,8 @@ return array(
     'Smashballoon\\Customizer\\' => array($vendorDir . '/smashballoon/customizer/app'),
     'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'SmashBalloon\\YoutubeFeed\\Vendor\\PhpDocReader\\' => array($vendorDir . '/php-di/phpdoc-reader/src/PhpDocReader'),
+    'SmashBalloon\\YoutubeFeed\\Vendor\\Laravel\\SerializableClosure\\' => array($vendorDir . '/laravel/serializable-closure/src'),
     'SmashBalloon\\YoutubeFeed\\Vendor\\Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
-    'SmashBalloon\\YoutubeFeed\\Vendor\\Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
-    'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' => array($vendorDir . '/php-di/php-di/src/DI'),
+    'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' => array($vendorDir . '/php-di/php-di/src'),
     'SmashBalloon\\YouTubeFeed\\' => array($baseDir . '/inc'),
 );

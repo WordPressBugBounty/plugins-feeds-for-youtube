@@ -96,7 +96,7 @@ class AssetsService extends ServiceProvider {
 		$js_file = $assets_url . 'js/sb-youtube.min.js';
 
 		if ( isset( $_GET['sb_debug'] ) ) {
-			$js_file = $assets_url . 'js/sb-youtube.js';
+			$js_file = $assets_url . 'js/sb-youtube-debug.js';
 		}
 
 		if(!Util::isProduction()) {

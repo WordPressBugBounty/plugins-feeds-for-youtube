@@ -1,20 +1,18 @@
 <?php
 
+
 namespace SmashBalloon\YoutubeFeed\Vendor\Invoker\ParameterResolver\Container;
 
-use SmashBalloon\YoutubeFeed\Vendor\Interop\Container\ContainerInterface;
 use SmashBalloon\YoutubeFeed\Vendor\Invoker\ParameterResolver\ParameterResolver;
+use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract;
 /**
  * Inject entries from a DI container using the parameter names.
- *
- * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class ParameterNameContainerResolver implements ParameterResolver
 {
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     private $container;
     /**
      * @param ContainerInterface $container The container to get entries from.
@@ -23,7 +21,7 @@ class ParameterNameContainerResolver implements ParameterResolver
     {
         $this->container = $container;
     }
-    public function getParameters(ReflectionFunctionAbstract $reflection, array $providedParameters, array $resolvedParameters)
+    public function getParameters(ReflectionFunctionAbstract $reflection, array $providedParameters, array $resolvedParameters) : array
     {
         $parameters = $reflection->getParameters();
         // Skip parameters already resolved

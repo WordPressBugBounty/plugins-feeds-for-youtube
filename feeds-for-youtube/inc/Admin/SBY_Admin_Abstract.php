@@ -36,6 +36,10 @@ abstract class SBY_Admin_Abstract {
 
 	protected $textarea_fields;
 
+	protected $position;
+
+	protected $settings;
+
 	public function __construct( $vars, $base_path, $slug, $plugin_name, $capability, $icon, $position, $tabs, $settings, $active_tab = false, $option_name = 'sbspf_settings' ) {
 		$this->vars = $vars;
 		$this->base_path = $base_path;

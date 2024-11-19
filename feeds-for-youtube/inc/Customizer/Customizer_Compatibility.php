@@ -14,6 +14,10 @@ class Customizer_Compatibility extends ServiceProvider {
 	public function register_scripts() {
 		$asset_url = trailingslashit( SBY_PLUGIN_URL ) . 'js/customizer.min.js';
 
+		if ( isset( $_GET['sb_debug'] ) ) {
+			$asset_url = trailingslashit( SBY_PLUGIN_URL ) . 'js/customizer-debug.js';
+		}
+
 		if(!Util::isProduction()) {
 			$asset_url = 'http://localhost:9005/customizer.min.js';
 		}

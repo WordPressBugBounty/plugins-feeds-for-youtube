@@ -347,8 +347,11 @@ class SBY_Feed_Saver_Manager
 				)
 			);
 
+			//Fixes Carousel preview issue.
+			$only_preview = self::carousel_column_preview($_POST['previewScreen'],$preview_settings);
+
 			$shortcode = new ShortcodeService();
-			$feed_output = $shortcode->sby_youtube_feed($atts, $preview_settings);
+			$feed_output = $shortcode->sby_youtube_feed($atts, $only_preview);
 			$return['feed_html'] = $feed_output['feedInitOutput'];
 			;
 			$return['customizerDataSettings'] = $preview_settings;
@@ -675,5 +678,30 @@ class SBY_Feed_Saver_Manager
 		delete_transient('sby_comment_cache');
 		echo 'success';
 		wp_die();
+	}
+
+	/**
+	 * Carousel Column Preview.
+	 *
+	 * @param string $preview_screen
+	 * @param array $preview_settings
+	 * @return array
+	 *
+	 * @since 2.3.4
+	 */
+	public static function carousel_column_preview($preview_screen, $preview_settings) {
+		// Return if preview_settings does not exist.
+		if(empty($preview_settings)) {
+			return $preview_settings;
+		}
+
+		$layout = !empty($preview_settings['layout']) ? $preview_settings['layout'] : '';
+
+		// As we do not use iframe owl slider still thinks that it's in desktop mode ( on mobile view inside preview ). So we just intercepted the desktop value with the mobile one to simulate the desired behavior.
+		if( !empty( $preview_screen ) && 'mobile' === $preview_screen && 'carousel' === $layout ) {
+			$preview_settings['cols'] = $preview_settings['colsmobile'];
+		}
+
+		return $preview_settings;
 	}
 }

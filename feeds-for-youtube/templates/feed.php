@@ -36,8 +36,7 @@ if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] 
 ?>
 
 
-<div
-	id="sb_youtube_<?php echo esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) ); ?>" 
+<div id="sb_youtube_<?php echo esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) ); ?>" 
 	<?php echo $feed_classes; ?> 
 	data-feedid="<?php echo esc_attr( $feed_id ); ?>" 
 	data-shortcode-atts="<?php echo esc_attr( $shortcode_atts ); ?>" 
