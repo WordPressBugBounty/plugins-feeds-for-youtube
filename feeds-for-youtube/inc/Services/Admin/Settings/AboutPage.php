@@ -12,7 +12,7 @@ class AboutPage extends BaseSettingPage {
 	protected $template_file = 'settings.index';
 	protected $has_assets = true;
 	protected $menu_position = 4;
-	protected $menu_position_free_version = 3;
+	protected $menu_position_free_version = 4;
 
 	public function register() {
 		parent::register();
@@ -166,29 +166,29 @@ class AboutPage extends BaseSettingPage {
 
 		$settings['pluginInfo'] = [
 			"plugins" => [
-				'instagram' => array(
-					'plugin'          => $sb_other_plugins['instagram_plugin'],
-					'download_plugin' => 'https://downloads.wordpress.org/plugin/feeds-for-youtube.zip',
-					'title'           => __( 'Instagram Feed', 'feeds-for-youtube' ),
-					'description'     => __( 'A quick and elegant way to add your Instagram posts to your website. ', 'feeds-for-youtube' ),
-					'icon'            => 'insta-icon.svg',
-					'installed'       => isset( $sb_other_plugins['is_instagram_installed'] ) && $sb_other_plugins['is_instagram_installed'] == true,
-					'activated'       => is_plugin_active( $sb_other_plugins['instagram_plugin'] ),
-				),
 				'facebook'  => array(
 					'plugin'      => $sb_other_plugins['facebook_plugin'],
 					'download_plugin' => 'https://downloads.wordpress.org/plugin/custom-facebook-feed.zip',
-					'title'       => __( 'Custom Facebook Feed', 'feeds-for-youtube' ),
-					'description' => __( 'Add Facebook posts from your timeline, albums and much more.', 'feeds-for-youtube' ),
+					'title'       => __( 'Facebook Feeds', 'feeds-for-youtube' ),
+					'description' => __( 'Get in depth analytics on all your social feeds in a single place', 'feeds-for-youtube' ),
 					'icon'        => 'fb-icon.svg',
 					'installed'   => isset( $sb_other_plugins['is_facebook_installed'] ) && $sb_other_plugins['is_facebook_installed'] == true,
 					'activated'   => is_plugin_active( $sb_other_plugins['facebook_plugin'] ),
 				),
+				'instagram' => array(
+					'plugin'          => $sb_other_plugins['instagram_plugin'],
+					'download_plugin' => 'https://downloads.wordpress.org/plugin/instagram-feed.zip',
+					'title'           => __( 'Instagram Feeds', 'feeds-for-youtube' ),
+					'description'     => __( 'Display customizable Instagram feeds in WordPress', 'feeds-for-youtube' ),
+					'icon'            => 'insta-icon.svg',
+					'installed'       => isset( $sb_other_plugins['is_instagram_installed'] ) && $sb_other_plugins['is_instagram_installed'] == true,
+					'activated'       => is_plugin_active( $sb_other_plugins['instagram_plugin'] ),
+				),
 				'twitter'   => array(
 					'plugin'          => $sb_other_plugins['twitter_plugin'],
 					'download_plugin' => 'https://downloads.wordpress.org/plugin/custom-twitter-feeds.zip',
-					'title'           => __( 'Custom Twitter Feeds', 'feeds-for-youtube' ),
-					'description'     => __( 'A customizable way to display tweets from your Twitter account. ', 'feeds-for-youtube' ),
+					'title'           => __( 'Twitter Feeds', 'feeds-for-youtube' ),
+					'description'     => __( 'Display customizable Twitter feeds in WordPress', 'feeds-for-youtube' ),
 					'icon'            => 'twitter-icon.svg',
 					'installed'       => isset( $sb_other_plugins['is_twitter_installed'] ) && $sb_other_plugins['is_twitter_installed'] == true,
 					'activated'       => is_plugin_active( $sb_other_plugins['twitter_plugin'] ),
@@ -197,20 +197,60 @@ class AboutPage extends BaseSettingPage {
 					'plugin'          => $sb_other_plugins['youtube_plugin'],
 					'download_plugin' => 'https://downloads.wordpress.org/plugin/feeds-for-youtube.zip',
 					'title'           => __( 'YouTube Feeds', 'feeds-for-youtube' ),
-					'description'     => __( 'A simple yet powerful way to display videos from YouTube. ', 'feeds-for-youtube' ),
+					'description'     => __( 'Display customizable YouTube feeds in WordPress', 'feeds-for-youtube' ),
 					'icon'            => 'youtube-icon.svg',
 					'installed'       => isset( $sb_other_plugins['is_youtube_installed'] ) && $sb_other_plugins['is_youtube_installed'] == true,
 					'activated'       => is_plugin_active( $sb_other_plugins['youtube_plugin'] ),
-				)
+				),
+				'tiktok'   => array(
+					'plugin'          => $sb_other_plugins['tiktok_plugin'],
+					'download_plugin' => 'https://downloads.wordpress.org/plugin/feeds-for-tiktok.zip',
+					'title'           => __( 'Tiktok Feeds', 'feeds-for-youtube' ),
+					'description'     => __( 'Display customizable TikTok feeds in WordPress', 'feeds-for-youtube' ),
+					'icon'            => 'tiktok-icon.svg',
+					'installed'       => isset( $sb_other_plugins['is_tiktok_installed'] ) && $sb_other_plugins['is_tiktok_installed'] == true,
+					'activated'       => is_plugin_active( $sb_other_plugins['tiktok_plugin'] ),
+				),
 			],
 			'social_wall'         => array(
 				'plugin'      => 'social-wall/social-wall.php',
 				'title'       => __( 'Social Wall', 'feeds-for-youtube' ),
-				'description' => __( 'Combine feeds from all of our plugins into a single wall', 'feeds-for-youtube' ),
+				'description' => __( 'Connect all social feeds in a single feed with Social Wall', 'feeds-for-youtube' ),
 				'graphic'     => 'social-wall-graphic.png',
+				'icon'            => 'reviews-icon.svg',
 				'permalink'   => sprintf( 'https://smashballoon.com/social-wall/demo?edd_license_key=%s&upgrade=true&utm_campaign='. sby_utm_campaign() .'&utm_source=about&utm_medium=social-wall', $license_key ),
+				'permalink_text' => __( 'See Demo', 'feeds-for-youtube' ),
 				'installed'   => isset( $sb_other_plugins['is_social_wall_installed'] ) && $sb_other_plugins['is_social_wall_installed'] == true,
 				'activated'   => is_plugin_active( $sb_other_plugins['social_wall_plugin'] ),
+			),
+			'reviews'   => array(
+				'plugin'          => $sb_other_plugins['reviews_plugin'],
+				'download_plugin' => 'https://downloads.wordpress.org/plugin/reviews-feed.zip',
+				'title'           => __( 'Reviews Feeds', 'feeds-for-youtube' ),
+				'description'     => __( 'Display customizable Reviews feeds in WordPress', 'feeds-for-youtube' ),
+				'icon'            => 'reviews-icon.svg',
+				'installed'       => isset( $sb_other_plugins['is_reviews_installed'] ) && $sb_other_plugins['is_reviews_installed'] == true,
+				'activated'       => is_plugin_active( $sb_other_plugins['reviews_plugin'] ),
+			),
+			'click_social'   => array(
+				'plugin'          => $sb_other_plugins['click_social_plugin'],
+				'download_plugin' => 'https://downloads.wordpress.org/plugin/click-social.zip',
+				'title'           => __( 'ClickSocial', 'feeds-for-youtube' ),
+				'description'     => __( 'Effortlessly manage your social media presence directly within WordPress. ', 'feeds-for-youtube' ),
+				'icon'            => 'click-social-icon.svg', 
+				'installed'       => isset( $sb_other_plugins['is_click_social_installed'] ) && $sb_other_plugins['is_click_social_installed'] == true,
+				'activated'       => is_plugin_active( $sb_other_plugins['click_social_plugin'] ),
+			),
+			'feed_analytics'   => array(
+				'plugin'          => $sb_other_plugins['click_social_plugin'],
+				'download_plugin' => '',
+				'title'           => __( 'Feed Analytics', 'feeds-for-youtube' ),
+				'description'     => __( 'Get in depth analytics on all your social feeds in a single place', 'feeds-for-youtube' ),
+				'icon'            => 'feed-analytics-icon.svg', 
+				'permalink'   => sprintf( 'https://smashballoon.com/social-wall/demo?edd_license_key=%s&upgrade=true&utm_campaign='. sby_utm_campaign() .'&utm_source=about&utm_medium=social-wall', $license_key ),
+				'permalink_text' => __( 'See Demo', 'feeds-for-youtube' ),
+				'installed'       => isset( $sb_other_plugins['is_click_social_installed'] ) && $sb_other_plugins['is_click_social_installed'] == true,
+				'activated'       => is_plugin_active( $sb_other_plugins['click_social_plugin'] ),
 			),
 			'recommendedPlugins'  => array(
 				'aioseo'  => array(
@@ -221,6 +261,7 @@ class AboutPage extends BaseSettingPage {
 		            'icon' =>  'plugin-seo.png',
 		            'installed' => isset( $installed_plugins['all-in-one-seo-pack/all_in_one_seo_pack.php'] ) ? true : false,
 		            'activated' => is_plugin_active('all-in-one-seo-pack/all_in_one_seo_pack.php'),
+					'installs_number' => __('3 Million+ Installs', 'feeds-for-youtube')
 	            ),
 	            'wpforms'  => array(
                     'plugin' => 'wpforms-lite/wpforms.php',
@@ -230,6 +271,7 @@ class AboutPage extends BaseSettingPage {
                     'icon' =>  'plugin-wpforms.png',
                     'installed' => isset( $installed_plugins['wpforms-lite/wpforms.php'] ) ? true : false,
                     'activated' => is_plugin_active('wpforms-lite/wpforms.php'),
+					'installs_number' => __('6 Million+ Installs', 'feeds-for-youtube')
                 ),
                 'monsterinsights'  => array(
                     'plugin' => 'google-analytics-for-wordpress/googleanalytics.php',
@@ -239,6 +281,7 @@ class AboutPage extends BaseSettingPage {
                     'icon' =>  'plugin-mi.png',
                     'installed' => isset( $installed_plugins['google-analytics-for-wordpress/googleanalytics.php'] ) ? true : false,
                     'activated' => is_plugin_active('google-analytics-for-wordpress/googleanalytics.php'),
+					'installs_number' => __('3 Million+ Installs', 'feeds-for-youtube')
                 ),
                 'optinmonster'  => array(
                     'plugin' => 'optinmonster/optin-monster-wp-api.php',
@@ -248,6 +291,7 @@ class AboutPage extends BaseSettingPage {
                     'icon' =>  'plugin-om.png',
                     'installed' => isset( $installed_plugins['optinmonster/optin-monster-wp-api.php'] ) ? true : false,
                     'activated' => is_plugin_active('optinmonster/optin-monster-wp-api.php'),
+					'installs_number' => __('1 Million+ Installs', 'feeds-for-youtube')
                 ),
                 'wp_mail_smtp'  => array(
                     'plugin' => 'wp-mail-smtp/wp_mail_smtp.php',
@@ -257,6 +301,7 @@ class AboutPage extends BaseSettingPage {
                     'icon' =>  'plugin-smtp.png',
                     'installed' => isset( $installed_plugins['wp-mail-smtp/wp_mail_smtp.php'] ) ? true : false,
                     'activated' => is_plugin_active('wp-mail-smtp/wp_mail_smtp.php'),
+					'installs_number' => __('3 Million+ Installs', 'feeds-for-youtube')
                 ),
                 'rafflepress'  => array(
                     'plugin' => 'rafflepress/rafflepress.php',
@@ -266,6 +311,7 @@ class AboutPage extends BaseSettingPage {
                     'icon' =>  'plugin-rp.png',
                     'installed' => isset( $installed_plugins['rafflepress/rafflepress.php'] ) ? true : false,
                     'activated' => is_plugin_active('rafflepress/rafflepress.php'),
+					'installs_number' => __('20 Thousand+ Installs', 'feeds-for-youtube')
                 ),
                 'seedprod'  => array(
 	                'plugin' => 'coming-soon/coming-soon.php',
@@ -275,15 +321,17 @@ class AboutPage extends BaseSettingPage {
 	                'icon' =>  'plugin-seedprod.png',
 	                'installed' => isset( $installed_plugins['coming-soon/coming-soon.php'] ) ? true : false,
 	                'activated' => is_plugin_active('coming-soon/coming-soon.php'),
+					'installs_number' => __('800 Thousand+ Installs', 'feeds-for-youtube')
                 ),
                 'pushengage'  => array(
 	                'plugin' => 'pushengage/main.php',
 	                'download_plugin' => 'https://downloads.wordpress.org/plugin/pushengage.zip',
 	                'title' => __('PushEngage Web Push Notifications', 'feeds-for-youtube'),
 	                'description' => __('Connect with your visitors after they leave your website with the leading web push notification software. Over 10,000+ businesses worldwide use PushEngage to send 15 billion notifications each month.', 'feeds-for-youtube'),
-	                'icon' =>  'plugin-pushengage.png',
+	                'icon' =>  'plugin-push.png',
 	                'installed' => isset( $installed_plugins['pushengage/main.php'] ) ? true : false,
 	                'activated' => is_plugin_active('pushengage/main.php'),
+					'installs_number' => __('10 Thousand+ Installs', 'feeds-for-youtube')
                 )
 			),
 		];

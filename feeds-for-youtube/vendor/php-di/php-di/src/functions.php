@@ -11,58 +11,54 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\Helper\FactoryDefinitionHelper
 use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\Reference;
 use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\StringDefinition;
 use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\ValueDefinition;
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\value')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\value')) {
     /**
      * Helper for defining a value.
      *
      * @param mixed $value
-     * @internal
      */
-    function value($value) : ValueDefinition
+    function value($value): ValueDefinition
     {
         return new ValueDefinition($value);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\create')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\create')) {
     /**
      * Helper for defining an object.
      *
      * @param string|null $className Class name of the object.
      *                               If null, the name of the entry (in the container) will be used as class name.
-     * @internal
      */
-    function create(string $className = null) : CreateDefinitionHelper
+    function create(string $className = null): CreateDefinitionHelper
     {
         return new CreateDefinitionHelper($className);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\autowire')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\autowire')) {
     /**
      * Helper for autowiring an object.
      *
      * @param string|null $className Class name of the object.
      *                               If null, the name of the entry (in the container) will be used as class name.
-     * @internal
      */
-    function autowire(string $className = null) : AutowireDefinitionHelper
+    function autowire(string $className = null): AutowireDefinitionHelper
     {
         return new AutowireDefinitionHelper($className);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\factory')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\factory')) {
     /**
      * Helper for defining a container entry using a factory function/callable.
      *
      * @param callable $factory The factory is a callable that takes the container as parameter
      *                          and returns the value to register in the container.
-     * @internal
      */
-    function factory($factory) : FactoryDefinitionHelper
+    function factory($factory): FactoryDefinitionHelper
     {
         return new FactoryDefinitionHelper($factory);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\decorate')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\decorate')) {
     /**
      * Decorate the previous definition using a callable.
      *
@@ -74,39 +70,36 @@ if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\decorate')) {
      *
      * @param callable $callable The callable takes the decorated object as first parameter and
      *                           the container as second.
-     * @internal
      */
-    function decorate($callable) : FactoryDefinitionHelper
+    function decorate($callable): FactoryDefinitionHelper
     {
         return new FactoryDefinitionHelper($callable, \true);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\get')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\get')) {
     /**
      * Helper for referencing another container entry in an object definition.
-     * @internal
      */
-    function get(string $entryName) : Reference
+    function get(string $entryName): Reference
     {
         return new Reference($entryName);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\env')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\env')) {
     /**
      * Helper for referencing environment variables.
      *
      * @param string $variableName The name of the environment variable.
      * @param mixed $defaultValue The default value to be used if the environment variable is not defined.
-     * @internal
      */
-    function env(string $variableName, $defaultValue = null) : EnvironmentVariableDefinition
+    function env(string $variableName, $defaultValue = null): EnvironmentVariableDefinition
     {
         // Only mark as optional if the default value was *explicitly* provided.
-        $isOptional = 2 === \func_num_args();
+        $isOptional = 2 === func_num_args();
         return new EnvironmentVariableDefinition($variableName, $isOptional, $defaultValue);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\add')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\add')) {
     /**
      * Helper for extending another definition.
      *
@@ -123,17 +116,16 @@ if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\add')) {
      * @param mixed|array $values A value or an array of values to add to the array.
      *
      * @since 5.0
-     * @internal
      */
-    function add($values) : ArrayDefinitionExtension
+    function add($values): ArrayDefinitionExtension
     {
-        if (!\is_array($values)) {
+        if (!is_array($values)) {
             $values = [$values];
         }
         return new ArrayDefinitionExtension($values);
     }
 }
-if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\string')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\DI\string')) {
     /**
      * Helper for concatenating strings.
      *
@@ -144,9 +136,8 @@ if (!\function_exists('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\string')) {
      * @param string $expression A string expression. Use the `{}` placeholders to reference other container entries.
      *
      * @since 5.0
-     * @internal
      */
-    function string(string $expression) : StringDefinition
+    function string(string $expression): StringDefinition
     {
         return new StringDefinition($expression);
     }

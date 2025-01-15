@@ -17,10 +17,12 @@ class Customize_Tab extends Tab {
 	protected $id = 'customize';
 	protected $heading = "";
 	protected $license_tier_features;
+	protected $parent_class = "";
 
 	public function __construct() {
 		$this->heading = __('Customize', 'feeds-for-youtube');
 		$this->feed_id            = isset( $_GET['feed_id'] ) ? sanitize_key( $_GET['feed_id'] ) : '';
+		$this->parent_class = "body ";
 		// init license tier
 		$license_tier = new YouTube_License_Tier;
 		$this->license_tier_features = $license_tier->tier_features();
@@ -287,7 +289,7 @@ class Customize_Tab extends Tab {
 				'separator'     => 'bottom',
 				'strongHeading' => 'true',
 				'heading'       => __( 'Spacing between videos', 'feeds-for-youtube'),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube .sby_items_wrap .sby_item' => 'padding:{{value}}px !important;' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube .sby_items_wrap .sby_item' => 'padding:{{value}}px !important;' ),
 			),
 
 		);
@@ -386,7 +388,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Background', 'feeds-for-youtube' ),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id => 'background:{{value}};' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id => 'background:{{value}};' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -397,7 +399,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Text', 'feeds-for-youtube' ),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_video_title' => 'color:{{value}};' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_video_title' => 'color:{{value}};' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -408,7 +410,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Text 2', 'feeds-for-youtube' ),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_info .sby_meta' => 'color:{{value}};' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_info .sby_meta' => 'color:{{value}};' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -419,7 +421,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Link', 'feeds-for-youtube' ),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sb_youtube_header .sby_header_text .sby_bio, [id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sb_youtube_header .sby_header_text h3, [id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sb_youtube_header .sby_header_text .sby_subscribers' => 'color:{{value}};' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sb_youtube_header .sby_header_text .sby_bio, [id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sb_youtube_header .sby_header_text h3, [id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sb_youtube_header .sby_header_text .sby_subscribers' => 'color:{{value}};' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -430,7 +432,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Button 1', 'feeds-for-youtube' ),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_follow_btn a' => 'background:{{value}};' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_follow_btn a' => 'background:{{value}};' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -441,7 +443,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Button 2', 'feeds-for-youtube' ),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_footer .sby_load_btn' => 'background:{{value}};' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube.sby_palette_custom_' . $this->feed_id . ' .sby_footer .sby_load_btn' => 'background:{{value}};' ),
 				'stacked'       => 'true',
 			),
 		);
@@ -613,7 +615,7 @@ class Customize_Tab extends Tab {
 				'layout' 			=> 'half',
 				'strongHeading'		=> 'false',
 				'heading' 			=> __( 'Color', 'feeds-for-youtube' ),
-				'style'				=> ['[id^=sb_youtube_].sb_youtube .sby-header-type-text' => 'color:{{value}}!important;'],
+				'style'				=> [ $this->parent_class . '[id^=sb_youtube_].sb_youtube .sby-header-type-text' => 'color:{{value}}!important;'],
 				'stacked'			=> 'true'
 			),
 		);
@@ -689,7 +691,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Background Color', 'feeds-for-youtube' ),
-				'style'         => array( '[id^=sb_youtube_].sb_youtube[data-videostyle=boxed] .sby_items_wrap .sby_item .sby_inner_item' => 'background:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube[data-videostyle=boxed] .sby_items_wrap .sby_item .sby_inner_item' => 'background:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -703,8 +705,8 @@ class Customize_Tab extends Tab {
 				'heading'       => __( 'Border Radius', 'feeds-for-youtube' ),
 				'fieldSuffix'   => 'px',
 				'style'         => array( 
-					'.sb_youtube[data-videostyle=boxed] .sby_items_wrap .sby_item .sby_inner_item' => 'border-radius:{{value}}px!important;',
-					'.sb_youtube[data-videostyle=boxed] .sby_items_wrap .sby_video_thumbnail' => sprintf('border-radius:%spx %spx 0 0!important;', '{{value}}', '{{value}}' )
+					$this->parent_class . '.sb_youtube[data-videostyle=boxed] .sby_items_wrap .sby_item .sby_inner_item' => 'border-radius:{{value}}px!important;',
+					$this->parent_class . '.sb_youtube[data-videostyle=boxed] .sby_items_wrap .sby_video_thumbnail' => sprintf('border-radius:%spx %spx 0 0!important;', '{{value}}', '{{value}}' )
 				),
 				'stacked'       => 'true',
 			),
@@ -1077,7 +1079,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Background', 'feeds-for-youtube' ),
-				'style'         => array( '.sbi_link' => 'background:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sbi_link' => 'background:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -1087,7 +1089,7 @@ class Customize_Tab extends Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Text', 'feeds-for-youtube' ),
-				'style'         => array( '.sbi_photo_wrap .sbi_username > a, .sbi_photo_wrap .sbi_caption,.sbi_photo_wrap .sbi_instagram_link,.sbi_photo_wrap .sbi_hover_bottom,.sbi_photo_wrap .sbi_location,.sbi_photo_wrap .sbi_meta,.sbi_photo_wrap .sbi_comments' => 'color:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sbi_photo_wrap .sbi_username > a, .sbi_photo_wrap .sbi_caption,.sbi_photo_wrap .sbi_instagram_link,.sbi_photo_wrap .sbi_hover_bottom,.sbi_photo_wrap .sbi_location,.sbi_photo_wrap .sbi_meta,.sbi_photo_wrap .sbi_comments' => 'color:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -1177,7 +1179,7 @@ class Customize_Tab extends Tab {
 				'icon'          => 'background',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Background', 'feeds-for-youtube' ),
-				'style'         => array( '.sby_load_btn' => 'background:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sby_load_btn' => 'background:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -1188,7 +1190,7 @@ class Customize_Tab extends Tab {
 				'icon'          => 'cursor',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Hover State', 'feeds-for-youtube' ),
-				'style'         => array( '.sby_load_btn:hover' => 'background:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sby_load_btn:hover' => 'background:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -1199,7 +1201,7 @@ class Customize_Tab extends Tab {
 				'icon'          => 'text',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Text', 'feeds-for-youtube' ),
-				'style'         => array( '.sby_load_btn' => 'color:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sby_load_btn' => 'color:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 		);
@@ -1253,7 +1255,7 @@ class Customize_Tab extends Tab {
 				'icon'          => 'background',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Background', 'feeds-for-youtube' ),
-				'style'         => array( '.sby_follow_btn a' => 'background:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sby_follow_btn a' => 'background:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -1264,7 +1266,7 @@ class Customize_Tab extends Tab {
 				'icon'          => 'cursor',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Hover State', 'feeds-for-youtube' ),
-				'style'         => array( '.sby_follow_btn a:hover' => 'box-shadow:inset 0 0 10px 20px {{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sby_follow_btn a:hover' => 'box-shadow:inset 0 0 10px 20px {{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 			array(
@@ -1275,7 +1277,7 @@ class Customize_Tab extends Tab {
 				'icon'          => 'text',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Text', 'feeds-for-youtube' ),
-				'style'         => array( '.sby_follow_btn a' => 'color:{{value}}!important;' ),
+				'style'         => array( $this->parent_class . '.sby_follow_btn a' => 'color:{{value}}!important;' ),
 				'stacked'       => 'true',
 			),
 		);
@@ -1392,7 +1394,7 @@ class Customize_Tab extends Tab {
 			'layout'        => 'half',
 			'strongHeading' => 'false',
 			'heading'       => __( 'Channel Name', 'feeds-for-youtube' ),
-			'style'         => array( '[id^=sb_youtube_].sb_youtube .sby-video-header-info h5, [id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-name, .sby_lb-dataContainer .sby-lb-channel-header .sby-lb-channel-name-with-subs span:first-child' => 'color:{{value}};' ),
+			'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube .sby-video-header-info h5, [id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-name, .sby_lb-dataContainer .sby-lb-channel-header .sby-lb-channel-name-with-subs span:first-child' => 'color:{{value}};' ),
 			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
 			'stacked'       => 'true',
 		);
@@ -1402,7 +1404,7 @@ class Customize_Tab extends Tab {
 			'layout'        => 'half',
 			'strongHeading' => 'false',
 			'heading'       => __( 'Subscriber Count', 'feeds-for-youtube' ),
-			'style'         => array( '[id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-subscriber-count, [id^=sb_youtube_].sb_youtube .sby-video-header-info .sby-video-header-meta, .sby_lb-dataContainer .sby-lb-channel-header .sby-lb-channel-name-with-subs span:nth-child(2)' => 'color:{{value}};', '[id^=sb_youtube_].sb_youtube .sby-video-header-meta span:last-child::after' => 'background:{{value}}' ),
+			'style'         => array( $this->parent_class . '[id^=sb_youtube_].sb_youtube .sby-channel-info-bar .sby-channel-subscriber-count, [id^=sb_youtube_].sb_youtube .sby-video-header-info .sby-video-header-meta, .sby_lb-dataContainer .sby-lb-channel-header .sby-lb-channel-name-with-subs span:nth-child(2)' => 'color:{{value}};', '[id^=sb_youtube_].sb_youtube .sby-video-header-meta span:last-child::after' => 'background:{{value}}' ),
 			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
 			'stacked'       => 'true',
 		);
@@ -1413,7 +1415,7 @@ class Customize_Tab extends Tab {
 			'layout'        => 'half',
 			'strongHeading' => 'false',
 			'heading'       => __( 'Button Background', 'feeds-for-youtube' ),
-			'style'         => array( '.sbc-channel-subscribe-btn button' => 'background:{{value}};', '.sby-player-info .sby-channel-info-bar .sby-channel-subscribe-btn a' => 'background:{{value}};' ),
+			'style'         => array( $this->parent_class . '.sbc-channel-subscribe-btn button' => 'background:{{value}};', '.sby-player-info .sby-channel-info-bar .sby-channel-subscribe-btn a' => 'background:{{value}};' ),
 			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
 			'stacked'       => 'true',
 		);
@@ -1424,7 +1426,7 @@ class Customize_Tab extends Tab {
 			'layout'        => 'half',
 			'strongHeading' => 'false',
 			'heading'       => __( 'Button Text', 'feeds-for-youtube' ),
-			'style'         => array( '.sbc-channel-subscribe-btn button' => 'color:{{value}};', '.sby-player-info .sby-channel-info-bar .sby-channel-subscribe-btn a' => 'color:{{value}};' ),
+			'style'         => array( $this->parent_class . '.sbc-channel-subscribe-btn button' => 'color:{{value}};', '.sby-player-info .sby-channel-info-bar .sby-channel-subscribe-btn a' => 'color:{{value}};' ),
 			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribeLink',
 			'stacked'       => 'true',
 		);

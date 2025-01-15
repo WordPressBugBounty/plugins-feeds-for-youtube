@@ -6,6 +6,7 @@ use Smashballoon\Stubs\Services\ServiceProvider;
 
 class UpgradeRoutine extends ServiceProvider {
 	protected $target_version = 0;
+	protected $is_fresh_install = false;
 
 	public function register() {
 		if ( $this->will_run() ) {
@@ -26,5 +27,16 @@ class UpgradeRoutine extends ServiceProvider {
 
 	public function run() {
 		//implement your own version
+	}
+
+	/**
+	 * Set fresh install flag.
+	 *
+	 * @param $is_fresh_install
+	 *
+	 * @return void
+	 */
+	public function set_is_fresh_install($is_fresh_install) {
+		$this->is_fresh_install = $is_fresh_install;
 	}
 }

@@ -52,7 +52,7 @@ class MenuService extends ServiceProvider {
 			0
 		);
 
-		if ( !sby_is_pro() || empty( Util::get_license_key() ) ) {
+		if ( (sby_is_pro() && empty( Util::get_license_key() )) || Util::is_license_expired() || !sby_is_pro() ) {
 			add_submenu_page(
 				SBY_MENU_SLUG,
 				__( 'Upgrade to Pro', 'feeds-for-youtube' ),
@@ -93,6 +93,28 @@ class MenuService extends ServiceProvider {
                 'manage_options',
                 'admin.php?page=sby-feed-builder&tab=more',
                 7
+            );
+		}
+
+		if ( sby_should_add_free_plugin_submenu( 'tiktok' ) ) {
+			add_submenu_page(
+                SBY_MENU_SLUG,
+                __( 'Tiktok Feed', 'feeds-for-youtube' ),
+                '<span class="sby_get_sbtt">' . __( 'Tiktok Feed', 'feeds-for-youtube' ) . '</span>',
+                'manage_options',
+                'admin.php?page=sby-feed-builder&tab=more',
+                8
+            );
+		}
+
+		if ( sby_should_add_free_plugin_submenu( 'reviews' ) ) {
+			add_submenu_page(
+                SBY_MENU_SLUG,
+                __( 'Reviews Feed', 'feeds-for-youtube' ),
+                '<span class="sby_get_sbr">' . __( 'Reviews Feed', 'feeds-for-youtube' ) . '</span>',
+                'manage_options',
+                'admin.php?page=sby-feed-builder&tab=more',
+                9
             );
 		}
 	}

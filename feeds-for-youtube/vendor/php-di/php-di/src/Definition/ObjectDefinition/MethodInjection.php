@@ -8,7 +8,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\Definition;
  * Describe an injection in an object method.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class MethodInjection implements Definition
 {
@@ -25,18 +24,18 @@ class MethodInjection implements Definition
         $this->methodName = $methodName;
         $this->parameters = $parameters;
     }
-    public static function constructor(array $parameters = []) : self
+    public static function constructor(array $parameters = []): self
     {
         return new self('__construct', $parameters);
     }
-    public function getMethodName() : string
+    public function getMethodName(): string
     {
         return $this->methodName;
     }
     /**
      * @return mixed[]
      */
-    public function getParameters() : array
+    public function getParameters(): array
     {
         return $this->parameters;
     }
@@ -52,7 +51,7 @@ class MethodInjection implements Definition
         // In case of conflicts, the current definition prevails.
         $this->parameters = $this->parameters + $definition->parameters;
     }
-    public function getName() : string
+    public function getName(): string
     {
         return '';
     }
@@ -62,13 +61,13 @@ class MethodInjection implements Definition
     }
     public function replaceNestedDefinitions(callable $replacer)
     {
-        $this->parameters = \array_map($replacer, $this->parameters);
+        $this->parameters = array_map($replacer, $this->parameters);
     }
     /**
      * {@inheritdoc}
      */
     public function __toString()
     {
-        return \sprintf('method(%s)', $this->methodName);
+        return sprintf('method(%s)', $this->methodName);
     }
 }

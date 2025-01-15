@@ -420,53 +420,56 @@ function sby_attempt_connection() {
 	if ( ! current_user_can( 'manage_youtube_feed_options' ) ) {
 		return false;
 	}
-	$nonce = !empty($_GET['nonce']) ? sanitize_key($_GET['nonce']) : '';
-	if (!wp_verify_nonce($nonce, 'sby_con')) {
-		return false;
-	}
-	if ( isset( $_GET['sby_access_token'] ) ) {
-		$access_token = sanitize_text_field( urldecode( $_GET['sby_access_token'] ) );
-		$refresh_token = '';
-	} else {
-		$access_token = sanitize_text_field( $_POST['sby_access_token'] );
-		$refresh_token = '';
-	}
 
-	$account_info = array(
-		'access_token' => $access_token,
-		'refresh_token' => $refresh_token
-	);
-	$sby_api_connect = new SBY_API_Connect( $account_info, 'tokeninfo' );
-	$sby_api_connect->connect();
+	$nonce = !empty($_GET['nonce']) ? sanitize_key($_GET['nonce']) : 
+        (!empty($_POST['nonce']) ? sanitize_key($_POST['nonce']) : '');
 
-	$data = $sby_api_connect->get_data();
+	if (wp_verify_nonce($nonce, 'sby_con') || wp_verify_nonce($nonce, 'sby-admin') ) {
 
-	if ( isset( $data['audience'] ) ) {
-		$expires = $data['expires_in'] + time();
-		$sby_api_connect = new SBY_API_Connect( $account_info, 'channels' );
-		$sby_api_connect->connect();
-		$data = $sby_api_connect->get_data();
-
-		if ( isset( $data['items'] ) ) {
-			$account_info['username'] = $data['items'][0]['snippet']['title'];
-			$account_info['channel_id'] = $data['items'][0]['id'];
-			$account_info['profile_picture'] = $data['items'][0]['snippet']['thumbnails']['default']['url'];
-			$account_info['privacy'] = '';
-			$account_info['expires'] = $expires;
-			//privacyStatus
-			SBY_Admin::connect_account( $account_info );
-
-			return $account_info;
+		if ( isset( $_GET['sby_access_token'] ) ) {
+			$access_token = sanitize_text_field( urldecode( $_GET['sby_access_token'] ) );
+			$refresh_token = '';
 		} else {
-			$account_info['username'] = '(No Channel)';
-			$account_info['channel_id'] = '';
-			$account_info['profile_picture'] = SBY_PLUGIN_URL . 'img/person-avatar.png';
-			$account_info['privacy'] = '';
-			$account_info['expires'] = $expires;
-			//privacyStatus
-			SBY_Admin::connect_account( $account_info );
-
-			return $account_info;
+			$access_token = sanitize_text_field( $_POST['sby_access_token'] );
+			$refresh_token = '';
+		}
+	
+		$account_info = array(
+			'access_token' => $access_token,
+			'refresh_token' => $refresh_token
+		);
+		$sby_api_connect = new SBY_API_Connect( $account_info, 'tokeninfo' );
+		$sby_api_connect->connect();
+	
+		$data = $sby_api_connect->get_data();
+	
+		if ( isset( $data['audience'] ) ) {
+			$expires = $data['expires_in'] + time();
+			$sby_api_connect = new SBY_API_Connect( $account_info, 'channels' );
+			$sby_api_connect->connect();
+			$data = $sby_api_connect->get_data();
+	
+			if ( isset( $data['items'] ) ) {
+				$account_info['username'] = $data['items'][0]['snippet']['title'];
+				$account_info['channel_id'] = $data['items'][0]['id'];
+				$account_info['profile_picture'] = $data['items'][0]['snippet']['thumbnails']['default']['url'];
+				$account_info['privacy'] = '';
+				$account_info['expires'] = $expires;
+				//privacyStatus
+				SBY_Admin::connect_account( $account_info );
+	
+				return $account_info;
+			} else {
+				$account_info['username'] = '(No Channel)';
+				$account_info['channel_id'] = '';
+				$account_info['profile_picture'] = SBY_PLUGIN_URL . 'img/person-avatar.png';
+				$account_info['privacy'] = '';
+				$account_info['expires'] = $expires;
+				//privacyStatus
+				SBY_Admin::connect_account( $account_info );
+	
+				return $account_info;
+			}
 		}
 	}
 	return false;

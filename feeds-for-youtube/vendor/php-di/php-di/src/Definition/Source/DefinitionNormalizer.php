@@ -17,7 +17,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\ValueDefinition;
  * to be resolved or compiled.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class DefinitionNormalizer
 {
@@ -40,11 +39,11 @@ class DefinitionNormalizer
      *
      * @throws InvalidDefinition
      */
-    public function normalizeRootDefinition($definition, string $name, array $wildcardsReplacements = null) : Definition
+    public function normalizeRootDefinition($definition, string $name, array $wildcardsReplacements = null): Definition
     {
         if ($definition instanceof DefinitionHelper) {
             $definition = $definition->getDefinition($name);
-        } elseif (\is_array($definition)) {
+        } elseif (is_array($definition)) {
             $definition = new ArrayDefinition($definition);
         } elseif ($definition instanceof \Closure) {
             $definition = new FactoryDefinition($name, $definition);
@@ -63,7 +62,7 @@ class DefinitionNormalizer
         try {
             $definition->replaceNestedDefinitions([$this, 'normalizeNestedDefinition']);
         } catch (InvalidDefinition $e) {
-            throw InvalidDefinition::create($definition, \sprintf('Definition "%s" contains an error: %s', $definition->getName(), $e->getMessage()), $e);
+            throw InvalidDefinition::create($definition, sprintf('Definition "%s" contains an error: %s', $definition->getName(), $e->getMessage()), $e);
         }
         return $definition;
     }
@@ -80,7 +79,7 @@ class DefinitionNormalizer
         $name = '<nested definition>';
         if ($definition instanceof DefinitionHelper) {
             $definition = $definition->getDefinition($name);
-        } elseif (\is_array($definition)) {
+        } elseif (is_array($definition)) {
             $definition = new ArrayDefinition($definition);
         } elseif ($definition instanceof \Closure) {
             $definition = new FactoryDefinition($name, $definition);

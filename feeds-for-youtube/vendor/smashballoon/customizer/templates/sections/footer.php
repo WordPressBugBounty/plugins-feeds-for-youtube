@@ -1,7 +1,14 @@
 <?php
 	include_once CUSTOMIZER_ABSPATH . 'templates/sections/popup/license-learn-more.php';
 	include_once CUSTOMIZER_ABSPATH . 'templates/sections/popup/why-renew-license-popup.php';
-	$footer_template = sby_is_pro() ?  CUSTOMIZER_ABSPATH . 'templates/sections/footer-banner/footer-pro.php' :  CUSTOMIZER_ABSPATH . 'templates/sections/footer-banner/footer-free.php';
+
+	$aab_upsell =  CUSTOMIZER_ABSPATH . 'templates/sections/footer-banner/aab-upsell.php';
+	$click_social_upsell = CUSTOMIZER_ABSPATH . 'templates/sections/footer-banner/click-social-upsell.php';
+	$feed_plugin_upsell = CUSTOMIZER_ABSPATH . 'templates/sections/footer-banner/feed-plugins-upsell.php';
+
+	$pro_banners = rand(0, 1) ? $aab_upsell : $click_social_upsell;
+
+	$footer_template = sby_is_pro() ?  $pro_banners :  CUSTOMIZER_ABSPATH . 'templates/sections/footer-banner/footer-free.php';
 	include_once $footer_template;
 	include_once CUSTOMIZER_ABSPATH . 'templates/sections/popup/feedtypes-popup.php';
 	include_once CUSTOMIZER_ABSPATH . 'templates/sections/popup/feedtemplates-popup.php';
@@ -32,4 +39,5 @@
 :svg-icons="svgIcons"
 :parent-type="'builder'"
 :generic-text="genericText"
+:generic-link="genericLink"
 ></sb-confirm-dialog-component>

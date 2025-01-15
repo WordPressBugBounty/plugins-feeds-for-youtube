@@ -22,7 +22,9 @@ var CustomYouTubeFeedElementor = window.CustomYouTubeFeedElementor || ( function
 
 		registerWidgetEvents: function( $scope ) {
 			$scope
-				.on( 'change', '.sb-elementor-cta-feedselector', app.selectFeedInPreview );
+				.on( 'change', '.sby-feed-block-cta-feedselector', app.selectFeedInPreview );
+			$scope
+				.on( 'click', '.sby-feed-block-cta-btn,.sby-feed-block-link', app.anchorTrigger );
 
 		},
 
@@ -42,6 +44,11 @@ var CustomYouTubeFeedElementor = window.CustomYouTubeFeedElementor || ( function
 			vars.feedId = $( this ).val();
 			app.findFeedSelector();
 			vars.$select.val( vars.feedId ).trigger( 'change' );
+		},
+
+		anchorTrigger : function( event ){
+			vars.href = $( this ).attr('href');
+			window.open(vars.href ,'_blank');
 		},
 
 		widgetPanelOpen: function( panel, model ) {

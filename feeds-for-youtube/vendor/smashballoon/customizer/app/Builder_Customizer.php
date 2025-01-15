@@ -8,10 +8,9 @@
  */
 namespace Smashballoon\Customizer;
 
-if (!\defined('ABSPATH')) {
+if (!defined('ABSPATH')) {
     exit;
 }
-/** @internal */
 class Builder_Customizer
 {
     /**
@@ -54,8 +53,8 @@ class Builder_Customizer
     public static function register_controls()
     {
         foreach (self::get_controls_list() as $control) {
-            $controlClassName = 'SB_' . \ucfirst($control) . '_Control';
-            $cls_name = __NAMESPACE__ . '\\Controls\\' . $controlClassName;
+            $controlClassName = 'SB_' . ucfirst($control) . '_Control';
+            $cls_name = __NAMESPACE__ . '\Controls\\' . $controlClassName;
             self::$controls_classes[$control] = new $cls_name();
         }
     }

@@ -9,7 +9,12 @@ body{
     --error-red: #D72C2C;
     --customizer-blue: #0096CC;
     --dark-blue: #2A65DB;
-}
+    --sbc-color-1: #fff;
+    --sbc-color-2: #434960;
+    --sbc-color-3: #4A9F36;
+    --sbc-color-4: #141B38;
+    --sbc-color-5: #E6E6EB;
+    --sbc-color-6: #F9F9FA;
 
 #sbc-builder-app {
     display: none;
@@ -4597,4 +4602,168 @@ Feed Instance Popup
 .sb-input-button-with-icon .sb-control-input-info svg{
 
     margin-right: 5px; 
+}
+
+/* === Upsell Banner Common === */
+
+.sbc-upsell-banner *,.sbc-upsell-banner *:before,.sbc-upsell-banner *:after{
+    box-sizing: border-box;
+}
+
+.sbc-upsell-banner {
+    padding: 14px 53px 0 53px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    float: left;
+}
+
+.sbc-upsell-banner .sbc-row {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--sbc-color-1);
+    border-radius: 4px;
+    box-shadow: 0px 4px 5px 0px #0000000D, 0px 1px 2px 0px #0000000D;
+}
+
+.sbc-upsell-banner .sbc-row .sbc-col-left {
+    width: 319px;
+}
+
+.sbc-upsell-banner .sbc-row .sbc-col-left img{ 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sbc-upsell-banner .sbc-row .sbc-col-right { 
+    width: calc(100% - 319px);
+    padding: 25px 45px 30px;
+}
+
+.sbc-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title{ 
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+.sbc-upsell-banner .sbc-row .sbc-col-right p { 
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20.8px;
+    color: var(--sbc-color-2);
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.sbc-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-cta .sbc-cta-link { 
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22.4px;
+    padding: 8px 20px;
+    border-radius: 4px;
+    color: var(--sbc-color-1);
+    background-color: var(--sbc-color-3);
+    box-shadow: 0px 1px 1px 0px #00000014, 0px 2px 5px 0px #3C42571F, 0px -1px 1px 0px #0000001F inset;
+}
+
+.sbc-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-cta .sbc-cta-link svg {
+    margin-left: 5px;   
+}
+
+@media (max-width: 768px) {
+
+    .sbc-upsell-banner .sbc-row .sbc-col-left,
+    .sbc-upsell-banner .sbc-row .sbc-col-right {
+        width: 100%;
+    }    
+
+    .sbc-upsell-banner .sbc-row .sbc-col-right { 
+        padding: 20px;
+    }
+
+    .sbc-upsell-banner {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .sbc-click-social-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title,
+    .sbc-click-social-upsell-banner .sbc-row .sbc-col-right p {
+        max-width: 100%;
+    }
+}
+
+/* === AAB Upsell Banner === */
+.sbc-aab-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title { 
+    max-width: 320px;
+}
+
+.sbc-aab-upsell-banner .sbc-row .sbc-col-right p{ 
+    max-width: 450px;
+}
+
+
+/* === Click Social Upsell Banner === */
+
+.sbc-click-social-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title{ 
+    max-width: 466px;
+}
+
+.sbc-click-social-upsell-banner .sbc-row .sbc-col-right p{ 
+    max-width: 375px;
+}
+
+/* === Feed Plugin Upsell Banner === */
+
+.sbc-feed-plugins-upsell-banner {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sbc-upsell-banner.sbc-feed-plugins-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title{
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 28.8px;
+    letter-spacing: -0.01em;
+    color: var(--sbc-color-4);
+    width: 100%;
+    max-width: 383px;
+    margin-bottom: 25px;
+}
+
+.sbc-upsell-banner.sbc-feed-plugins-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title span{
+   color: var(--cl-orange);
+}
+
+.sbc-upsell-banner.sbc-feed-plugins-upsell-banner .sbc-upsell-banner-cta .sbc-upsell-banner-single-cta{
+    position: relative;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22.4px;
+    color: var(--sbc-color-4);
+    border-radius: 4px;
+    background-color: var(--sbc-color-6);
+    padding: 8px 12px 8px 36px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--sbc-color-5);
+    box-shadow: 0px 1px 1px 0px #0000000D, 0px 2px 5px 0px #3C42570D, 0px -1px 1px 0px #0000001F inset;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.sbc-upsell-banner.sbc-feed-plugins-upsell-banner .sbc-upsell-banner-cta .sbc-upsell-banner-single-cta:hover{
+    background-color: var(--sbc-color-1);
+}
+
+.sbc-upsell-banner.sbc-feed-plugins-upsell-banner .sbc-upsell-banner-cta svg{
+    position: absolute;
+    left: 12px;
+    top: 11px;
+    width: 16px;
+    height: 16px;
 }

@@ -7,7 +7,6 @@
  */
 namespace Smashballoon\Customizer;
 
-/** @internal */
 class Feed_Saver_Manager
 {
     private $saver;
@@ -26,7 +25,7 @@ class Feed_Saver_Manager
      */
     public function hooks()
     {
-        \add_action('wp_ajax_sbc_feed_saver_manager_fly_preview', array('Smashballoon\\Customizer\\Feed_Saver_Manager', 'feed_customizer_fly_preview'));
+        add_action('wp_ajax_sbc_feed_saver_manager_fly_preview', array('Smashballoon\Customizer\Feed_Saver_Manager', 'feed_customizer_fly_preview'));
     }
     /**
      * Used To check if it's customizer Screens
@@ -41,7 +40,7 @@ class Feed_Saver_Manager
     public function maybe_feed_customizer_data($include_comments = \false)
     {
         if (isset($_GET['feed_id'])) {
-            $feed_id = \sanitize_key($_GET['feed_id']);
+            $feed_id = sanitize_key($_GET['feed_id']);
             $this->saver->set_feed_id($feed_id);
             $settings = $this->saver->get_feed_settings();
             $settings = $this->process_videos_elements_settings($settings);
@@ -72,19 +71,19 @@ class Feed_Saver_Manager
         }
         // if there are only one video element shown as string
         // convert it to an array
-        if (!\is_array($settings['include'])) {
+        if (!is_array($settings['include'])) {
             $settings['include'] = array($settings['include']);
         }
-        if (!\is_array($settings['hoverinclude'])) {
+        if (!is_array($settings['hoverinclude'])) {
             $settings['hoverinclude'] = array($settings['hoverinclude']);
         }
         // If api is not added then remove stats and views from settings if were added before
         if (!$api_key_activated) {
             $hover_settings = $settings['hoverinclude'];
-            if ($key = \array_search('view', $hover_settings) !== \false) {
+            if ($key = array_search('view', $hover_settings) !== \false) {
                 unset($hover_settings[$key]);
             }
-            if ($key = \array_search('stats', $hover_settings) !== \false) {
+            if ($key = array_search('stats', $hover_settings) !== \false) {
                 unset($hover_settings[$key]);
             }
             $settings['hoverinclude'] = $hover_settings;
@@ -99,9 +98,9 @@ class Feed_Saver_Manager
      */
     public function feed_customizer_fly_preview()
     {
-        \check_ajax_referer('sby-admin', 'nonce');
+        check_ajax_referer('sby-admin', 'nonce');
         if (!sby_current_user_can('manage_youtube_feed_options')) {
-            \wp_send_json_error();
+            wp_send_json_error();
         }
         if (isset($_POST['feedID']) && isset($_POST['previewSettings'])) {
             $feed_id = $_POST['feedID'];
@@ -117,7 +116,7 @@ class Feed_Saver_Manager
             $return['feed_html'] = $this->preview_provider->render($atts);
             echo $return['feed_html'];
         }
-        \wp_die();
+        wp_die();
     }
     public function get_source_list($page = 1)
     {
@@ -133,7 +132,7 @@ class Feed_Saver_Manager
      */
     public function import_feed($json, $name = null)
     {
-        $settings_data = \json_decode($json, \true);
+        $settings_data = json_decode($json, \true);
         $return = [];
         $this->saver->set_data($settings_data);
         if (!empty($name)) {
@@ -141,10 +140,10 @@ class Feed_Saver_Manager
         }
         $this->saver->set_feed_id(\false);
         if ($this->saver->update_or_insert()) {
-            $return = array('success' => \true, 'feed_id' => $this->saver->get_feed_id(), 'message' => \__('Feed imported successfully.', 'feeds-for-youtube'));
+            $return = array('success' => \true, 'feed_id' => $this->saver->get_feed_id(), 'message' => __('Feed imported successfully.', 'feeds-for-youtube'));
             return $return;
         } else {
-            $return['message'] = \__('Could not import feed. Please try again', 'feeds-for-youtube');
+            $return['message'] = __('Could not import feed. Please try again', 'feeds-for-youtube');
         }
         return $return;
     }

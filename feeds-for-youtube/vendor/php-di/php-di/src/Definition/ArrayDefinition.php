@@ -8,7 +8,6 @@ namespace SmashBalloon\YoutubeFeed\Vendor\DI\Definition;
  *
  * @since 5.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class ArrayDefinition implements Definition
 {
@@ -25,7 +24,7 @@ class ArrayDefinition implements Definition
     {
         $this->values = $values;
     }
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -33,26 +32,26 @@ class ArrayDefinition implements Definition
     {
         $this->name = $name;
     }
-    public function getValues() : array
+    public function getValues(): array
     {
         return $this->values;
     }
     public function replaceNestedDefinitions(callable $replacer)
     {
-        $this->values = \array_map($replacer, $this->values);
+        $this->values = array_map($replacer, $this->values);
     }
     public function __toString()
     {
         $str = '[' . \PHP_EOL;
         foreach ($this->values as $key => $value) {
-            if (\is_string($key)) {
+            if (is_string($key)) {
                 $key = "'" . $key . "'";
             }
             $str .= '    ' . $key . ' => ';
             if ($value instanceof Definition) {
-                $str .= \str_replace(\PHP_EOL, \PHP_EOL . '    ', (string) $value);
+                $str .= str_replace(\PHP_EOL, \PHP_EOL . '    ', (string) $value);
             } else {
-                $str .= \var_export($value, \true);
+                $str .= var_export($value, \true);
             }
             $str .= ',' . \PHP_EOL;
         }

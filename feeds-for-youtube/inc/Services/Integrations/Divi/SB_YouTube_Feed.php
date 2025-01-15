@@ -38,7 +38,15 @@ class SB_YouTube_Feed extends ET_Builder_Module {
 	 * @return array
 	 */
 	public function get_fields() {
-        $feeds_list = SBY_Db::elementor_feeds_query();
+		$feeds_divi  = array();
+		$feeds_list = SBY_Db::elementor_feeds_query();
+
+		if ( ! empty( $feeds_list ) ) {
+			$feeds_divi[ 'sby-0' ] = esc_html__('Select Youtube Feed', 'feeds-for-youtube');
+			foreach ( $feeds_list as $key => $feed ) {
+				$feeds_divi[ 'sby-' . $key ] = $feed;
+			}
+		}
 
         return [
             'feed_id'    => [
@@ -46,7 +54,7 @@ class SB_YouTube_Feed extends ET_Builder_Module {
 				'type'            => 'select',
 				'option_category' => 'basic_option',
 				'toggle_slug'     => 'main_content',
-				'options'         => $feeds_list,
+				'options'         => $feeds_divi,
 			]
         ];
     }
@@ -86,11 +94,13 @@ class SB_YouTube_Feed extends ET_Builder_Module {
 		if (empty($this->props['feed_id'])) {
 			return '';
 		}
+		
+		$feed_id = str_replace('sby-', '', $this->props['feed_id']);
 
 		return do_shortcode(
 			sprintf(
 				'[youtube-feed feed="%1$s"]',
-				absint($this->props['feed_id'])
+				absint($feed_id)
 			)
 		);
 	}

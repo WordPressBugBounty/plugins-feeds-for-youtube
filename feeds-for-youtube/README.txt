@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 6.7
-Stable tag: 2.2.4
+Stable tag: 2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,14 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.3 =
+* New - Added an onboarding wizard to make setting up your first feed even easier!
+* Tweak - Added easy installers for our latest Smash Balloon Products. Try [ClickSocial](https://clicksocial.com/?utm_source=plugin-free&utm_campaign=sby&utm_medium=readme&utm_content=ClickSocial), [Reviews Feed](https://smashballoon.com/reviews-feed/?utm_source=plugin-free&utm_campaign=sby&utm_medium=readme&utm_content=ReviewsFeed), and [TikTok Feeds](https://smashballoon.com/tiktok-feeds/?utm_source=plugin-free&utm_campaign=sby&utm_medium=readme&utm_content=TikTok) today!
+* Fix - PHP warning related to _load_textdomain_just_in_time are now resolved
+* Fix - Fixed an issue making it difficult for users to close the lightbox in some situations
+* Fix - Improved compatibility with the latest versions of Divi and Elementor. Use our related integrations to easily add your feeds to your site!
+
 = 2.2.4 =
 * Tweak: Added support for our new [Feed Analytics](https://smashballoon.com/?utm_campaign=youtube-free-readme&utm_source=changelog&utm_medium=feedanalyticsannouncement) product. Get insights as to how your feeds are being used by site visitors.
 

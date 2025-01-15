@@ -32,6 +32,7 @@ class Util {
 		$allowed_screens = array( 
 			'dashboard', 
 			'toplevel_page_sby-feed-builder',
+			'youtube-feed_page_youtube-feed-setup',
 			'youtube-feed_page_youtube-feed-settings',
 			'youtube-feed_page_youtube-feed-single-videos',
 			'youtube-feed_page_youtube-feed-support',

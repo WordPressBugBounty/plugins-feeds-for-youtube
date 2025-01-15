@@ -9,7 +9,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\Exception\InvalidDefinition;
  * Source of definitions for entries of the container.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 interface DefinitionSource
 {
@@ -23,5 +22,5 @@ interface DefinitionSource
     /**
      * @return Definition[] Definitions indexed by their name.
      */
-    public function getDefinitions() : array;
+    public function getDefinitions(): array;
 }

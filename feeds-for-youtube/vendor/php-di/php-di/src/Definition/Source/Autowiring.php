@@ -9,7 +9,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\ObjectDefinition;
  * Source of definitions for entries of the container.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 interface Autowiring
 {

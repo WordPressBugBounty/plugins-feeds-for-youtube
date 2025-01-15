@@ -13,10 +13,13 @@
 		</div>
 		<?php
 			$file_path = sby_is_pro() && !sby_license_notices_active() ? CUSTOMIZER_ABSPATH . 'templates/sections/' : CUSTOMIZER_ABSPATH . 'templates/sections/free/';
+			$feed_plugin_upsell = CUSTOMIZER_ABSPATH . 'templates/sections/footer-banner/feed-plugins-upsell.php';
+
 			include_once $file_path . 'feeds-type.php';
 			include_once $file_path . 'select-source.php';
 			include_once $file_path . 'select-template.php';
-		?>
+			include_once $feed_plugin_upsell;
+			?>
 	</div>
 
 	<div class="sbc-ft-action sbc-slctfd-action sbc-fs">
@@ -35,4 +38,5 @@
 			</div>
 		</div>
 	</div>
+
 </div>

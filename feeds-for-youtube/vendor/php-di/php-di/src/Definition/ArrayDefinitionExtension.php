@@ -9,7 +9,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\Exception\InvalidDefinition;
  *
  * @since 5.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class ArrayDefinitionExtension extends ArrayDefinition implements ExtendsPreviousDefinition
 {
@@ -17,17 +16,17 @@ class ArrayDefinitionExtension extends ArrayDefinition implements ExtendsPreviou
      * @var ArrayDefinition
      */
     private $subDefinition;
-    public function getValues() : array
+    public function getValues(): array
     {
         if (!$this->subDefinition) {
             return parent::getValues();
         }
-        return \array_merge($this->subDefinition->getValues(), parent::getValues());
+        return array_merge($this->subDefinition->getValues(), parent::getValues());
     }
     public function setExtendedDefinition(Definition $definition)
     {
         if (!$definition instanceof ArrayDefinition) {
-            throw new InvalidDefinition(\sprintf('Definition %s tries to add array entries but the previous definition is not an array', $this->getName()));
+            throw new InvalidDefinition(sprintf('Definition %s tries to add array entries but the previous definition is not an array', $this->getName()));
         }
         $this->subDefinition = $definition;
     }

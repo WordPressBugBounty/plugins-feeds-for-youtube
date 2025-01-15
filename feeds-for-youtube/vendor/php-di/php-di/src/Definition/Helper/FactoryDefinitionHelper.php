@@ -10,7 +10,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\FactoryDefinition;
  * Helps defining how to create an instance of a class using a factory (callable).
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class FactoryDefinitionHelper implements DefinitionHelper
 {
@@ -39,7 +38,7 @@ class FactoryDefinitionHelper implements DefinitionHelper
      * @param string $entryName Container entry name
      * @return FactoryDefinition
      */
-    public function getDefinition(string $entryName) : Definition
+    public function getDefinition(string $entryName): Definition
     {
         if ($this->decorate) {
             return new DecoratorDefinition($entryName, $this->factory, $this->parameters);

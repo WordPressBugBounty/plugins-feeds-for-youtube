@@ -12,7 +12,6 @@ use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\ContainerInterface;
  *
  * @since 5.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class DecoratorResolver implements DefinitionResolver
 {
@@ -45,20 +44,20 @@ class DecoratorResolver implements DefinitionResolver
     public function resolve(Definition $definition, array $parameters = [])
     {
         $callable = $definition->getCallable();
-        if (!\is_callable($callable)) {
-            throw new InvalidDefinition(\sprintf('The decorator "%s" is not callable', $definition->getName()));
+        if (!is_callable($callable)) {
+            throw new InvalidDefinition(sprintf('The decorator "%s" is not callable', $definition->getName()));
         }
         $decoratedDefinition = $definition->getDecoratedDefinition();
         if (!$decoratedDefinition instanceof Definition) {
             if (!$definition->getName()) {
                 throw new InvalidDefinition('Decorators cannot be nested in another definition');
             }
-            throw new InvalidDefinition(\sprintf('Entry "%s" decorates nothing: no previous definition with the same name was found', $definition->getName()));
+            throw new InvalidDefinition(sprintf('Entry "%s" decorates nothing: no previous definition with the same name was found', $definition->getName()));
         }
         $decorated = $this->definitionResolver->resolve($decoratedDefinition, $parameters);
-        return \call_user_func($callable, $decorated, $this->container);
+        return call_user_func($callable, $decorated, $this->container);
     }
-    public function isResolvable(Definition $definition, array $parameters = []) : bool
+    public function isResolvable(Definition $definition, array $parameters = []): bool
     {
         return \true;
     }

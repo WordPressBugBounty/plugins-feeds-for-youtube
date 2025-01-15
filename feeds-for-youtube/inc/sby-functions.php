@@ -360,7 +360,7 @@ function sby_maybe_palette_styles( $feed_id, $posts, $settings ) {
 	if ( sby_doing_customizer( $settings ) ) {
 		return;
 	}
-	$feed_container = '#sb_youtube_' . esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) );
+	$feed_container = 'body #sb_youtube_' . esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) );
 
 	$custom_palette_class = trim(SBY_Display_Elements::get_palette_class( $settings ));
 	if ( SBY_Display_Elements::palette_type( $settings ) !== 'custom' ) {
@@ -422,7 +422,7 @@ add_action( 'sby_after_feed', 'sby_maybe_palette_styles', 1, 3 );
  * @since 2.0
  */
 function sby_custom_feed_styles( $feed_id, $posts, $settings ) {
-	$feed_selector = '#sb_youtube_' . esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) );
+	$feed_selector = 'body #sb_youtube_' . esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) );
 	if ( sby_doing_customizer( $settings ) ) {
 		return;
 	}
@@ -676,14 +676,11 @@ function sby_current_user_can( $cap ) {
 }
 
 /**
- * Check should add free plugin submenu for the free version
+ * Check should add free plugin submenu for the free and pro version
  * 
  * @since 2.0
  */
 function sby_should_add_free_plugin_submenu( $plugin ) {
-	if ( sby_is_pro() && !empty( Util::get_license_key() ) ) {
-		return;
-	}
 
 	if ( $plugin === 'facebook' && !is_plugin_active( 'custom-facebook-feed/custom-facebook-feed.php' ) && !is_plugin_active( 'custom-facebook-feed-pro/custom-facebook-feed.php' ) ) {
 		return true;
@@ -694,6 +691,14 @@ function sby_should_add_free_plugin_submenu( $plugin ) {
 	}
 
 	if ( $plugin === 'twitter' && !is_plugin_active( 'custom-twitter-feeds/custom-twitter-feed.php' ) && !is_plugin_active( 'custom-twitter-feeds-pro/custom-twitter-feed.php' ) ) {
+		return true;
+	}
+
+	if ( $plugin === 'tiktok' && !is_plugin_active( 'feeds-for-tiktok/feeds-for-tiktok.php' ) && !is_plugin_active( 'tiktok-feeds-pro/tiktok-feeds-pro.php' ) ) {
+		return true;
+	}
+
+	if ( $plugin === 'reviews' && !is_plugin_active( 'reviews-feed/sb-reviews.php' ) && !is_plugin_active( 'reviews-feed-pro/sb-reviews-pro.php' ) ) {
 		return true;
 	}
 
@@ -749,21 +754,47 @@ function sby_get_active_plugins_info() {
 		$is_youtube_installed = true;
 	}
 
+	$is_tiktok_installed = false;
+	$tiktok_plugin       = 'feeds-for-tiktok/feeds-for-tiktok.php';
+	if ( isset( $installed_plugins['tiktok-feeds-pro/tiktok-feeds-pro.php'] ) ) {
+		$is_tiktok_installed = true;
+		$tiktok_plugin       = 'tiktok-feeds-pro/tiktok-feeds-pro.php';
+	} elseif ( isset( $installed_plugins['feeds-for-tiktok/feeds-for-tiktok.php'] ) ) {
+		$is_tiktok_installed = true;
+	}
+
+	$is_reviews_installed = false;
+	$reviews_plugin       = 'reviews-feed/sb-reviews.php';
+	if ( isset( $installed_plugins['reviews-feed-pro/sb-reviews-pro.php'] ) ) {
+		$is_reviews_installed = true;
+		$reviews_plugin       = 'reviews-feed-pro/sb-reviews-pro.php';
+	} elseif ( isset( $installed_plugins['reviews-feed/sb-reviews.php'] ) ) {
+		$is_reviews_installed = true;
+	}
+
 	$is_social_wall_installed = isset( $installed_plugins['social-wall/social-wall.php'] ) ? true : false;
 	$social_wall_plugin = 'social-wall/social-wall.php';
 
+	$click_social_plugin = 'click-social/click-social.php';
+	$is_click_social_installed = isset( $installed_plugins[$click_social_plugin] ) ? true : false;
 
 	return array(
 		'is_facebook_installed' => $is_facebook_installed,
 		'is_instagram_installed' => $is_instagram_installed,
 		'is_twitter_installed' => $is_twitter_installed,
 		'is_youtube_installed' => $is_youtube_installed,
+		'is_tiktok_installed' => $is_tiktok_installed,
+		'is_reviews_installed' => $is_reviews_installed,
 		'is_social_wall_installed' => $is_social_wall_installed,
+		'is_click_social_installed' => $is_click_social_installed,
 		'facebook_plugin' => $facebook_plugin,
 		'instagram_plugin' => $instagram_plugin,
 		'twitter_plugin' => $twitter_plugin,
 		'youtube_plugin' => $youtube_plugin,
+		'tiktok_plugin' => $tiktok_plugin,
+		'reviews_plugin' => $reviews_plugin,
 		'social_wall_plugin' => $social_wall_plugin,
+		'click_social_plugin' => $click_social_plugin,
 		'installed_plugins' => $installed_plugins
 	);
 }
@@ -790,19 +821,21 @@ function sby_get_installed_plugin_info() {
 			'activated' => is_plugin_active( $sb_other_plugins['facebook_plugin'] ),
 			'plugin' => $sb_other_plugins['facebook_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/custom-facebook-feed.zip',
+			'website_link' => 'https://smashballoon.com/custom-facebook-feed/'
 		),
 		'instagram' => array(
 			'displayName' => __( 'Instagram', 'feeds-for-youtube' ),
 			'name' => __( 'Instagram Feed', 'feeds-for-youtube' ),
 			'author' => __( 'By Smash Balloon', 'feeds-for-youtube' ),
 			'description' => __('To display an Instagram feed, our Instagram plugin is required. </br> It provides a clean and beautiful way to add your Instagram posts to your website. Grab your visitors attention and keep them engaged with your site longer.', 'feeds-for-youtube'),
-			'dashboard_permalink' => admin_url( 'admin.php?page=sb-instagram-feed' ),
+			'dashboard_permalink' => admin_url( 'admin.php?page=sbi-feed-builder' ),
 			'svgIcon' => '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 9.91406C13.5 9.91406 9.91406 13.5703 9.91406 18C9.91406 22.5 13.5 26.0859 18 26.0859C22.4297 26.0859 26.0859 22.5 26.0859 18C26.0859 13.5703 22.4297 9.91406 18 9.91406ZM18 23.2734C15.1172 23.2734 12.7266 20.9531 12.7266 18C12.7266 15.1172 15.0469 12.7969 18 12.7969C20.8828 12.7969 23.2031 15.1172 23.2031 18C23.2031 20.9531 20.8828 23.2734 18 23.2734ZM28.2656 9.63281C28.2656 8.57812 27.4219 7.73438 26.3672 7.73438C25.3125 7.73438 24.4688 8.57812 24.4688 9.63281C24.4688 10.6875 25.3125 11.5312 26.3672 11.5312C27.4219 11.5312 28.2656 10.6875 28.2656 9.63281ZM33.6094 11.5312C33.4688 9 32.9062 6.75 31.0781 4.92188C29.25 3.09375 27 2.53125 24.4688 2.39062C21.8672 2.25 14.0625 2.25 11.4609 2.39062C8.92969 2.53125 6.75 3.09375 4.85156 4.92188C3.02344 6.75 2.46094 9 2.32031 11.5312C2.17969 14.1328 2.17969 21.9375 2.32031 24.5391C2.46094 27.0703 3.02344 29.25 4.85156 31.1484C6.75 32.9766 8.92969 33.5391 11.4609 33.6797C14.0625 33.8203 21.8672 33.8203 24.4688 33.6797C27 33.5391 29.25 32.9766 31.0781 31.1484C32.9062 29.25 33.4688 27.0703 33.6094 24.5391C33.75 21.9375 33.75 14.1328 33.6094 11.5312ZM30.2344 27.2812C29.7422 28.6875 28.6172 29.7422 27.2812 30.3047C25.1719 31.1484 20.25 30.9375 18 30.9375C15.6797 30.9375 10.7578 31.1484 8.71875 30.3047C7.3125 29.7422 6.25781 28.6875 5.69531 27.2812C4.85156 25.2422 5.0625 20.3203 5.0625 18C5.0625 15.75 4.85156 10.8281 5.69531 8.71875C6.25781 7.38281 7.3125 6.32812 8.71875 5.76562C10.7578 4.92188 15.6797 5.13281 18 5.13281C20.25 5.13281 25.1719 4.92188 27.2812 5.76562C28.6172 6.25781 29.6719 7.38281 30.2344 8.71875C31.0781 10.8281 30.8672 15.75 30.8672 18C30.8672 20.3203 31.0781 25.2422 30.2344 27.2812Z" fill="url(#paint0_linear)"/><defs><linearGradient id="paint0_linear" x1="13.4367" y1="62.5289" x2="79.7836" y2="-5.19609" gradientUnits="userSpaceOnUse"><stop stop-color="white"/><stop offset="0.147864" stop-color="#F6640E"/><stop offset="0.443974" stop-color="#BA03A7"/><stop offset="0.733337" stop-color="#6A01B9"/><stop offset="1" stop-color="#6B01B9"/></linearGradient></defs></svg>',
 			'installed' => isset( $sb_other_plugins['is_instagram_installed'] ) && $sb_other_plugins['is_instagram_installed'] == true,
 			'class' => 'SBI_Elementor_Widget',
 			'activated' => is_plugin_active( $sb_other_plugins['instagram_plugin'] ),
 			'plugin' => $sb_other_plugins['instagram_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/instagram-feed.zip',
+			'website_link' => 'https://smashballoon.com/instagram-feed/'
 		),
 		'twitter' => array(
 			'displayName' => __( 'Twitter', 'feeds-for-youtube' ),
@@ -816,6 +849,35 @@ function sby_get_installed_plugin_info() {
 			'activated' => is_plugin_active( $sb_other_plugins['twitter_plugin'] ),
 			'plugin' => $sb_other_plugins['twitter_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/custom-twitter-feeds.zip',
+			'website_link' => 'https://smashballoon.com/custom-twitter-feeds/'
+		),
+		'tiktok' => array(
+			'displayName' => __( 'Tiktok', 'feeds-for-youtube' ),
+			'name' => __( 'Tiktok Feed', 'feeds-for-youtube' ),
+			'author' => __( 'By Smash Balloon', 'feeds-for-youtube' ),
+			'description' => __('To display your TikToks, TikTok Feeds is required. Display your latest TikTok videos in a clean feed featuring a video player so visitors can watch without leaving your site. Keep your visitors engaged and boost your TikTok audience.', 'feeds-for-youtube'),
+			'dashboard_permalink' => admin_url( 'admin.php?page=sbtt' ),
+			'svgIcon' => '<svg width="26" height="30" viewBox="0 0 26 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.8163 6.63053C22.6189 6.5285 22.4267 6.41664 22.2405 6.29539C21.6989 5.93738 21.2024 5.51552 20.7616 5.03892C19.6587 3.77697 19.2468 2.49674 19.095 1.60039H19.1011C18.9744 0.856382 19.0268 0.375 19.0347 0.375H14.0113V19.7997C14.0113 20.0605 14.0113 20.3182 14.0003 20.5729C14.0003 20.6046 13.9973 20.6339 13.9954 20.668C13.9954 20.682 13.9954 20.6966 13.9924 20.7113C13.9924 20.7149 13.9924 20.7186 13.9924 20.7222C13.9394 21.4192 13.716 22.0925 13.3418 22.6828C12.9676 23.2731 12.454 23.7625 11.8463 24.1078C11.2129 24.4681 10.4965 24.6571 9.76779 24.6562C7.4273 24.6562 5.53041 22.7477 5.53041 20.3908C5.53041 18.0338 7.4273 16.1253 9.76779 16.1253C10.2108 16.1249 10.6512 16.1946 11.0724 16.3319L11.0785 11.2171C9.7997 11.0519 8.50055 11.1535 7.263 11.5155C6.02545 11.8776 4.87636 12.4922 3.88823 13.3205C3.02239 14.0728 2.29447 14.9704 1.73724 15.973C1.52519 16.3386 0.725118 17.8077 0.628232 20.1921C0.567297 21.5455 0.97373 22.9476 1.1675 23.527V23.5392C1.28937 23.8805 1.76161 25.0449 2.53121 26.0266C3.15179 26.814 3.88499 27.5057 4.70718 28.0795V28.0673L4.71937 28.0795C7.15126 29.732 9.84762 29.6235 9.84762 29.6235C10.3144 29.6047 11.878 29.6235 13.6536 28.782C15.623 27.8491 16.7442 26.4592 16.7442 26.4592C17.4605 25.6287 18.03 24.6823 18.4284 23.6605C18.883 22.4656 19.0347 21.0324 19.0347 20.4596V10.1544C19.0956 10.1909 19.9073 10.7278 19.9073 10.7278C19.9073 10.7278 21.0766 11.4773 22.901 11.9653C24.2099 12.3127 25.9733 12.3858 25.9733 12.3858V7.39892C25.3554 7.46594 24.1008 7.27095 22.8163 6.63053Z" fill="#141B38"/></svg>',
+			'installed' => isset( $sb_other_plugins['is_tiktok_installed'] ) && $sb_other_plugins['is_tiktok_installed'] == true,
+			'class' => 'SBTT_Elementor_Widget',
+			'activated' => is_plugin_active( $sb_other_plugins['tiktok_plugin'] ),
+			'plugin' => $sb_other_plugins['tiktok_plugin'],
+			'download_plugin' => 'https://downloads.wordpress.org/plugin/feeds-for-tiktok.zip',
+			'website_link' => 'https://smashballoon.com/tiktok-feeds/'
+		),
+		'reviews' => array(
+			'displayName' => __( 'Reviews', 'feeds-for-youtube' ),
+			'name' => __( 'Reviews Feed', 'feeds-for-youtube' ),
+			'author' => __( 'By Smash Balloon', 'feeds-for-youtube' ),
+			'description' => __('To display reviews in a feed, Reviews Feed is required. Display reviews from Google Reviews or Yelp in a clean feed on your site. Increase conversions with social proof from your latest public reviews.', 'feeds-for-youtube'),
+			'dashboard_permalink' => admin_url( 'admin.php?page=sbr' ),
+			'svgIcon' => '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30.2626 3.375H5.66199C3.9707 3.375 2.58691 4.75878 2.58691 6.45007V24.3471C2.58691 26.2261 4.08678 27.7616 5.96528 27.8056L13.2144 27.9756L17.22 33.2391C17.4201 33.502 17.8157 33.502 18.0158 33.2391L22.0214 27.9756H30.2626C31.9539 27.9756 33.3376 26.5918 33.3376 24.9005V6.45007C33.3376 4.75878 31.9539 3.375 30.2626 3.375Z" fill="#FF611E"/><path d="M17.449 9.58077C17.6139 9.10638 18.2848 9.10638 18.4497 9.58078L19.7851 13.4224C19.7996 13.4642 19.8387 13.4926 19.883 13.4935L23.9492 13.5764C24.4514 13.5866 24.6587 14.2247 24.2585 14.5281L21.0175 16.9852C20.9822 17.012 20.9673 17.0579 20.9801 17.1003L22.1578 20.9931C22.3033 21.4738 21.7605 21.8682 21.3482 21.5813L18.0099 19.2583C17.9735 19.233 17.9252 19.233 17.8889 19.2583L14.5505 21.5813C14.1383 21.8682 13.5955 21.4738 13.7409 20.9931L14.9187 17.1003C14.9315 17.0579 14.9166 17.012 14.8813 16.9852L11.6403 14.5281C11.2401 14.2247 11.4474 13.5866 11.9496 13.5764L16.0158 13.4935C16.0601 13.4926 16.0991 13.4642 16.1137 13.4224L17.449 9.58077Z" fill="white"/></svg>',
+			'installed' => isset( $sb_other_plugins['is_reviews_installed'] ) && $sb_other_plugins['is_reviews_installed'] == true,
+			'class' => 'SBR_Elementor_Widget',
+			'activated' => is_plugin_active( $sb_other_plugins['reviews_plugin'] ),
+			'plugin' => $sb_other_plugins['reviews_plugin'],
+			'download_plugin' => 'https://downloads.wordpress.org/plugin/reviews-feed.zip',
+			'website_link' => 'https://smashballoon.com/reviews-feed/'
 		),
 		'youtube' => [
 			'installed' => $sb_other_plugins['is_youtube_installed'],

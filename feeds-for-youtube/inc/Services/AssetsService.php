@@ -106,7 +106,10 @@ class AssetsService extends ServiceProvider {
 		$enqueue_in_head = isset($global_settings['enqueue_js_in_head']) ? $global_settings['enqueue_js_in_head'] : false;
 		wp_register_script( 'sby_scripts', $js_file, array('jquery'), SBYVER, !$enqueue_in_head );
 
-		$css_file_name = 'sb-youtube.min.css';
+		$css_free_file_name = 'sb-youtube-free.min.css';
+		$css_pro_file_name = 'sb-youtube.min.css';
+		$css_file_name = sby_is_pro() ? $css_pro_file_name : $css_free_file_name;
+
 
 		if ( !empty( $sby_settings['enqueue_css_in_shortcode'] ) ) {
 			wp_register_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/' . $css_file_name, array(), SBYVER );

@@ -521,7 +521,8 @@ class AdminAjaxService extends ServiceProvider {
 		}
 
 		if ( isset( $_POST['sby_access_token'] ) ) {
-			sby_attempt_connection();
+			$return = sby_attempt_connection();
+			wp_send_json_success($return);
 		}
 	}
 

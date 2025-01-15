@@ -19,7 +19,6 @@ use ReflectionProperty;
  *
  * @since 4.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class ObjectCreator implements DefinitionResolver
 {
@@ -68,17 +67,17 @@ class ObjectCreator implements DefinitionResolver
      *
      * @param ObjectDefinition $definition
      */
-    public function isResolvable(Definition $definition, array $parameters = []) : bool
+    public function isResolvable(Definition $definition, array $parameters = []): bool
     {
         return $definition->isInstantiable();
     }
     /**
      * Returns a proxy instance.
      */
-    private function createProxy(ObjectDefinition $definition, array $parameters) : LazyLoadingInterface
+    private function createProxy(ObjectDefinition $definition, array $parameters): LazyLoadingInterface
     {
         /** @noinspection PhpUnusedParameterInspection */
-        $proxy = $this->proxyFactory->createProxy($definition->getClassName(), function (&$wrappedObject, $proxy, $method, $params, &$initializer) use($definition, $parameters) {
+        $proxy = $this->proxyFactory->createProxy($definition->getClassName(), function (&$wrappedObject, $proxy, $method, $params, &$initializer) use ($definition, $parameters) {
             $wrappedObject = $this->createInstance($definition, $parameters);
             $initializer = null;
             // turning off further lazy initialization
@@ -101,9 +100,9 @@ class ObjectCreator implements DefinitionResolver
         if (!$definition->isInstantiable()) {
             // Check that the class exists
             if (!$definition->classExists()) {
-                throw InvalidDefinition::create($definition, \sprintf('Entry "%s" cannot be resolved: the class doesn\'t exist', $definition->getName()));
+                throw InvalidDefinition::create($definition, sprintf('Entry "%s" cannot be resolved: the class doesn\'t exist', $definition->getName()));
             }
-            throw InvalidDefinition::create($definition, \sprintf('Entry "%s" cannot be resolved: the class is not instantiable', $definition->getName()));
+            throw InvalidDefinition::create($definition, sprintf('Entry "%s" cannot be resolved: the class is not instantiable', $definition->getName()));
         }
         $classname = $definition->getClassName();
         $classReflection = new ReflectionClass($classname);
@@ -113,9 +112,9 @@ class ObjectCreator implements DefinitionResolver
             $object = new $classname(...$args);
             $this->injectMethodsAndProperties($object, $definition);
         } catch (NotFoundExceptionInterface $e) {
-            throw new DependencyException(\sprintf('Error while injecting dependencies into %s: %s', $classReflection->getName(), $e->getMessage()), 0, $e);
+            throw new DependencyException(sprintf('Error while injecting dependencies into %s: %s', $classReflection->getName(), $e->getMessage()), 0, $e);
         } catch (InvalidDefinition $e) {
-            throw InvalidDefinition::create($definition, \sprintf('Entry "%s" cannot be resolved: %s', $definition->getName(), $e->getMessage()));
+            throw InvalidDefinition::create($definition, sprintf('Entry "%s" cannot be resolved: %s', $definition->getName(), $e->getMessage()));
         }
         return $object;
     }
@@ -151,14 +150,14 @@ class ObjectCreator implements DefinitionResolver
             } catch (DependencyException $e) {
                 throw $e;
             } catch (Exception $e) {
-                throw new DependencyException(\sprintf('Error while injecting in %s::%s. %s', \get_class($object), $propertyName, $e->getMessage()), 0, $e);
+                throw new DependencyException(sprintf('Error while injecting in %s::%s. %s', get_class($object), $propertyName, $e->getMessage()), 0, $e);
             }
         }
         self::setPrivatePropertyValue($propertyInjection->getClassName(), $object, $propertyName, $value);
     }
     public static function setPrivatePropertyValue(string $className = null, $object, string $propertyName, $propertyValue)
     {
-        $className = $className ?: \get_class($object);
+        $className = $className ?: get_class($object);
         $property = new ReflectionProperty($className, $propertyName);
         if (!$property->isPublic()) {
             $property->setAccessible(\true);

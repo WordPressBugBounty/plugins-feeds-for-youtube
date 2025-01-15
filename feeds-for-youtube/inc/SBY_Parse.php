@@ -343,7 +343,8 @@ class SBY_Parse
 	 * @since 1.0
 	 */
 	public static function get_avatar( $header_data, $settings = array( 'favor_local' => false ) ) {
-		if ( !empty($settings['favor_local']) && ! empty( $header_data['local_avatar'] ) ) {
+		if ( !empty($settings['favor_local'] ) && ! empty( $header_data['local_avatar'] ) ) {
+
 			return $header_data['local_avatar'];
 		} else {
 			if ( isset( $header_data['items'][0]['snippet']['thumbnails'] ) ) {

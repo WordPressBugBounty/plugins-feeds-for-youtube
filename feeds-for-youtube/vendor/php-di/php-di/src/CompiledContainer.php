@@ -19,7 +19,6 @@ use SmashBalloon\YoutubeFeed\Vendor\Invoker\ParameterResolver\ResolverChain;
  * Compiled version of the dependency injection container.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 abstract class CompiledContainer extends Container
 {
@@ -38,7 +37,7 @@ abstract class CompiledContainer extends Container
     public function get($name)
     {
         // Try to find the entry in the singleton map
-        if (isset($this->resolvedEntries[$name]) || \array_key_exists($name, $this->resolvedEntries)) {
+        if (isset($this->resolvedEntries[$name]) || array_key_exists($name, $this->resolvedEntries)) {
             return $this->resolvedEntries[$name];
         }
         $method = static::METHOD_MAPPING[$name] ?? null;
@@ -65,8 +64,8 @@ abstract class CompiledContainer extends Container
      */
     public function has($name)
     {
-        if (!\is_string($name)) {
-            throw new \InvalidArgumentException(\sprintf('The name parameter must be of type string, %s given', \is_object($name) ? \get_class($name) : \gettype($name)));
+        if (!is_string($name)) {
+            throw new \InvalidArgumentException(sprintf('The name parameter must be of type string, %s given', is_object($name) ? get_class($name) : gettype($name)));
         }
         // The parent method is overridden to check in our array, it avoids resolving definitions
         if (isset(static::METHOD_MAPPING[$name])) {
@@ -91,7 +90,7 @@ abstract class CompiledContainer extends Container
             $this->factoryInvoker = new Invoker($parameterResolver, $this->delegateContainer);
         }
         $parameters = [$this->delegateContainer, new RequestedEntryHolder($entryName)];
-        $parameters = \array_merge($parameters, $extraParameters);
+        $parameters = array_merge($parameters, $extraParameters);
         try {
             return $this->factoryInvoker->call($callable, $parameters);
         } catch (NotCallableException $e) {

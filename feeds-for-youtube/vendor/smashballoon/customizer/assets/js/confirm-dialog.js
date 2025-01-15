@@ -10,6 +10,7 @@
     	'dialogBox',
     	'sourceToDelete',
     	'genericText',
+    	'genericLink',
     	'svgIcons',
     	'parentType',
     	'parent'

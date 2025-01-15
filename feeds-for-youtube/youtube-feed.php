@@ -3,7 +3,7 @@
 Plugin Name: Feeds for YouTube
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.2.4
+Version: 2.3
 Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
@@ -54,10 +54,10 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.2.4' );
+    define( 'SBYVER', '2.3' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
-    define( 'SBY_DBVERSION', '2.0' );
+    define( 'SBY_DBVERSION', '2.3' );
 }
 
 if ( ! defined( 'SBY_BUILDER_DIR' ) ) {
@@ -315,9 +315,38 @@ if ( ! function_exists( 'sby_init' ) ) {
         FROM $table_name
         WHERE `option_name` LIKE ('%\_transient\_timeout\_\$sby\_%')
         " );
+
+
+        $sby_statuses_option = get_option( 'sby_statuses', array() );
+		if( !isset( $sby_statuses_option['wizard_dismissed'] ) || $sby_statuses_option['wizard_dismissed'] === false){
+			add_option('sby_plugin_do_activation_redirect', true);
+		}
     }
 
     register_activation_hook( __FILE__, 'sby_activate' );
+
+
+     /**
+     * Activation redirect
+     *
+     * @since  2.2.4
+     * 
+     * @return bool|void
+     */
+    function sby_activation_plugin_redirect() {
+
+		if( !sby_current_user_can( 'manage_youtube_feed_options' ) ){
+			return false;
+		}
+
+		if (get_option('sby_plugin_do_activation_redirect', false)) {
+			delete_option('sby_plugin_do_activation_redirect');
+			wp_safe_redirect( admin_url( '/admin.php?page=youtube-feed-setup' )  );
+			exit();
+		}
+	}
+
+	add_action('admin_init', 'sby_activation_plugin_redirect');
 
     /**
      * Stop cron events when deactivated
@@ -341,12 +370,12 @@ if ( ! function_exists( 'sby_init' ) ) {
      */
     function sby_check_for_db_updates() {
 
-        $db_ver = get_option( 'sby_db_version', 0 );
+        $db_ver = get_option( 'sby_db_version', SBY_DBVERSION );
 
         if ( version_compare( $db_ver, '1.2', '<' ) ) {
             sby_add_caps();
 
-            update_option( 'sby_db_version', SBY_DBVERSION );
+            update_option( 'sby_db_version', '2.0' );
         }
 
         if ( version_compare( $db_ver, '1.3', '<' ) ) {
@@ -359,7 +388,7 @@ if ( ! function_exists( 'sby_init' ) ) {
                 wp_schedule_event( $six_am_local, 'sbyweekly', 'sby_notification_update' );
             }
         }
-
+        
 
     }
 

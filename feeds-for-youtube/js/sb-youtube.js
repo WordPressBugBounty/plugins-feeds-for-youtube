@@ -3365,9 +3365,6 @@ if(!sby_js_exists) {
                 const subscribeSection = data?.subscribeBtn ? data.subscribeBtn : false;
                 const subscribeBtnText = data?.subscribeBtnText ? data.subscribeBtnText : '';
 
-
-                const subscribeClass = subscribeSection ? 'sby_lb-channel-info' : 'sby_lb-no-channel-info'
-
                 if (typeof sbyLightboxAction === 'function') {
                     setTimeout(function() {
                         sbyLightboxAction();
@@ -3391,8 +3388,10 @@ if(!sby_js_exists) {
                     });
                 }
 
+                const channelSubscribers = data?.channelSubscribers ?? '';
                 const avatarImageHtml = avatarImage ? '<img src="'+ avatarImage +'" referrerPolicy="no-referrer"/>' : getStaticSVG('profile-picture');
-                const userHtml = subscribeSection ? '<div class="sby-lb-channel-header"><a class="sby_lightbox_username" href="'+ data.channelURL+'" target="_blank" rel="noopener">'+ avatarImageHtml + '<p class="sby-lb-channel-name-with-subs"><span>@'+data.user + '</span><span>' + data.channelSubscribers  +'</span></p></a> ' + subscribeBtn + '</div>' : '';
+                const userHtml = subscribeSection && avatarImage ? '<div class="sby-lb-channel-header"><a class="sby_lightbox_username" href="'+ data.channelURL+'" target="_blank" rel="noopener">'+ avatarImageHtml + '<p class="sby-lb-channel-name-with-subs"><span>@'+data.user + '</span><span>' + channelSubscribers +'</span></p></a> ' + subscribeBtn + '</div>' : '';
+                const subscribeClass = subscribeSection && avatarImage ? 'sby_lb-channel-info' : 'sby_lb-no-channel-info'
 
                 if( window.sbyOptions.isPro ) {
 

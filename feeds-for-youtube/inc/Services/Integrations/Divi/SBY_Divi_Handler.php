@@ -36,11 +36,9 @@ class SBY_Divi_Handler
 			return true;
 		}
 		$allow_themes = [ 'Divi' ];
-		$theme        = wp_get_theme();
-		$theme_name   = $theme->get_template();
-		$theme_parent = $theme->parent();
+		$theme_name = get_template();
 
-		return (bool) array_intersect([ $theme_name, $theme_parent ], $allow_themes);
+		return in_array($theme_name, $allow_themes, true);
 	}
 
 
@@ -81,7 +79,10 @@ class SBY_Divi_Handler
 	 */
 	public function builder_scripts()
 	{
-		$css_file_name = 'sb-youtube.min.css';
+		
+		$css_free_file_name = 'sb-youtube-free.min.css';
+		$css_pro_file_name = 'sb-youtube.min.css';
+		$css_file_name = sby_is_pro() ? $css_pro_file_name : $css_free_file_name;
 
 		wp_enqueue_style('sby_styles', trailingslashit(SBY_PLUGIN_URL) . 'css/' . $css_file_name, array(), SBYVER);
 
@@ -115,6 +116,15 @@ class SBY_Divi_Handler
 			// The unminified version is not supported by the browser.
 			SBY_PLUGIN_URL . 'js/divi-handler.min.js',
 			['react', 'react-dom', 'jquery'],
+			SBYVER,
+			true
+		);
+
+		wp_enqueue_script(
+			'sby-divi-handler',
+			// The unminified version is not supported by the browser.
+			SBY_PLUGIN_URL . 'js/divi-preview-handler.js',
+			['jquery'],
 			SBYVER,
 			true
 		);

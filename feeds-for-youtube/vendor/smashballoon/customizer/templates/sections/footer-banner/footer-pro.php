@@ -1,3 +1,5 @@
+<?php // This has been removed in favor of aab-upsell.php and click-social-upsell.php ?>
+
 <div id="sb-footer-banner" class="sbc-yt-fs sbc-bld-footer sbc-full-wrapper" v-if="(viewsActive.pageScreen == 'welcome' && feedsList != null && feedsList.length != 0) && !iscustomizerScreen">    <div class="sb-box-shadow">
         <div class="sbc-bld-ft-content">
             <div class="sbc-bld-ft-img">

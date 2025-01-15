@@ -16,7 +16,7 @@ class HelpPage extends BaseSettingPage {
 	protected $template_file = 'settings.index';
 	protected $has_assets = true;
 	protected $menu_position = 3;
-	protected $menu_position_free_version = 2;
+	protected $menu_position_free_version = 3;
 
 	/**
 	 * @var Feed_Builder

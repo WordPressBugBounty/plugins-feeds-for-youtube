@@ -6,6 +6,7 @@ use Smashballoon\Stubs\Services\ServiceProvider;
 use SmashBalloon\YouTubeFeed\Container;
 use SmashBalloon\YouTubeFeed\Services\Upgrade\Routines\UpgradeRoutine;
 use SmashBalloon\YouTubeFeed\Services\Upgrade\Routines\V2Routine;
+use SmashBalloon\YouTubeFeed\Services\Upgrade\Routines\OnboardingWizardRoutine;
 
 class RoutineManagerService extends ServiceProvider {
 	/**
@@ -14,14 +15,23 @@ class RoutineManagerService extends ServiceProvider {
 	 * @var UpgradeRoutine[]
 	 */
 	private $routines = [
-		V2Routine::class
+		V2Routine::class,
+		OnboardingWizardRoutine::class
 	];
+
+	public function is_fresh_install() {
+		$db_version = get_option( 'sby_db_version', false );
+		return false === $db_version;
+	}
 
 	public function register() {
 		$container = Container::get_instance();
+		$is_fresh_install = $this->is_fresh_install();
 
 		foreach ($this->routines as $routine) {
-			$container->get($routine)->register();
+			$routine = $container->get($routine);
+			$routine->set_is_fresh_install($is_fresh_install);
+			$routine->register();
 		}
 	}
 }

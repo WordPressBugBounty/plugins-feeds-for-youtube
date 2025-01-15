@@ -12,12 +12,11 @@ namespace SmashBalloon\YoutubeFeed\Vendor\DI\Factory;
  * @api
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 interface RequestedEntry
 {
     /**
      * Returns the name of the entry that was requested by the container.
      */
-    public function getName() : string;
+    public function getName(): string;
 }

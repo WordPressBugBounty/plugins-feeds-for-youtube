@@ -103,6 +103,7 @@ abstract class BaseSettingPage extends ServiceProvider {
 			'admin_url'           => admin_url(),
 			'ajax_handler'        => admin_url( 'admin-ajax.php' ),
 			'nonce'               => wp_create_nonce( 'sby-admin' ),
+			'setupPageUrl'      => admin_url( 'admin.php?page=youtube-feed-setup' ),
 			'supportPageUrl'      => admin_url( 'admin.php?page=youtube-feed-support' ),
 			'settingsPageUrl'     => admin_url( 'admin.php?page=youtube-feed-settings' ),
 			'builderUrl'          => admin_url( 'admin.php?page=sby-feed-builder' ),

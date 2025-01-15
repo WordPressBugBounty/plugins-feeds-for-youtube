@@ -11,6 +11,7 @@ class PagesServiceContainer extends ServiceProvider {
 		SingleVideoPage::class,
 		HelpPage::class,
 		AboutPage::class,
+		SetupPage::class,
 	];
 
 	public function register() {

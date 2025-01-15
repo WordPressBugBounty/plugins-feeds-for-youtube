@@ -81,7 +81,7 @@
      * 
      * @since 2.0
      */
-    $('.sby_get_cff, .sby_get_sbi, .sby_get_ctf').parent('a').on('click', function(e) {
+    $('.sby_get_cff, .sby_get_sbi, .sby_get_ctf, .sby_get_sbtt, .sby_get_sbr').parent('a').on('click', function(e) {
         e.preventDefault();
         // remove the already opened modal
         $('#sby-op-modals').remove();
@@ -95,11 +95,24 @@
 
         if ($self.hasClass('sby_get_cff')) {
           sb_get_plugin = 'facebook';
-        } else if ($self.hasClass('sby_get_sbi')) {
+        }
+
+        if ($self.hasClass('sby_get_sbi')) {
           sb_get_plugin = 'instagram';
-        } else if ($self.hasClass('sby_get_sby')) {
+        }
+
+        if ($self.hasClass('sby_get_sby')) {
           sb_get_plugin = 'twitter';
         }
+
+        if ($self.hasClass('sby_get_sbtt')) {
+          sb_get_plugin = 'tiktok';
+        }
+
+        if ($self.hasClass('sby_get_sbr')) {
+          sb_get_plugin = 'reviews';
+        }
+
         // send the ajax request to load plugin name and others data
         $.ajax({
           url: ajaxurl,
