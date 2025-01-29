@@ -1239,29 +1239,32 @@ if(!sby_js_exists) {
                               }), this.$lightbox.hide(),
                                 jQuery('#sby_lightboxOverlay').on("click", function(c) {
                                     lbBuilder.pausePlayer();
-
+                                    jQuery('.sby_gdpr_notice').remove();
                                     return "sby_lightbox" === a(c.target).attr("id") && b.end(), !1
                                 }), this.$lightbox.find(".sby_lb-prev").on("click", function() {
                                   lbBuilder.pausePlayer();
+                                  jQuery('.sby_gdpr_notice').remove();
 
                                   return b.changeImage(0 === b.currentImageIndex ? b.album.length - 1 : b.currentImageIndex - 1), !1
                               }), this.$lightbox.find(".sby_lb-container").on("swiperight", function() {
                                   lbBuilder.pausePlayer();
+                                  jQuery('.sby_gdpr_notice').remove();
 
                                   return b.changeImage(0 === b.currentImageIndex ? b.album.length - 1 : b.currentImageIndex - 1), !1
                               }), this.$lightbox.find(".sby_lb-next").on("click", function() {
                                   lbBuilder.pausePlayer();
+                                  jQuery('.sby_gdpr_notice').remove();
 
                                   return b.changeImage(b.currentImageIndex === b.album.length - 1 ? 0 : b.currentImageIndex + 1), !1
                               }), this.$lightbox.find(".sby_lb-container").on("swipeleft", function() {
                                   lbBuilder.pausePlayer();
+                                  jQuery('.sby_gdpr_notice').remove();
 
                                   return b.changeImage(b.currentImageIndex === b.album.length - 1 ? 0 : b.currentImageIndex + 1), !1
                               }), 
                               this.$lightbox.find(".sby_lb-loader, .sby_lb-close").on("click", function() {
                                     lightboxOnClose();
                                     lbBuilder.pausePlayer();
-
                                   return b.end(), !1
                               })
                           }, b.prototype.start = function(b) {
@@ -4282,7 +4285,8 @@ function LightboxColorScheme(colorScheme, flag) {
  */
 function lightboxOnClose() {
     jQuery('body').css('overflow', 'auto');
-    LightboxColorScheme('', false)
+    LightboxColorScheme('', false);
+    jQuery('.sby_gdpr_notice').remove();
 }
 
 /**
