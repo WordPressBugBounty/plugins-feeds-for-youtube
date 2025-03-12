@@ -8,6 +8,7 @@ namespace SmashBalloon\YoutubeFeed\Vendor\DI\Definition;
  * value if the environment variable is not defined.
  *
  * @author James Harris <james.harris@icecave.com.au>
+ * @internal
  */
 class EnvironmentVariableDefinition implements Definition
 {
@@ -46,7 +47,7 @@ class EnvironmentVariableDefinition implements Definition
         $this->isOptional = $isOptional;
         $this->defaultValue = $defaultValue;
     }
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
@@ -57,14 +58,14 @@ class EnvironmentVariableDefinition implements Definition
     /**
      * @return string The name of the environment variable
      */
-    public function getVariableName(): string
+    public function getVariableName() : string
     {
         return $this->variableName;
     }
     /**
      * @return bool Whether or not the environment variable definition is optional
      */
-    public function isOptional(): bool
+    public function isOptional() : bool
     {
         return $this->isOptional;
     }
@@ -85,12 +86,12 @@ class EnvironmentVariableDefinition implements Definition
         if ($this->isOptional) {
             if ($this->defaultValue instanceof Definition) {
                 $nestedDefinition = (string) $this->defaultValue;
-                $defaultValueStr = str_replace(\PHP_EOL, \PHP_EOL . '    ', $nestedDefinition);
+                $defaultValueStr = \str_replace(\PHP_EOL, \PHP_EOL . '    ', $nestedDefinition);
             } else {
-                $defaultValueStr = var_export($this->defaultValue, \true);
+                $defaultValueStr = \var_export($this->defaultValue, \true);
             }
             $str .= \PHP_EOL . '    default = ' . $defaultValueStr;
         }
-        return sprintf('Environment variable (' . \PHP_EOL . '%s' . \PHP_EOL . ')', $str);
+        return \sprintf('Environment variable (' . \PHP_EOL . '%s' . \PHP_EOL . ')', $str);
     }
 }

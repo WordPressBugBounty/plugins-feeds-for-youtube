@@ -596,7 +596,7 @@ class SBY_Feed
 		return false;
 	}
 
-	public function make_workaround_connection( $connected_account_for_term, $type, $params ) {
+	public function make_workaround_connection( $connected_account_for_term, $type, $params, $feed_id = '' ) {
 		return $this->make_api_connection( $connected_account_for_term, $type, $params );
 	}
 
@@ -666,7 +666,9 @@ class SBY_Feed
 				if ( ! $this->is_efficient_type( $type ) && $this->is_pageable() ) {
 
 					if ( $this->requires_workaround_connection( $type ) ) {
-						$api_connect_playlist_items = $this->make_workaround_connection( $connected_account_for_term, $type, $params );
+						$feed_id  = !empty($settings['feed']) ? $settings['feed'] : '';
+
+						$api_connect_playlist_items = $this->make_workaround_connection( $connected_account_for_term, $type, $params, $feed_id );
 						$this->add_report( 'Workaround API call made for ' . $term );
 
 					} else {

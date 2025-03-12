@@ -15,6 +15,7 @@ namespace SmashBalloon\YoutubeFeed\Vendor\DI\Annotation;
  *
  * @author Domenic Muskulus <domenic@muskulus.eu>
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 final class Injectable
 {

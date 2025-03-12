@@ -3,6 +3,7 @@
 namespace SmashBalloon\YoutubeFeed\Vendor\Laravel\SerializableClosure\Support;
 
 use SplObjectStorage;
+/** @internal */
 class ClosureScope extends SplObjectStorage
 {
     /**

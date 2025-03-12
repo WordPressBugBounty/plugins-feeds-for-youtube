@@ -342,7 +342,6 @@ class SBY_Tracking {
 			beforedatetext,beforestreamtimetext,minutetext,minutestext,hourstext,thousandstext,millionstext,
 			watchnowtext,cta,linktext,linkurl,linkopentype,linkcolor,linktextcolor'
 		);
-
 		$tracked_string_settings = explode( ',',
 			'type,num,nummobile,layout,playvideo,sortby,cache_time,cache_time_unit,playerratio,gdpr,carouselcols,carouselcolsmobile,infoposition'
 		);

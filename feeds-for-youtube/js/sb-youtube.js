@@ -2651,7 +2651,9 @@ if(!sby_js_exists) {
                     this.settings.noCDN = false;
                     return true;
                 }
-                if (typeof CLI_Cookie !== "undefined") { // GDPR Cookie Consent by WebToffee
+                if (typeof window.WPConsent !== 'undefined') {
+                    this.settings.consentGiven = window.WPConsent.hasConsent('marketing');
+                } else if (typeof CLI_Cookie !== "undefined") { // GDPR Cookie Consent by WebToffee
                     if (CLI_Cookie.read(CLI_ACCEPT_COOKIE_NAME) !== null)  {
 
                         // WebToffee no longer uses this cookie but being left here to maintain backwards compatibility
@@ -2679,6 +2681,9 @@ if(!sby_js_exists) {
                     this.settings.consentGiven = Cookiebot.consented;
                 } else if (typeof window.BorlabsCookie !== 'undefined') { // Borlabs Cookie by Borlabs
                     this.settings.consentGiven = typeof window.BorlabsCookie.Consents !== 'undefined' ? window.BorlabsCookie.Consents.hasConsent('youtube') : window.BorlabsCookie.checkCookieConsent('youtube');
+                } else if (sbyCmplzGetCookie('moove_gdpr_popup')) { // Moove GDPR Popup
+                    var moove_gdpr_popup = JSON.parse(decodeURIComponent(sbyCmplzGetCookie('moove_gdpr_popup')));
+                    this.settings.consentGiven = typeof moove_gdpr_popup.thirdparty !== "undefined" && moove_gdpr_popup.thirdparty === "1";
                 }
 
                 var evt = jQuery.Event('sbycheckconsent');
@@ -3779,6 +3784,46 @@ if(!sby_js_exists) {
                 window.sby.feeds[ index ].settings.consentGiven = false;
                 window.sby.feeds[ index ].afterConsentToggled();
             });
+        });
+
+        if (typeof window.consentApi !== 'undefined') {
+            window.consentApi?.consent("feeds-for-youtube").then(() => {
+                try {
+                    // applies full features to feed
+                    $.each(window.sby.feeds,function(index){
+                        window.sby.feeds[ index ].settings.consentGiven = true;
+                        window.sby.feeds[ index ].afterConsentToggled();
+                    });
+                }
+                catch (error) {
+                    // do nothing
+                }
+            });
+        }
+
+        $('.moove-gdpr-infobar-allow-all').on('click',function() {
+            setTimeout(function() {
+                $.each(window.sby.feeds,function(index){
+                    window.sby.feeds[ index ].afterConsentToggled();
+                });
+            },1000);
+        });
+
+        // WPConsent
+        window.addEventListener('wpconsent_consent_saved', function(event) {
+            setTimeout(function() {
+                $.each(window.sby.feeds,function(index){
+                    window.sby.feeds[ index ].afterConsentToggled();
+                });
+            },1000);
+        });
+
+        window.addEventListener('wpconsent_consent_updated', function(event) {
+            setTimeout(function() {
+                $.each(window.sby.feeds,function(index){
+                    window.sby.feeds[ index ].afterConsentToggled();
+                });
+            },1000);
         });
 
         // hide notice on click and send ajax request to backend

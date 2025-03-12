@@ -10,6 +10,7 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\Exception\InvalidDefinition;
  * Resolves a environment variable definition to a value.
  *
  * @author James Harris <james.harris@icecave.com.au>
+ * @internal
  */
 class EnvironmentVariableResolver implements DefinitionResolver
 {
@@ -33,12 +34,12 @@ class EnvironmentVariableResolver implements DefinitionResolver
      */
     public function resolve(Definition $definition, array $parameters = [])
     {
-        $value = call_user_func($this->variableReader, $definition->getVariableName());
+        $value = \call_user_func($this->variableReader, $definition->getVariableName());
         if (\false !== $value) {
             return $value;
         }
         if (!$definition->isOptional()) {
-            throw new InvalidDefinition(sprintf("The environment variable '%s' has not been defined", $definition->getVariableName()));
+            throw new InvalidDefinition(\sprintf("The environment variable '%s' has not been defined", $definition->getVariableName()));
         }
         $value = $definition->getDefaultValue();
         // Nested definition
@@ -47,7 +48,7 @@ class EnvironmentVariableResolver implements DefinitionResolver
         }
         return $value;
     }
-    public function isResolvable(Definition $definition, array $parameters = []): bool
+    public function isResolvable(Definition $definition, array $parameters = []) : bool
     {
         return \true;
     }
@@ -58,6 +59,6 @@ class EnvironmentVariableResolver implements DefinitionResolver
         } elseif (isset($_SERVER[$variableName])) {
             return $_SERVER[$variableName];
         }
-        return getenv($variableName);
+        return \getenv($variableName);
     }
 }

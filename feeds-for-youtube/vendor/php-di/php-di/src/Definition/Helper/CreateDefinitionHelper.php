@@ -12,6 +12,7 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\ObjectDefinition\PropertyInjec
  * Helps defining how to create an instance of a class.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class CreateDefinitionHelper implements DefinitionHelper
 {
@@ -114,7 +115,7 @@ class CreateDefinitionHelper implements DefinitionHelper
     /**
      * @return ObjectDefinition
      */
-    public function getDefinition(string $entryName): Definition
+    public function getDefinition(string $entryName) : Definition
     {
         $class = $this::DEFINITION_CLASS;
         /** @var ObjectDefinition $definition */
@@ -150,17 +151,17 @@ class CreateDefinitionHelper implements DefinitionHelper
      *
      * @throws InvalidDefinition
      */
-    private function fixParameters(ObjectDefinition $definition, string $method, array $parameters): array
+    private function fixParameters(ObjectDefinition $definition, string $method, array $parameters) : array
     {
         $fixedParameters = [];
         foreach ($parameters as $index => $parameter) {
             // Parameter indexed by the parameter name, we reindex it with its position
-            if (is_string($index)) {
+            if (\is_string($index)) {
                 $callable = [$definition->getClassName(), $method];
                 try {
                     $reflectionParameter = new \ReflectionParameter($callable, $index);
                 } catch (\ReflectionException $e) {
-                    throw InvalidDefinition::create($definition, sprintf("Parameter with name '%s' could not be found. %s.", $index, $e->getMessage()));
+                    throw InvalidDefinition::create($definition, \sprintf("Parameter with name '%s' could not be found. %s.", $index, $e->getMessage()));
                 }
                 $index = $reflectionParameter->getPosition();
             }

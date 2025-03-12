@@ -12,6 +12,7 @@ use ReflectionClass;
  * Defines how an object can be instantiated.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class ObjectDefinition implements Definition
 {
@@ -64,7 +65,7 @@ class ObjectDefinition implements Definition
         $this->name = $name;
         $this->setClassName($className);
     }
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
@@ -77,7 +78,7 @@ class ObjectDefinition implements Definition
         $this->className = $className;
         $this->updateCache();
     }
-    public function getClassName(): string
+    public function getClassName() : string
     {
         if ($this->className !== null) {
             return $this->className;
@@ -108,7 +109,7 @@ class ObjectDefinition implements Definition
     /**
      * @return PropertyInjection[] Property injections
      */
-    public function getPropertyInjections(): array
+    public function getPropertyInjections() : array
     {
         return $this->propertyInjections;
     }
@@ -127,11 +128,11 @@ class ObjectDefinition implements Definition
     /**
      * @return MethodInjection[] Method injections
      */
-    public function getMethodInjections(): array
+    public function getMethodInjections() : array
     {
         // Return array leafs
         $injections = [];
-        array_walk_recursive($this->methodInjections, function ($injection) use (&$injections) {
+        \array_walk_recursive($this->methodInjections, function ($injection) use(&$injections) {
             $injections[] = $injection;
         });
         return $injections;
@@ -159,7 +160,7 @@ class ObjectDefinition implements Definition
     {
         $this->lazy = $lazy;
     }
-    public function isLazy(): bool
+    public function isLazy() : bool
     {
         if ($this->lazy !== null) {
             return $this->lazy;
@@ -167,24 +168,24 @@ class ObjectDefinition implements Definition
         // Default value
         return \false;
     }
-    public function classExists(): bool
+    public function classExists() : bool
     {
         return $this->classExists;
     }
-    public function isInstantiable(): bool
+    public function isInstantiable() : bool
     {
         return $this->isInstantiable;
     }
     public function replaceNestedDefinitions(callable $replacer)
     {
-        array_walk($this->propertyInjections, function (PropertyInjection $propertyInjection) use ($replacer) {
+        \array_walk($this->propertyInjections, function (PropertyInjection $propertyInjection) use($replacer) {
             $propertyInjection->replaceNestedDefinition($replacer);
         });
         if ($this->constructorInjection) {
             $this->constructorInjection->replaceNestedDefinitions($replacer);
         }
-        array_walk($this->methodInjections, function ($injectionArray) use ($replacer) {
-            array_walk($injectionArray, function (MethodInjection $methodInjection) use ($replacer) {
+        \array_walk($this->methodInjections, function ($injectionArray) use($replacer) {
+            \array_walk($injectionArray, function (MethodInjection $methodInjection) use($replacer) {
                 $methodInjection->replaceNestedDefinitions($replacer);
             });
         });
@@ -198,9 +199,9 @@ class ObjectDefinition implements Definition
     {
         $className = $this->getClassName();
         foreach ($replacements as $replacement) {
-            $pos = strpos($className, DefinitionArray::WILDCARD);
+            $pos = \strpos($className, DefinitionArray::WILDCARD);
             if ($pos !== \false) {
-                $className = substr_replace($className, $replacement, $pos, 1);
+                $className = \substr_replace($className, $replacement, $pos, 1);
             }
         }
         $this->setClassName($className);
@@ -212,7 +213,7 @@ class ObjectDefinition implements Definition
     private function updateCache()
     {
         $className = $this->getClassName();
-        $this->classExists = class_exists($className) || interface_exists($className);
+        $this->classExists = \class_exists($className) || \interface_exists($className);
         if (!$this->classExists) {
             $this->isInstantiable = \false;
             return;

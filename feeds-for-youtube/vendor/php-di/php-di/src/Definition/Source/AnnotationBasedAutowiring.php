@@ -28,6 +28,7 @@ use UnexpectedValueException;
  * This source automatically includes the reflection source.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
 {
@@ -50,7 +51,7 @@ class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
     public function autowire(string $name, ObjectDefinition $definition = null)
     {
         $className = $definition ? $definition->getClassName() : $name;
-        if (!class_exists($className) && !interface_exists($className)) {
+        if (!\class_exists($className) && !\interface_exists($className)) {
             return $definition;
         }
         $definition = $definition ?: new ObjectDefinition($name);
@@ -74,7 +75,7 @@ class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
     /**
      * Autowiring cannot guess all existing definitions.
      */
-    public function getDefinitions(): array
+    public function getDefinitions() : array
     {
         return [];
     }
@@ -103,18 +104,18 @@ class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
     private function readProperty(ReflectionProperty $property, ObjectDefinition $definition, $classname = null)
     {
         // Look for @Inject annotation
-        $annotation = $this->getAnnotationReader()->getPropertyAnnotation($property, 'SmashBalloon\YoutubeFeed\Vendor\DI\Annotation\Inject');
+        $annotation = $this->getAnnotationReader()->getPropertyAnnotation($property, 'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\Annotation\\Inject');
         if (!$annotation instanceof Inject) {
             return;
         }
         // Try to @Inject("name") or look for @var content
         $entryName = $annotation->getName() ?: $this->getPhpDocReader()->getPropertyClass($property);
         // Try using PHP7.4 typed properties
-        if (\PHP_VERSION_ID > 70400 && $entryName === null && $property->getType() instanceof ReflectionNamedType && (class_exists($property->getType()->getName()) || interface_exists($property->getType()->getName()))) {
+        if (\PHP_VERSION_ID > 70400 && $entryName === null && $property->getType() instanceof ReflectionNamedType && (\class_exists($property->getType()->getName()) || \interface_exists($property->getType()->getName()))) {
             $entryName = $property->getType()->getName();
         }
         if ($entryName === null) {
-            throw new InvalidAnnotation(sprintf('@Inject found on property %s::%s but unable to guess what to inject, use a @var annotation', $property->getDeclaringClass()->getName(), $property->getName()));
+            throw new InvalidAnnotation(\sprintf('@Inject found on property %s::%s but unable to guess what to inject, use a @var annotation', $property->getDeclaringClass()->getName(), $property->getName()));
         }
         $definition->addPropertyInjection(new PropertyInjection($property->getName(), new Reference($entryName), $classname));
     }
@@ -146,9 +147,9 @@ class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
     {
         // Look for @Inject annotation
         try {
-            $annotation = $this->getAnnotationReader()->getMethodAnnotation($method, 'SmashBalloon\YoutubeFeed\Vendor\DI\Annotation\Inject');
+            $annotation = $this->getAnnotationReader()->getMethodAnnotation($method, 'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\Annotation\\Inject');
         } catch (InvalidAnnotation $e) {
-            throw new InvalidAnnotation(sprintf('@Inject annotation on %s::%s is malformed. %s', $method->getDeclaringClass()->getName(), $method->getName(), $e->getMessage()), 0, $e);
+            throw new InvalidAnnotation(\sprintf('@Inject annotation on %s::%s is malformed. %s', $method->getDeclaringClass()->getName(), $method->getName(), $e->getMessage()), 0, $e);
         }
         // @Inject on constructor is implicit
         if (!($annotation || $method->isConstructor())) {
@@ -201,7 +202,7 @@ class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
         if ($this->annotationReader === null) {
             AnnotationRegistry::registerLoader('class_exists');
             $this->annotationReader = new SimpleAnnotationReader();
-            $this->annotationReader->addNamespace('SmashBalloon\YoutubeFeed\Vendor\DI\Annotation');
+            $this->annotationReader->addNamespace('SmashBalloon\\YoutubeFeed\\Vendor\\DI\\Annotation');
         }
         return $this->annotationReader;
     }
@@ -219,9 +220,9 @@ class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
     {
         try {
             /** @var Injectable|null $annotation */
-            $annotation = $this->getAnnotationReader()->getClassAnnotation($class, 'SmashBalloon\YoutubeFeed\Vendor\DI\Annotation\Injectable');
+            $annotation = $this->getAnnotationReader()->getClassAnnotation($class, 'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\Annotation\\Injectable');
         } catch (UnexpectedValueException $e) {
-            throw new InvalidAnnotation(sprintf('Error while reading @Injectable on %s: %s', $class->getName(), $e->getMessage()), 0, $e);
+            throw new InvalidAnnotation(\sprintf('Error while reading @Injectable on %s: %s', $class->getName(), $e->getMessage()), 0, $e);
         }
         if (!$annotation) {
             return;

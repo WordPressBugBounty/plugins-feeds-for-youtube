@@ -12,6 +12,7 @@ use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\NotFoundExceptionInterface;
  *
  * @since 5.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class InstanceInjector extends ObjectCreator
 {
@@ -25,12 +26,12 @@ class InstanceInjector extends ObjectCreator
         try {
             $this->injectMethodsAndProperties($definition->getInstance(), $definition->getObjectDefinition());
         } catch (NotFoundExceptionInterface $e) {
-            $message = sprintf('Error while injecting dependencies into %s: %s', get_class($definition->getInstance()), $e->getMessage());
+            $message = \sprintf('Error while injecting dependencies into %s: %s', \get_class($definition->getInstance()), $e->getMessage());
             throw new DependencyException($message, 0, $e);
         }
         return $definition;
     }
-    public function isResolvable(Definition $definition, array $parameters = []): bool
+    public function isResolvable(Definition $definition, array $parameters = []) : bool
     {
         return \true;
     }

@@ -2,6 +2,7 @@
 
 namespace SmashBalloon\YoutubeFeed\Vendor\Laravel\SerializableClosure\Support;
 
+/** @internal */
 class SelfReference
 {
     /**

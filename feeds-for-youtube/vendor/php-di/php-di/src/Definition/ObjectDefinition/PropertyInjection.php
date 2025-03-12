@@ -7,6 +7,7 @@ namespace SmashBalloon\YoutubeFeed\Vendor\DI\Definition\ObjectDefinition;
  * Describe an injection in a class property.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class PropertyInjection
 {
@@ -37,7 +38,7 @@ class PropertyInjection
         $this->value = $value;
         $this->className = $className;
     }
-    public function getPropertyName(): string
+    public function getPropertyName() : string
     {
         return $this->propertyName;
     }

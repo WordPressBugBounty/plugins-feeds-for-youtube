@@ -8,6 +8,7 @@ use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\ContainerInterface;
  * Describes a definition that can resolve itself.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 interface SelfResolvingDefinition
 {
@@ -20,5 +21,5 @@ interface SelfResolvingDefinition
     /**
      * Check if a definition can be resolved.
      */
-    public function isResolvable(ContainerInterface $container): bool;
+    public function isResolvable(ContainerInterface $container) : bool;
 }

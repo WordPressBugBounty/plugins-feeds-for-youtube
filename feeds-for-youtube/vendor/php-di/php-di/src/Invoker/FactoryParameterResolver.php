@@ -26,12 +26,12 @@ class FactoryParameterResolver implements ParameterResolver
     {
         $this->container = $container;
     }
-    public function getParameters(ReflectionFunctionAbstract $reflection, array $providedParameters, array $resolvedParameters): array
+    public function getParameters(ReflectionFunctionAbstract $reflection, array $providedParameters, array $resolvedParameters) : array
     {
         $parameters = $reflection->getParameters();
         // Skip parameters already resolved
         if (!empty($resolvedParameters)) {
-            $parameters = array_diff_key($parameters, $resolvedParameters);
+            $parameters = \array_diff_key($parameters, $resolvedParameters);
         }
         foreach ($parameters as $index => $parameter) {
             $parameterType = $parameter->getType();
@@ -48,9 +48,9 @@ class FactoryParameterResolver implements ParameterResolver
                 continue;
             }
             $parameterClass = $parameterType->getName();
-            if ($parameterClass === 'Psr\Container\ContainerInterface') {
+            if ($parameterClass === 'Psr\\Container\\ContainerInterface') {
                 $resolvedParameters[$index] = $this->container;
-            } elseif ($parameterClass === 'DI\Factory\RequestedEntry') {
+            } elseif ($parameterClass === 'DI\\Factory\\RequestedEntry') {
                 // By convention the second parameter is the definition
                 $resolvedParameters[$index] = $providedParameters[1];
             } elseif ($this->container->has($parameterClass)) {

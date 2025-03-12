@@ -3,6 +3,7 @@
 namespace SmashBalloon\YoutubeFeed\Vendor\Laravel\SerializableClosure\Exceptions;
 
 use Exception;
+/** @internal */
 class InvalidSignatureException extends Exception
 {
     /**

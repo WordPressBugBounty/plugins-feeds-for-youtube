@@ -33,6 +33,7 @@ use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\ContainerInterface;
  * @api
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class Container implements ContainerInterface, FactoryInterface, InvokerInterface
 {
@@ -106,7 +107,7 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
     public function get($name)
     {
         // If the entry is already resolved we return it
-        if (isset($this->resolvedEntries[$name]) || array_key_exists($name, $this->resolvedEntries)) {
+        if (isset($this->resolvedEntries[$name]) || \array_key_exists($name, $this->resolvedEntries)) {
             return $this->resolvedEntries[$name];
         }
         $definition = $this->getDefinition($name);
@@ -125,7 +126,7 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
     private function getDefinition($name)
     {
         // Local cache that avoids fetching the same definition twice
-        if (!array_key_exists($name, $this->fetchedDefinitions)) {
+        if (!\array_key_exists($name, $this->fetchedDefinitions)) {
             $this->fetchedDefinitions[$name] = $this->definitionSource->getDefinition($name);
         }
         return $this->fetchedDefinitions[$name];
@@ -151,13 +152,13 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
      */
     public function make($name, array $parameters = [])
     {
-        if (!is_string($name)) {
-            throw new InvalidArgumentException(sprintf('The name parameter must be of type string, %s given', is_object($name) ? get_class($name) : gettype($name)));
+        if (!\is_string($name)) {
+            throw new InvalidArgumentException(\sprintf('The name parameter must be of type string, %s given', \is_object($name) ? \get_class($name) : \gettype($name)));
         }
         $definition = $this->getDefinition($name);
         if (!$definition) {
             // If the entry is already resolved we return it
-            if (array_key_exists($name, $this->resolvedEntries)) {
+            if (\array_key_exists($name, $this->resolvedEntries)) {
                 return $this->resolvedEntries[$name];
             }
             throw new NotFoundException("No entry or class found for '{$name}'");
@@ -174,10 +175,10 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
      */
     public function has($name)
     {
-        if (!is_string($name)) {
-            throw new InvalidArgumentException(sprintf('The name parameter must be of type string, %s given', is_object($name) ? get_class($name) : gettype($name)));
+        if (!\is_string($name)) {
+            throw new InvalidArgumentException(\sprintf('The name parameter must be of type string, %s given', \is_object($name) ? \get_class($name) : \gettype($name)));
         }
-        if (array_key_exists($name, $this->resolvedEntries)) {
+        if (\array_key_exists($name, $this->resolvedEntries)) {
             return \true;
         }
         $definition = $this->getDefinition($name);
@@ -200,10 +201,10 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
         if (!$instance) {
             return $instance;
         }
-        $className = get_class($instance);
+        $className = \get_class($instance);
         // If the class is anonymous, don't cache its definition
         // Checking for anonymous classes is cleaner via Reflection, but also slower
-        $objectDefinition = \false !== strpos($className, '@anonymous') ? $this->definitionSource->getDefinition($className) : $this->getDefinition($className);
+        $objectDefinition = \false !== \strpos($className, '@anonymous') ? $this->definitionSource->getDefinition($className) : $this->getDefinition($className);
         if (!$objectDefinition instanceof ObjectDefinition) {
             return $instance;
         }
@@ -254,10 +255,10 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
      *
      * @return string[]
      */
-    public function getKnownEntryNames(): array
+    public function getKnownEntryNames() : array
     {
-        $entries = array_unique(array_merge(array_keys($this->definitionSource->getDefinitions()), array_keys($this->resolvedEntries)));
-        sort($entries);
+        $entries = \array_unique(\array_merge(\array_keys($this->definitionSource->getDefinitions()), \array_keys($this->resolvedEntries)));
+        \sort($entries);
         return $entries;
     }
     /**
@@ -268,13 +269,13 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
      * @throws InvalidDefinition
      * @throws NotFoundException
      */
-    public function debugEntry(string $name): string
+    public function debugEntry(string $name) : string
     {
         $definition = $this->definitionSource->getDefinition($name);
         if ($definition instanceof Definition) {
             return (string) $definition;
         }
-        if (array_key_exists($name, $this->resolvedEntries)) {
+        if (\array_key_exists($name, $this->resolvedEntries)) {
             return $this->getEntryType($this->resolvedEntries[$name]);
         }
         throw new NotFoundException("No entry or class found for '{$name}'");
@@ -284,21 +285,21 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
      *
      * @param mixed $entry
      */
-    private function getEntryType($entry): string
+    private function getEntryType($entry) : string
     {
-        if (is_object($entry)) {
-            return sprintf("Object (\n    class = %s\n)", get_class($entry));
+        if (\is_object($entry)) {
+            return \sprintf("Object (\n    class = %s\n)", \get_class($entry));
         }
-        if (is_array($entry)) {
-            return preg_replace(['/^array \(/', '/\)$/'], ['[', ']'], var_export($entry, \true));
+        if (\is_array($entry)) {
+            return \preg_replace(['/^array \\(/', '/\\)$/'], ['[', ']'], \var_export($entry, \true));
         }
-        if (is_string($entry)) {
-            return sprintf('Value (\'%s\')', $entry);
+        if (\is_string($entry)) {
+            return \sprintf('Value (\'%s\')', $entry);
         }
-        if (is_bool($entry)) {
-            return sprintf('Value (%s)', $entry === \true ? 'true' : 'false');
+        if (\is_bool($entry)) {
+            return \sprintf('Value (%s)', $entry === \true ? 'true' : 'false');
         }
-        return sprintf('Value (%s)', is_scalar($entry) ? $entry : ucfirst(gettype($entry)));
+        return \sprintf('Value (%s)', \is_scalar($entry) ? $entry : \ucfirst(\gettype($entry)));
     }
     /**
      * Resolves a definition.
@@ -327,14 +328,14 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
     protected function setDefinition(string $name, Definition $definition)
     {
         // Clear existing entry if it exists
-        if (array_key_exists($name, $this->resolvedEntries)) {
+        if (\array_key_exists($name, $this->resolvedEntries)) {
             unset($this->resolvedEntries[$name]);
         }
         $this->fetchedDefinitions = [];
         // Completely clear this local cache
         $this->definitionSource->addDefinition($definition);
     }
-    private function getInvoker(): InvokerInterface
+    private function getInvoker() : InvokerInterface
     {
         if (!$this->invoker) {
             $parameterResolver = new ResolverChain([new DefinitionParameterResolver($this->definitionResolver), new NumericArrayResolver(), new AssociativeArrayResolver(), new DefaultValueResolver(), new TypeHintContainerResolver($this->delegateContainer)]);
@@ -342,7 +343,7 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
         }
         return $this->invoker;
     }
-    private function createDefaultDefinitionSource(): SourceChain
+    private function createDefaultDefinitionSource() : SourceChain
     {
         $source = new SourceChain([new ReflectionBasedAutowiring()]);
         $source->setMutableDefinitionSource(new DefinitionArray([], new ReflectionBasedAutowiring()));

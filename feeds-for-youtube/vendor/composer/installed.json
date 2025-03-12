@@ -304,12 +304,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:awesomemotive\/sb-customizer.git",
-                "reference": "e213753f13cdea170132362776fa540476651f28"
+                "reference": "ee8ba9905c7b5ca183e151f0ea5473ab2758aadf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-customizer\/zipball\/e213753f13cdea170132362776fa540476651f28",
-                "reference": "e213753f13cdea170132362776fa540476651f28",
+                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-customizer\/zipball\/ee8ba9905c7b5ca183e151f0ea5473ab2758aadf",
+                "reference": "ee8ba9905c7b5ca183e151f0ea5473ab2758aadf",
                 "shasum": ""
             },
             "require": {
@@ -320,7 +320,7 @@
             "require-dev": {
                 "vlucas\/phpdotenv": "^4.0"
             },
-            "time": "2025-01-28T17:41:25+00:00",
+            "time": "2024-12-12T19:43:45+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -337,7 +337,7 @@
             ],
             "description": "The SmashBalloon customizer library.",
             "support": {
-                "source": "https:\/\/github.com\/awesomemotive\/sb-customizer\/tree\/master",
+                "source": "https:\/\/github.com\/awesomemotive\/sb-customizer\/tree\/SMASH-298-fix-about-page-error",
                 "issues": "https:\/\/github.com\/awesomemotive\/sb-customizer\/issues"
             },
             "install-path": "..\/smashballoon\/customizer"

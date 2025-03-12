@@ -8,6 +8,7 @@ namespace SmashBalloon\YoutubeFeed\Vendor\DI\Definition;
  *
  * @since 5.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class DecoratorDefinition extends FactoryDefinition implements Definition, ExtendsPreviousDefinition
 {

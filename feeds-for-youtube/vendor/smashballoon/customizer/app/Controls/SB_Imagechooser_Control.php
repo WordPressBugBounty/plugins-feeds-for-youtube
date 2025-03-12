@@ -8,9 +8,10 @@
  */
 namespace Smashballoon\Customizer\Controls;
 
-if (!defined('ABSPATH')) {
+if (!\defined('ABSPATH')) {
     exit;
 }
+/** @internal */
 class SB_Imagechooser_Control extends \Smashballoon\Customizer\Controls\SB_Controls_Base
 {
     /**

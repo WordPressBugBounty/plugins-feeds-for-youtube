@@ -8,6 +8,7 @@ use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\ContainerInterface;
  * Represents a reference to another entry.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ * @internal
  */
 class Reference implements Definition, SelfResolvingDefinition
 {
@@ -28,7 +29,7 @@ class Reference implements Definition, SelfResolvingDefinition
     {
         $this->targetEntryName = $targetEntryName;
     }
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
@@ -36,7 +37,7 @@ class Reference implements Definition, SelfResolvingDefinition
     {
         $this->name = $name;
     }
-    public function getTargetEntryName(): string
+    public function getTargetEntryName() : string
     {
         return $this->targetEntryName;
     }
@@ -44,7 +45,7 @@ class Reference implements Definition, SelfResolvingDefinition
     {
         return $container->get($this->getTargetEntryName());
     }
-    public function isResolvable(ContainerInterface $container): bool
+    public function isResolvable(ContainerInterface $container) : bool
     {
         return $container->has($this->getTargetEntryName());
     }
@@ -54,6 +55,6 @@ class Reference implements Definition, SelfResolvingDefinition
     }
     public function __toString()
     {
-        return sprintf('get(%s)', $this->targetEntryName);
+        return \sprintf('get(%s)', $this->targetEntryName);
     }
 }
