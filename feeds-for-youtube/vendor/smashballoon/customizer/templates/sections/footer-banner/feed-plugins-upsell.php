@@ -1,7 +1,7 @@
 <div class="sbc-upsell-banner sbc-feed-plugins-upsell-banner" v-if="viewsActive.pageScreen == 'selectFeed' && !iscustomizerScreen && !fullScreenLoader && viewsActive.selectedFeedSection == 'selectSource'">
     <div class="sbc-row">
         <div class="sbc-col-left">
-        <img src="<?php echo CUSTOMIZER_PLUGIN_URL . 'assets/img/upsell/all-plugins-upsell.jpg'; ?>" alt="click-social-upsell">
+        <img src="<?php echo CUSTOMIZER_PLUGIN_URL . 'assets/img/upsell/all-plugins-upsell.jpg'; ?>" alt="upsell">
         </div>
         <div class="sbc-col-right">
             <div class="sbc-upsell-banner-title">{{genericText.feedPluginUpSellTitleFirstPart}} <span>{{genericText.feedPluginUpSellTitleSecondPart}}</span></div>

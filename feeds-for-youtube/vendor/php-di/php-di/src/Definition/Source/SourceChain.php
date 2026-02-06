@@ -9,7 +9,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\ExtendsPreviousDefinition;
  * Manages a chain of other definition sources.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class SourceChain implements DefinitionSource, MutableDefinitionSource
 {
@@ -31,7 +30,7 @@ class SourceChain implements DefinitionSource, MutableDefinitionSource
     public function __construct(array $sources)
     {
         // We want a numerically indexed array to ease the traversal later
-        $this->sources = \array_values($sources);
+        $this->sources = array_values($sources);
         $this->rootSource = $this;
     }
     /**
@@ -42,7 +41,7 @@ class SourceChain implements DefinitionSource, MutableDefinitionSource
      */
     public function getDefinition(string $name, int $startIndex = 0)
     {
-        $count = \count($this->sources);
+        $count = count($this->sources);
         for ($i = $startIndex; $i < $count; ++$i) {
             $source = $this->sources[$i];
             $definition = $source->getDefinition($name);
@@ -55,14 +54,14 @@ class SourceChain implements DefinitionSource, MutableDefinitionSource
         }
         return null;
     }
-    public function getDefinitions() : array
+    public function getDefinitions(): array
     {
         $names = [];
         foreach ($this->sources as $source) {
-            $names = \array_merge($names, $source->getDefinitions());
+            $names = array_merge($names, $source->getDefinitions());
         }
-        $names = \array_keys($names);
-        $definitions = \array_combine($names, \array_map(function (string $name) {
+        $names = array_keys($names);
+        $definitions = array_combine($names, array_map(function (string $name) {
             return $this->getDefinition($name);
         }, $names));
         return $definitions;
@@ -87,6 +86,6 @@ class SourceChain implements DefinitionSource, MutableDefinitionSource
     public function setMutableDefinitionSource(MutableDefinitionSource $mutableSource)
     {
         $this->mutableSource = $mutableSource;
-        \array_unshift($this->sources, $mutableSource);
+        array_unshift($this->sources, $mutableSource);
     }
 }

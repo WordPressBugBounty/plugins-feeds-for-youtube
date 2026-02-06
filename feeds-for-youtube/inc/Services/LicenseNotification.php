@@ -2,6 +2,7 @@
 
 namespace SmashBalloon\YouTubeFeed\Services;
 
+use SmashBalloon\YouTubeFeed\Admin\SBY_Upgrader;
 use SmashBalloon\YouTubeFeed\Services\Admin\LicenseService;
 use Smashballoon\Stubs\Services\ServiceProvider;
 use SmashBalloon\YouTubeFeed\Helpers\Util;
@@ -24,7 +25,7 @@ class LicenseNotification extends ServiceProvider {
 
 	/**
 	 * Hide the frontend license error message for a day
-	 * 
+	 *
 	 * @since 2.0.3
 	 */
 	public function hide_frontend_license_error() {
@@ -63,11 +64,11 @@ class LicenseNotification extends ServiceProvider {
 
     /**
      * Output frontend license error HTML content
-     * 
+     *
      * @since 2.0.2
      */
 	public function sby_frontend_license_error_content( $license_state = 'expired' ) {
-            $icons = sby_builder_pro()->builder_svg_icons(); 
+            $icons = sby_builder_pro()->builder_svg_icons();
 
 			$feeds_count = $this->db->feeds_count();
 			if ( $feeds_count <= 0 ) {
@@ -91,11 +92,11 @@ class LicenseNotification extends ServiceProvider {
                     <?php echo $icons['instagram']; ?>
                     <div class="sby-fln-expired-text">
                         <p>
-                            <?php 
-                                printf( 
-                                    __( 'Your YouTube Feeds Pro license key %s', 'feeds-for-youtube' ), 
+                            <?php
+                                printf(
+                                    __( 'Your YouTube Feeds Pro license key %s', 'feeds-for-youtube' ),
                                     $license_state == 'expired' ? 'has ' . $license_state : 'is ' . $license_state
-                                ); 
+                                );
                             ?>
                             <a href="<?php echo $this->get_renew_url( $license_state ); ?>">Resolve Now <?php echo $icons['chevronRight']; ?></a>
                         </p>
@@ -111,6 +112,9 @@ class LicenseNotification extends ServiceProvider {
 	 * @since 2.2.0
 	 */
 	public function sby_recheck_connection() {
+		delete_option("sby_islicence_upgraded");
+		delete_option("sby_upgraded_info");
+
 		// Do the form validation
 		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( $_POST['license_key'] ) : '';
 		if ( empty( $license_key ) ) {
@@ -123,11 +127,21 @@ class LicenseNotification extends ServiceProvider {
 		// update options data
 		$license_changed = Util::update_recheck_license_data( $sby_license_data );
 
+		if (
+			isset($sby_license_data->success, $sby_license_data->license)
+			&& $sby_license_data->success === true
+			&& $sby_license_data->license === 'valid'
+		) {
+			SBY_Upgrader::check_license_upgraded($sby_license_data, $license_key);
+		}
+
 		// send AJAX response back
 		wp_send_json_success(
 			array(
 				'license'        => $sby_license_data->license,
 				'licenseChanged' => $license_changed,
+				'isLicenseUpgraded'   => get_option('sby_islicence_upgraded'),
+				'licenseUpgradedInfo' => get_option('sby_upgraded_info')
 			)
 		);
 	}

@@ -12,15 +12,9 @@ class Customizer_Compatibility extends ServiceProvider {
 	}
 
 	public function register_scripts() {
-		$asset_url = trailingslashit( SBY_PLUGIN_URL ) . 'js/customizer.min.js';
+		$asset_url = Util::getPluginAssets('js', 'customizer');
 
-		if ( isset( $_GET['sb_debug'] ) ) {
-			$asset_url = trailingslashit( SBY_PLUGIN_URL ) . 'js/customizer-debug.js';
-		}
 
-		if(!Util::isProduction()) {
-			$asset_url = 'http://localhost:9005/customizer.min.js';
-		}
 		
 		// only enqueue the below scripts on allowed pages; YouTube plugin All Feeds page
 		if ( !$this->is_allowed_screens() ) {

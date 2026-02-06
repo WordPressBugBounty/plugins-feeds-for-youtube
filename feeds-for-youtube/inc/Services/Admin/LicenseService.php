@@ -11,7 +11,7 @@ use SmashBalloon\YouTubeFeed\Services\LicenseNotification;
 class LicenseService extends ServiceProvider {
 
 	private $license_service;
-	
+
 	public function __construct() {
 		$this->license_service = new LicenseNotification();
 	}
@@ -24,6 +24,7 @@ class LicenseService extends ServiceProvider {
 		// Add extra localize script items
 		add_filter('sby_localized_settings', [$this, 'localized_license_settings']);
 		add_action('wp_ajax_sby_check_connection', [$this, 'test_connection']);
+		add_action('wp_ajax_sby_recheck_license_upgrade', [$this, 'recheck_license_upgrade']);
 		add_action('wp_ajax_sby_license_activation', [$this, 'ajax_activate_license']);
 		add_action('wp_ajax_sby_license_deactivation', [$this, 'ajax_deactivate_license']);
 		add_action( 'wp_ajax_sby_check_license', [ $this, 'check_license' ] );
@@ -36,7 +37,7 @@ class LicenseService extends ServiceProvider {
 		$settings['licenseStatus'] = $this->get_license_status();
 		$settings['licenseData']   = $this->get_license_data();
 		$settings['licenseKey']    = $license_key;
-		$settings['upgradeUrl']    = sprintf( 'https://smashballoon.com/youtube-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=youtube-pro&utm_source=settings&utm_medium=upgrade-license', $this->get_license_key() );
+		$settings['upgradeUrl']    = sprintf( 'https://smashballoon.com/pricing/youtube-feed/?license_key=%s&upgrade=true&utm_campaign=youtube-pro&utm_source=settings&utm_medium=upgrade-license', $this->get_license_key() );
 		return $settings;
 	}
 
@@ -77,6 +78,14 @@ class LicenseService extends ServiceProvider {
 		);
 
 		$response->send();
+	}
+
+	public function recheck_license_upgrade() {
+		check_ajax_referer( 'sby-admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
 	}
 
 	public function ajax_deactivate_license() {
@@ -144,7 +153,7 @@ class LicenseService extends ServiceProvider {
 		// decode the license data
 		$sby_license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		if ( 
+		if (
 			isset( $sby_license_data->success ) && ( $sby_license_data->success == false ) ||
 			isset( $sby_license_data->error ) && ( $sby_license_data->error == 'missing' ) ||
 			isset( $sby_license_data->license ) && (
@@ -205,7 +214,7 @@ class LicenseService extends ServiceProvider {
 
 	/**
 	 * Check license key
-	 * 
+	 *
 	 * @since 2.0.2
 	 */
 	public function sby_check_license( $sby_license, $check_license_status = false ) {
@@ -439,7 +448,7 @@ class LicenseService extends ServiceProvider {
 
 	/**
 	 * Admin header notices
-	 * 
+	 *
 	 * @since 2.0.2
 	 */
 	public function sby_admin_header_license_notice () {
@@ -477,7 +486,7 @@ class LicenseService extends ServiceProvider {
 
 	/**
 	 * Get post grace period header notice content
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public function get_post_grace_period_header_notice( $license_status = 'expired' ) {

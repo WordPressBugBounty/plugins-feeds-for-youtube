@@ -29,8 +29,8 @@ class Util {
 	}
 
 	public static function isCurrentScreenAllowed() {
-		$allowed_screens = array( 
-			'dashboard', 
+		$allowed_screens = array(
+			'dashboard',
 			'toplevel_page_sby-feed-builder',
 			'youtube-feed_page_youtube-feed-setup',
 			'youtube-feed_page_youtube-feed-settings',
@@ -132,7 +132,7 @@ class Util {
 
 	/**
 	 * Remote check for license status
-	 * 
+	 *
 	 * @since 2.0.2
 	 */
 	public static function sby_check_license( $sby_license, $check_license_status = false, $license_api_second_check = false ) {
@@ -142,12 +142,11 @@ class Util {
 		} else {
 			update_option( 'sby_check_license_api_when_expires', 'false' );
 		}
-
 		// data to send in our API request
 		$sby_api_params = array(
 			'edd_action'=> 'check_license',
 			'license'   => $sby_license,
-			'item_name' => urlencode( SBY_PLUGIN_NAME ) // the name of our product in EDD
+			'item_name' => urlencode( SBY_PLUGIN_EDD_NAME ) // the name of our product in EDD
 		);
 		$api_url = add_query_arg( $sby_api_params, SBY_STORE_URL );
 		$args = array(
@@ -180,7 +179,7 @@ class Util {
 		return $sby_license_data;
 	}
 
-	
+
 	/**
 	 * Update License Data
 	 *
@@ -201,12 +200,12 @@ class Util {
 
 	/**
 	 * Check if licese expired/inactive notices needs to show
-	 * 
+	 *
 	 * @since 2.0.2
 	 */
 	public static function expiredLicenseWithGracePeriodEnded() {
-		return !empty( self::get_license_key() ) && 
-				self::is_license_expired() && 
+		return !empty( self::get_license_key() ) &&
+				self::is_license_expired() &&
 				self::is_license_grace_period_ended( true );
 	}
 
@@ -220,7 +219,7 @@ class Util {
 
 		if( !empty($basename) ) {
 				$username = strpos($basename, '@') === 0 ? substr($basename, 1) : $basename;
-			
+
 				$params = array(
 					'channel_handle' => $username
 				);
@@ -280,7 +279,7 @@ class Util {
 
 	/**
 	 * Cache saved channel ID to database
-	 * 
+	 *
 	 * @return void
 	 */
 	public static function cache_saved_channel_id( $url, $response ) {
@@ -306,7 +305,7 @@ class Util {
 
 	/**
 	 * Get channel ID from saved channel IDs cached in the database
-	 * 
+	 *
 	 * @return null|string
 	 */
 	public static function get_saved_channel_id( $channel ) {
@@ -354,4 +353,31 @@ class Util {
 		return $resize_url;
 	}
 
+
+
+	/**
+	 * Get the path or URL of the plugin's asset file.
+	 * 
+	 * @since x.x.x
+	 * 
+	 * @param string $file_type       The type of the asset (e.g. 'css' or 'js').
+	 * @param string $file_name  The name of the asset file, including its extension.
+	 * @param bool   $libs     Optional. Whether the asset is from a libs directory. Default false.
+	 */
+	public static function getPluginAssets($file_type, $file_name, $libs = false) {
+		$assets_url = trailingslashit( SBY_PLUGIN_URL );
+		$asset_path =  trailingslashit('public/build/' . $file_type);
+		$rtl = ( 'css' === $file_type && is_rtl() ) ? '-rtl' : '';
+
+
+		if ( isset( $_GET['sb_debug'] ) || !self::isProduction() ) {
+			$asset_path = trailingslashit('public/debug/'. $file_type);
+		}
+
+		if ( true === $libs ) {
+			$asset_path = trailingslashit('public/libs/' . $file_type);
+		}
+
+		return $assets_url . $asset_path . $file_name . $rtl . '.' . $file_type;
+	}
 }

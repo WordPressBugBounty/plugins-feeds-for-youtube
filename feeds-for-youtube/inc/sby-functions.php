@@ -775,8 +775,8 @@ function sby_get_active_plugins_info() {
 	$is_social_wall_installed = isset( $installed_plugins['social-wall/social-wall.php'] ) ? true : false;
 	$social_wall_plugin = 'social-wall/social-wall.php';
 
-	$click_social_plugin = 'click-social/click-social.php';
-	$is_click_social_installed = isset( $installed_plugins[$click_social_plugin] ) ? true : false;
+	$is_feed_analytics_installed = isset( $installed_plugins['sb-analytics/sb-analytics-pro.php'] ) ? true : false;
+	$feed_analytics_plugin = 'sb-analytics/sb-analytics-pro.php';
 
 	return array(
 		'is_facebook_installed' => $is_facebook_installed,
@@ -786,7 +786,7 @@ function sby_get_active_plugins_info() {
 		'is_tiktok_installed' => $is_tiktok_installed,
 		'is_reviews_installed' => $is_reviews_installed,
 		'is_social_wall_installed' => $is_social_wall_installed,
-		'is_click_social_installed' => $is_click_social_installed,
+		'is_feed_analytics_installed' => $is_feed_analytics_installed,
 		'facebook_plugin' => $facebook_plugin,
 		'instagram_plugin' => $instagram_plugin,
 		'twitter_plugin' => $twitter_plugin,
@@ -794,7 +794,7 @@ function sby_get_active_plugins_info() {
 		'tiktok_plugin' => $tiktok_plugin,
 		'reviews_plugin' => $reviews_plugin,
 		'social_wall_plugin' => $social_wall_plugin,
-		'click_social_plugin' => $click_social_plugin,
+		'feed_analytics_plugin' => $feed_analytics_plugin,
 		'installed_plugins' => $installed_plugins
 	);
 }

@@ -6,6 +6,8 @@
  */
 namespace SmashBalloon\YouTubeFeed\Admin;
 
+use SmashBalloon\YouTubeFeed\Helpers\Util;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -437,18 +439,17 @@ class SBY_Notifications {
 			return;
 		}
 
-		$min = '';
 
 		wp_enqueue_style(
 			'sby-admin-notifications',
-			SBY_PLUGIN_URL . "css/admin-notifications{$min}.css",
+			Util::getPluginAssets('css', 'admin-notifications'),
 			array(),
 			SBYVER
 		);
 
 		wp_enqueue_script(
 			'sby-admin-notifications',
-			SBY_PLUGIN_URL . "js/admin-notifications{$min}.js",
+			Util::getPluginAssets('js', 'admin-notifications'),
 			array( 'jquery' ),
 			SBYVER,
 			true

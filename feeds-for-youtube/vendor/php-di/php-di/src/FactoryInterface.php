@@ -10,7 +10,6 @@ namespace SmashBalloon\YoutubeFeed\Vendor\DI;
  *
  * @since 4.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 interface FactoryInterface
 {

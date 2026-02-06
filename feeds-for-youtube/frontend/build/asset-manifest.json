@@ -1,7 +1,7 @@
 {
   "files": {
     "main.js": "/static/js/main.js",
-    "main.css": "/static/css/main.f974fbd6.css",
+    "main.css": "/static/css/main.f89c7ec4.css",
     "static/media/tiktok-icon.svg": "/static/media/tiktok-icon.a2e7de498350ff7ea62743426471b70a.svg",
     "static/images/welcome-setup.jpg": "/static/images/welcome-setup.jpg?f41ee75b05feb49b501d5a60fc6def9f",
     "static/images/team-avatar.png": "/static/images/team-avatar.png?6c9d478f50d90dd0cf91bdec6edccccd",
@@ -61,10 +61,8 @@
     "static/media/gallery.svg": "/static/media/gallery.a63a15044cc911c275600882fd68c0e9.svg",
     "index.html": "/index.html",
     "static/media/fb-alt.svg": "/static/media/fb-alt.cf9da0f511aee451a6ec759681fe809f.svg",
-    "static/media/calendar.svg": "/static/media/calendar.5ec9a2cb1a0da6f8fef333facfe3aafa.svg",
     "static/media/copy.svg": "/static/media/copy.073543cecd7997238f27079da5704033.svg",
     "static/media/fb-icon.svg": "/static/media/fb-icon.56eb841b2907a195c3a322bd0f4bbf99.svg",
-    "static/media/click-social-icon.svg": "/static/media/click-social-icon.aacf5c94707bd89911e0b320b98ab04a.svg",
     "static/media/loader.svg": "/static/media/loader.fd0904ffe747c7d1cb840149d5875cb5.svg",
     "static/media/updates.svg": "/static/media/updates.b344306ec80d979efc7bbd94372a6e9c.svg",
     "static/media/facebook.svg": "/static/media/facebook.b99f27b68bd822fe8a29c73842505531.svg",
@@ -91,6 +89,6 @@
   },
   "entrypoints": [
     "static/js/main.js",
-    "static/css/main.f974fbd6.css"
+    "static/css/main.f89c7ec4.css"
   ]
 }

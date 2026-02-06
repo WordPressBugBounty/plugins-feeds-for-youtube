@@ -1,0 +1,1 @@
+{"version":3,"file":"css/sby-notices.css","mappings":";;;AAAA;IACI,aAAa;AACjB,C","sources":["webpack://youtube-feed-pro/./css/sby-notices.css"],"sourcesContent":[".sby-license-expired {\n    display: none;\n}"],"names":[],"ignoreList":[],"sourceRoot":""}

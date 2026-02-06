@@ -21,10 +21,10 @@ $load_button_text = __( $settings['buttontext'], 'feeds-for-youtube' );
 <div class="sby_footer">
 
 <?php if ( $use_pagination || sby_doing_customizer( $settings ) ) : ?>
-    <a class="sby_load_btn" href="javascript:void(0);" <?php echo $load_btn_style; ?> <?php echo SBY_Display_Elements::get_button_data_attributes( $settings ); ?>>
+    <button type="button" aria-label="Load more content" class="sby_load_btn" <?php echo $load_btn_style; ?> <?php echo SBY_Display_Elements::get_button_data_attributes( $settings ); ?>>
         <span class="sby_btn_text" <?php echo SBY_Display_Elements::get_load_button_attribute( $settings ); ?>><?php echo esc_html( $load_button_text ); ?></span>
         <span class="sby_loader sby_hidden" style="background-color: rgb(255, 255, 255);"></span>
-    </a>
+    </button>
 <?php endif; ?>
 
 <?php if ( ($first_username && $show_subscribe_button) || sby_doing_customizer( $settings ) ) : ?>

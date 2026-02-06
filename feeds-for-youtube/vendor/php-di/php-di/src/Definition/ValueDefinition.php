@@ -8,7 +8,6 @@ use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\ContainerInterface;
  * Definition of a value for dependency injection.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class ValueDefinition implements Definition, SelfResolvingDefinition
 {
@@ -28,7 +27,7 @@ class ValueDefinition implements Definition, SelfResolvingDefinition
     {
         $this->value = $value;
     }
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -47,7 +46,7 @@ class ValueDefinition implements Definition, SelfResolvingDefinition
     {
         return $this->getValue();
     }
-    public function isResolvable(ContainerInterface $container) : bool
+    public function isResolvable(ContainerInterface $container): bool
     {
         return \true;
     }
@@ -57,6 +56,6 @@ class ValueDefinition implements Definition, SelfResolvingDefinition
     }
     public function __toString()
     {
-        return \sprintf('Value (%s)', \var_export($this->value, \true));
+        return sprintf('Value (%s)', var_export($this->value, \true));
     }
 }

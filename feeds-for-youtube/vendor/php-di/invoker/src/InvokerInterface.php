@@ -8,7 +8,6 @@ use SmashBalloon\YoutubeFeed\Vendor\Invoker\Exception\NotCallableException;
 use SmashBalloon\YoutubeFeed\Vendor\Invoker\Exception\NotEnoughParametersException;
 /**
  * Invoke a callable.
- * @internal
  */
 interface InvokerInterface
 {

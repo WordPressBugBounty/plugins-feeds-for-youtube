@@ -53,10 +53,10 @@ class SBY_Upgrader {
 	 *
 	 * @since 4.0
 	 */
-	public static function get_version_info( $license_data, $license_key ) {
+	public static function get_version_info( $license_data) {
 		$api_params = array(
 			'edd_action' => 'get_version',
-			'license'    => $license_key,
+			'license'    => !empty($license_data['key']) ? $license_data['key'] : false,
 			'item_name'  => isset( $license_data['item_name'] ) ? $license_data['item_name'] : false,
 			'item_id'    => isset( $license_data['item_id'] ) ? $license_data['item_id'] : false,
 			'version'    => '0',
@@ -116,68 +116,79 @@ class SBY_Upgrader {
 		}
 
 		$args = array(
-			'edd_action' => 'check_license',
-			'license'    => $license,
-			'item_name'  => urlencode( SBY_PLUGIN_EDD_NAME ), // the name of our product in EDD
+			'plugin_name' => self::NAME,
+			'plugin_slug' => 'pro',
+			'plugin_path' => plugin_basename(__FILE__),
+			'plugin_url'  => trailingslashit(WP_PLUGIN_URL) . 'youtube-feed-pro',
+			'home_url'    => $home_url,
+			'version'     => '1.0',
+			'key'         => $license,
+			'is_pro_upgrade' => true
 		);
-		$url  = add_query_arg( $args, SBY_STORE_URL );
+		$url  = add_query_arg( $args, self::CHECK_URL );
 
 		$remote_request_args = array(
 			'timeout' => '20',
-			'headers' => array(
-				'referer' => home_url(),
-			)
 		);
 
-		$response = wp_remote_get( $url, $remote_request_args );
+		$response = wp_safe_remote_get( $url, $remote_request_args );
 
-		if ( ! is_wp_error( $response ) ) {
-			$body = wp_remote_retrieve_body( $response );
+		if (! is_wp_error($response)) {
+			$body = wp_remote_retrieve_body($response);
 
-			$license_data = json_decode( $body, true );
-
-			if ( empty( $license_data ) ) {
+			$check_key_response = json_decode($body, true);
+			if (empty($check_key_response['license_data'])) {
 				wp_send_json_error(
 					array(
-						'message' => esc_html( self::get_error_message( $license_data ) ),
+						'message' => esc_html(self::get_error_message($check_key_response)),
 					)
 				);
 			}
 
-			if ( isset( $license_data['error'] ) && ! empty( $license_data['error'] ) ) {
+			if (!empty($check_key_response['license_data']['error'])) {
 				wp_send_json_error(
 					array(
-						'message' => self::get_error_message( $license_data ),
+						'message' => self::get_error_message($check_key_response),
 					)
 				);
 			}
 
-			if ( $license_data['license'] !== 'valid' ) {
+			if (!empty($check_key_response['license_data']['error'])) {
 				wp_send_json_error(
 					array(
-						'message' => self::get_error_message( $license_data ),
+						'message' => self::get_error_message($check_key_response),
 					)
 				);
 			}
 
-			update_option( 'sby_license_key', $license );
-			update_option( 'sby_license_data', $license_data );
-			update_option( 'sby_license_status', $license_data['license'] );
+			if ($check_key_response['license_data']['license'] !== 'valid') {
+				wp_send_json_error(
+					array(
+						'message' => self::get_error_message($check_key_response),
+					)
+				);
+			}
+
+
+			$license_data = $check_key_response['license_data'];
+			update_option('sby_license_key', $license);
+			update_option('sby_license_data', $license_data);
+			update_option('sby_license_status', $license_data['license']);
 
 			// Redirect.
-			$oth = hash( 'sha512', wp_rand() );
-			$hashed_oth = hash_hmac( 'sha512', $oth, wp_salt() );
+			$oth = hash('sha512', wp_rand());
+			$hashed_oth = hash_hmac('sha512', $oth, wp_salt());
 
-			update_option( 'sby_one_click_upgrade', $oth );
+			update_option('sby_one_click_upgrade', $oth);
 			$version      = '1.0';
-			$version_info = self::get_version_info( $license_data, $license );
+			$version_info = self::get_version_info($license_data);
 			$file         = '';
-			if ( isset( $version_info->package ) ) {
+			if (isset($version_info->package)) {
 				$file = $version_info->package;
 			}
 			$siteurl  = admin_url();
-			$endpoint = admin_url( 'admin-ajax.php' );
-			$redirect = admin_url( 'admin.php?page=' . self::REDIRECT );
+			$endpoint = admin_url('admin-ajax.php');
+			$redirect = admin_url('admin.php?page=' . self::REDIRECT);
 			$url      = add_query_arg(
 				array(
 					'key'         => $license,
@@ -186,19 +197,26 @@ class SBY_Upgrader {
 					'version'     => $version,
 					'siteurl'     => $siteurl,
 					'homeurl'     => $home_url,
-					'redirect'    => rawurldecode( base64_encode( $redirect ) ),
-					'file'        => rawurldecode( base64_encode( $file ) ),
+					'redirect'    => rawurldecode(base64_encode($redirect)),
+					'file'        => rawurldecode(base64_encode($file)),
 					'plugin_name' => self::NAME,
 				),
 				self::UPGRADE_URL
 			);
+
+
+
+
 			wp_send_json_success(
 				array(
+					'success' => true,
 					'url' => $url,
+					'same_version' => version_compare(SBYVER, $check_key_response['current_version'], '='),
+					'remote_version' => $check_key_response['current_version']
 				)
 			);
-
 		}
+
 
 		wp_send_json_error( array( 'message' => esc_html__( 'Could not connect.', 'feeds-for-youtube' ) ) );
 	}
@@ -208,114 +226,117 @@ class SBY_Upgrader {
 	 *
 	 * @since 4.0
 	 */
-	public function install_upgrade() {
-		$error = esc_html__( 'Could not install upgrade. Please download from smashballoon.com and install manually.', 'feeds-for-youtube' );
-		// verify params present (oth & download link).
-		$post_oth = ! empty( $_REQUEST['oth'] ) ? sanitize_text_field( $_REQUEST['oth'] ) : '';
-		$post_url = ! empty( $_REQUEST['file'] ) ? $_REQUEST['file'] : '';
+	public static function install_upgrade() {
 
-		if ( empty( $post_oth ) || empty( $post_url ) ) {
-			wp_send_json_error( $error );
+		$error = esc_html__('Could not install upgrade. Please download from smashballoon.com and install manually.', 'feeds-for-youtube');
+		// verify params present (oth & download link).
+		$post_oth = ! empty($_REQUEST['oth']) ? sanitize_text_field($_REQUEST['oth']) : '';
+		$post_url = ! empty($_REQUEST['file']) ? $_REQUEST['file'] : '';
+
+		if (empty($post_oth) || empty($post_url)) {
+			wp_send_json_error($error);
 		}
 		// Verify oth.
-		$oth = get_option( 'sby_one_click_upgrade' );
+		$oth = get_option('sby_one_click_upgrade');
 
-		if ( empty( $oth ) ) {
-			wp_send_json_error( $error );
+		if (empty($oth)) {
+			wp_send_json_error($error);
 		}
 
-		if ( hash_hmac( 'sha512', $oth, wp_salt() ) !== $post_oth ) {
-			wp_send_json_error( $error );
+		if (hash_hmac('sha512', $oth, wp_salt()) !== $post_oth) {
+			wp_send_json_error($error);
 		}
 
 		// Delete so cannot replay.
-		delete_option( 'sby_one_click_upgrade' );
+		delete_option('sby_one_click_upgrade');
 		// Set the current screen to avoid undefined notices.
-		set_current_screen( self::REDIRECT );
+		set_current_screen(self::REDIRECT);
 		// Prepare variables.
 		$url = esc_url_raw(
 			add_query_arg(
 				array(
 					'page' => self::REDIRECT,
 				),
-				admin_url( 'admin.php' )
+				admin_url('admin.php')
 			)
 		);
-
-		// Verify pro not installed.
-		$active = activate_plugin( self::SLUG, $url, false, true );
-		if ( ! is_wp_error( $active ) ) {
-			deactivate_plugins( plugin_basename( SBY_PLUGIN_DIR ) );
-			wp_send_json_success( esc_html__( 'Plugin installed & activated.', 'feeds-for-youtube' ) );
-		}
-
-		$creds = request_filesystem_credentials( $url, '', false, false, null );
+		$creds = request_filesystem_credentials($url, '', false, false, null);
 		// Check for file system permissions.
-		if ( false === $creds ) {
-			wp_send_json_error( $error );
+		if (false === $creds) {
+			wp_send_json_error($error);
 		}
-		if ( ! WP_Filesystem( $creds ) ) {
-			wp_send_json_error( $error );
+		if (!WP_Filesystem($creds)) {
+			wp_send_json_error($error);
 		}
 
 		// We do not need any extra credentials if we have gotten this far, so let's install the plugin.
-		$license = get_option( 'sby_license_key' );
-		if ( empty( $license ) ) {
-			wp_send_json_error( new \WP_Error( '403', esc_html__( 'You are not licensed.', 'feeds-for-youtube' ) ) );
+		$license = get_option('sby_license_key');
+		if (empty($license)) {
+			wp_send_json_error(new \WP_Error('403', esc_html__('You are not licensed.', 'feeds-for-youtube')));
 		}
 
 		// Do not allow WordPress to search/download translations, as this will break JS output.
-		remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
+		remove_action('upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20);
+
+		require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/PluginSilentUpgrader.php';
+		require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/class-install-skin.php';
+
 		// Create the plugin upgrader with our custom skin.
-		require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/Admin/PluginSilentUpgrader.php';
-		require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/Admin/PluginSilentUpgraderSkin.php';
-		require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/Admin/class-install-skin.php';
-		$installer = new \SBY\Helpers\PluginSilentUpgrader( new \SBY_Install_Skin() );
+		$installer = new \SmashBalloon\YouTubeFeed\PluginSilentUpgrader(new \SmashBalloon\YouTubeFeed\SBY_Install_Skin());
 
 		// Error check.
-		if ( ! method_exists( $installer, 'install' ) || empty( $post_url ) ) {
-			wp_send_json_error( $error );
+		if (!method_exists($installer, 'install') || empty($post_url)) {
+			wp_send_json_error($error);
 		}
 
-		$license_data = get_option( 'sby_license_data' );
+		$license_data = get_option('sby_license_data');
 
-		if ( ! empty( $license_data ) ) {
-			$version_info = self::get_version_info( $license_data );
+		if (!empty($license_data)) {
+			$version_info = self::get_version_info($license_data);
 
 			$file = '';
-			if ( isset( $version_info->package ) ) {
+			if (isset($version_info->package)) {
 				$file = $version_info->package;
 			}
 		} else {
-			wp_send_json_error( new \WP_Error( '403', esc_html__( 'You are not licensed.', 'feeds-for-youtube' ) ) );
+			wp_send_json_error(new \WP_Error('403', esc_html__('You are not licensed.', 'feeds-for-youtube')));
 		}
 
-		if ( ! empty( $file ) ) {
+		if (!empty($file)) {
+			delete_option('sby_islicence_upgraded');
+			delete_option('sby_upgraded_info');
 
-			$installer->install( $file ); // phpcs:ignore
+			$installer->install(
+				$file,
+				[
+					'overwrite_package' => true
+				]
+			);
+
 			// Check license key.
 			// Flush the cache and return the newly installed plugin basename.
 			wp_cache_flush();
 
 			$plugin_basename = $installer->plugin_info();
 
-			if ( $plugin_basename ) {
-				deactivate_plugins( plugin_basename( SBY_PLUGIN_BASENAME ), true );
+			if ($plugin_basename) {
+				deactivate_plugins(plugin_basename(SBY_PLUGIN_BASENAME), true);
 
 				// Activate the plugin silently.
-				$activated = activate_plugin( $plugin_basename );
+				$activated = activate_plugin($plugin_basename);
 
-				if ( ! is_wp_error( $activated ) ) {
-					wp_send_json_success( esc_html__( 'Plugin installed & activated.', 'feeds-for-youtube' ) );
+				if (!is_wp_error($activated)) {
+					wp_send_json_success(esc_html__('Plugin installed & activated.', 'feeds-for-youtube'));
 				} else {
 					// Reactivate the lite plugin if pro activation failed.
-					$activated = activate_plugin( plugin_basename( SBY_PLUGIN_BASENAME ), '', false, true );
-					wp_send_json_error( esc_html__( 'Pro version installed but needs to be activated from the Plugins page inside your WordPress admin.', 'feeds-for-youtube' ) );
+					$activated = activate_plugin(plugin_basename(SBY_PLUGIN_BASENAME), '', false, true);
+					wp_send_json_error(esc_html__('Pro version installed but needs to be activated from the Plugins page inside your WordPress admin.', 'feeds-for-youtube'));
 				}
 			}
 		}
 
-		wp_send_json_error( $error );
+		wp_send_json_error($error);
+
 	}
 
 	/**
@@ -391,6 +412,56 @@ class SBY_Upgrader {
 		}
 
 		return $message;
+	}
+
+	/**
+	 * Check if License Is Upgraded
+	 *
+	 * @param mixed $current_license_data .
+	 * @param mixed $license .
+	 *
+	 * @return void
+	 */
+	public static function check_license_upgraded($current_license_data, $license)
+	{
+		$home_url = home_url();
+
+		$args = [
+			'plugin_name' => self::NAME,
+			'plugin_slug' => 'pro',
+			'plugin_path' => plugin_basename(__FILE__),
+			'plugin_url'  => trailingslashit(WP_PLUGIN_URL) . 'pro',
+			'home_url'    => $home_url,
+			'version'     => '1.0',
+			'key'         => $license,
+			'is_pro_upgrade' => true
+		];
+
+		$url  = add_query_arg($args, self::CHECK_URL);
+
+		$request =  wp_safe_remote_get(
+			$url,
+			[
+				'timeout' => 50,
+			]
+		);
+
+		if (!is_wp_error($request)) {
+			$body = wp_remote_retrieve_body($request);
+			$response = json_decode($body, true);
+			$license_data = $response['license_data'];
+
+			if (
+				isset($current_license_data->item_name, $license_data['item_name'])
+				&& strtolower($current_license_data->item_name) !== strtolower($license_data['item_name'])
+			) {
+				update_option('sby_islicence_upgraded', true);
+				update_option('sby_upgraded_info', $license_data);
+			} else {
+				update_option('sby_islicence_upgraded', false);
+				delete_option('sby_upgraded_info');
+			}
+		}
 	}
 
 }

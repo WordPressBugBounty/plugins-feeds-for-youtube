@@ -615,7 +615,7 @@ class Customize_Tab extends Tab {
 				'layout' 			=> 'half',
 				'strongHeading'		=> 'false',
 				'heading' 			=> __( 'Color', 'feeds-for-youtube' ),
-				'style'				=> [ $this->parent_class . '[id^=sb_youtube_].sb_youtube .sby-header-type-text' => 'color:{{value}}!important;'],
+				'style'				=> [$this->parent_class . '[id^=sb_youtube_].sb_youtube .sby-header-type-text' => 'color:{{value}}!important;'],
 				'stacked'			=> 'true'
 			),
 		);

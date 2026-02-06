@@ -16,7 +16,7 @@ interface Definition extends RequestedEntry
     /**
      * Returns the name of the entry in the container.
      */
-    public function getName() : string;
+    public function getName(): string;
     /**
      * Set the name of the entry in the container.
      */

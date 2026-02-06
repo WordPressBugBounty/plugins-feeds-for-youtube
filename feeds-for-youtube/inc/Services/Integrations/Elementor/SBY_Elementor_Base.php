@@ -54,17 +54,25 @@ class SBY_Elementor_Base
 	}
 
 	public function register_frontend_scripts(){
+		$css_common_file = Util::getPluginAssets('css', 'sb-youtube-common');
+		$css_file = sby_is_pro() ? Util::getPluginAssets('css', 'sb-youtube') : Util::getPluginAssets('css', 'sb-youtube-free');
 
-		$css_free_file_name = 'sb-youtube-free.min.css';
-		$css_pro_file_name = 'sb-youtube.min.css';
-		$css_file_name = sby_is_pro() ? $css_pro_file_name : $css_free_file_name;
+		wp_enqueue_style('sby_common_styles', $css_common_file, array(), SBYVER);
+		wp_enqueue_style('sby_styles', $css_file, array(), SBYVER);
 
-			wp_enqueue_style(
-				'sby_styles', 
-				trailingslashit(SBY_PLUGIN_URL) . 'css/' . $css_file_name,
-				array(), 
-				SBYVER
-			);
+		wp_enqueue_style(
+			'sby_styles', 
+			$css_common_file,
+			array(), 
+			SBYVER
+		);
+
+		wp_enqueue_style(
+			'sby_styles', 
+			$css_file,
+			array(), 
+			SBYVER
+		);
 
 		$data = array(
 			'isAdmin' => is_admin(),
@@ -84,7 +92,7 @@ class SBY_Elementor_Base
 
 		wp_register_script(
 			'sbyscripts',
-			SBY_PLUGIN_URL . 'js/sb-youtube.min.js',
+			Util::getPluginAssets('js', 'sb-youtube'),
 			array('jquery'),
 			SBYVER,
 			true
@@ -99,7 +107,7 @@ class SBY_Elementor_Base
 
 		wp_register_script(
 			'sby-elementor-handler',
-			SBY_PLUGIN_URL . 'js/elementor-handler.js' ,
+			Util::getPluginAssets('js', 'elementor-handler'),
 			array('jquery'),
 			SBYVER,
 			true
@@ -109,7 +117,7 @@ class SBY_Elementor_Base
 
 		wp_register_script(
 			'sby-elementor-preview',
-			SBY_PLUGIN_URL . 'js/elementor-preview.js' ,
+			Util::getPluginAssets('js', 'elementor-preview'),
 			array('jquery'),
 			SBYVER,
 			true
@@ -118,13 +126,19 @@ class SBY_Elementor_Base
 
 	public function register_frontend_styles()
 	{
-		$css_free_file_name = 'sb-youtube-free.min.css';
-		$css_pro_file_name = 'sb-youtube.min.css';
-		$css_file_name = sby_is_pro() ? $css_pro_file_name : $css_free_file_name;
+		$css_common_file = Util::getPluginAssets('css', 'sb-youtube-common');
+		$css_file = sby_is_pro() ? Util::getPluginAssets('css', 'sb-youtube') : Util::getPluginAssets('css', 'sb-youtube-free');
+
+		wp_register_style(
+			'sby-common-styles',
+			SBY_PLUGIN_URL . 'css/' . $css_common_file,
+			array(),
+			SBYVER
+		);
 
 		wp_register_style(
 			'sby-styles',
-			SBY_PLUGIN_URL . 'css/' . $css_file_name,
+			SBY_PLUGIN_URL . 'css/' . $css_file,
 			array(),
 			SBYVER
 		);
@@ -132,6 +146,7 @@ class SBY_Elementor_Base
 
 	public function enqueue_frontend_styles()
 	{
+		wp_enqueue_style('sby-common-styles');
 		wp_enqueue_style('sby-styles');
 	}
 

@@ -18,7 +18,6 @@ use SmashBalloon\YoutubeFeed\Vendor\ProxyManager\Proxy\LazyLoadingInterface;
  *
  * @since  5.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class ProxyFactory
 {
@@ -48,7 +47,7 @@ class ProxyFactory
      * @param string $className name of the class to be proxied
      * @param \Closure $initializer initializer to be passed to the proxy
      */
-    public function createProxy(string $className, \Closure $initializer) : LazyLoadingInterface
+    public function createProxy(string $className, \Closure $initializer): LazyLoadingInterface
     {
         $this->createProxyManager();
         return $this->proxyManager->createProxy($className, $initializer);
@@ -73,7 +72,7 @@ class ProxyFactory
         if ($this->proxyManager !== null) {
             return;
         }
-        if (!\class_exists(Configuration::class)) {
+        if (!class_exists(Configuration::class)) {
             throw new \RuntimeException('The ocramius/proxy-manager library is not installed. Lazy injection requires that library to be installed with Composer in order to work. Run "composer require ocramius/proxy-manager:~2.0".');
         }
         $config = new Configuration();
@@ -81,7 +80,7 @@ class ProxyFactory
             $config->setProxiesTargetDir($this->proxyDirectory);
             $config->setGeneratorStrategy(new FileWriterGeneratorStrategy(new FileLocator($this->proxyDirectory)));
             // @phpstan-ignore-next-line
-            \spl_autoload_register($config->getProxyAutoloader());
+            spl_autoload_register($config->getProxyAutoloader());
         } else {
             $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
         }

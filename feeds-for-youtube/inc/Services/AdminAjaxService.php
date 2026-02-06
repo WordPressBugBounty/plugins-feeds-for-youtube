@@ -25,8 +25,6 @@ class AdminAjaxService extends ServiceProvider {
 		add_action( 'wp_ajax_nopriv_sby_live_retrieve', [$this, 'sby_get_live_retrieve'] );
 		add_action( 'wp_ajax_sby_check_wp_submit', [$this, 'sby_process_wp_posts'] );
 		add_action( 'wp_ajax_nopriv_sby_check_wp_submit', [$this, 'sby_process_wp_posts'] );
-		add_action( 'wp_ajax_sby_do_locator', [$this, 'sby_do_locator'] );
-		add_action( 'wp_ajax_nopriv_sby_do_locator', [$this, 'sby_do_locator'] );
 		add_action( 'wp_ajax_sby_add_api_key', [$this, 'sby_api_key'] );
 		add_action( 'wp_ajax_sby_other_plugins_modal', [$this, 'sby_other_plugins_modal'] );
 		add_action( 'wp_ajax_sby_single_videos_upsell_modal', [$this, 'sby_single_videos_upsell_modal'] );
@@ -39,6 +37,10 @@ class AdminAjaxService extends ServiceProvider {
 	 * Called after the load more button is clicked using admin-ajax.php
 	 */
 	public function sby_get_next_post_set() {
+		// Check nonce for security
+		check_ajax_referer( 'sby_nonce', 'nonce' );
+
+
 		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sby' ) === false ) {
 			die( 'invalid feed ID');
 		}
@@ -46,11 +48,10 @@ class AdminAjaxService extends ServiceProvider {
 		$feed_id = sanitize_text_field( $_POST['feed_id'] );
 		$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
 		if ( is_array( $atts_raw ) ) {
-			array_map( 'sanitize_text_field', $atts_raw );
+			$atts = array_map( 'sanitize_text_field', $atts_raw );
 		} else {
-			$atts_raw = array();
+			$atts = array();
 		}
-		$atts = $atts_raw; // now sanitized
 
 		$offset = isset( $_POST['offset'] ) ? (int)$_POST['offset'] : 0;
 
@@ -211,6 +212,9 @@ class AdminAjaxService extends ServiceProvider {
 	}
 
 	public function sby_get_live_retrieve() {
+		// Check nonce for security
+		check_ajax_referer( 'sby_nonce', 'nonce' );
+
 		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sby' ) === false ) {
 			die( 'invalid feed ID');
 		}
@@ -219,11 +223,10 @@ class AdminAjaxService extends ServiceProvider {
 		$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
 		$video_id = sanitize_text_field( $_POST['video_id'] );
 		if ( is_array( $atts_raw ) ) {
-			array_map( 'sanitize_text_field', $atts_raw );
+			$atts = array_map( 'sanitize_text_field', $atts_raw );
 		} else {
-			$atts_raw = array();
+			$atts = array();
 		}
-		$atts = $atts_raw; // now sanitized
 
 		if ( isset( $atts['live'] ) ) {
 			unset( $atts['live'] );
@@ -309,6 +312,9 @@ class AdminAjaxService extends ServiceProvider {
 	 * @return string
 	 */
 	public function sby_process_wp_posts() {
+		// Check nonce for security
+		check_ajax_referer( 'sby_nonce', 'nonce' );
+
 		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sby' ) === false ) {
 			die( 'invalid feed ID');
 		}
@@ -317,11 +323,10 @@ class AdminAjaxService extends ServiceProvider {
 
 		$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
 		if ( is_array( $atts_raw ) ) {
-			array_map( 'sanitize_text_field', $atts_raw );
+			$atts = array_map( 'sanitize_text_field', $atts_raw );
 		} else {
-			$atts_raw = array();
+			$atts = array();
 		}
-		$atts = $atts_raw; // now sanitized
 		$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( $_POST['location'] ) : 'unknown';
 		$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
 		$feed_details = array(
@@ -339,7 +344,7 @@ class AdminAjaxService extends ServiceProvider {
 		$vid_ids = isset( $_POST['posts'] ) && is_array( $_POST['posts'] ) ? $_POST['posts'] : array();
 
 		if ( ! empty( $vid_ids ) ) {
-			array_map( 'sanitize_text_field', $vid_ids );
+			$vid_ids = array_map( 'sanitize_text_field', $vid_ids );
 		}
 
 		$cache_all = isset( $_POST['cache_all'] ) ? $_POST['cache_all'] === 'true' : false;
@@ -347,10 +352,6 @@ class AdminAjaxService extends ServiceProvider {
 		$info = $this->sby_add_or_update_wp_posts( $vid_ids, $feed_id, $atts, $offset, $cache_all );
 
 		echo wp_json_encode( $info );
-
-		//global $sby_posts_manager;
-
-		//$sby_posts_manager->update_successful_ajax_test();
 
 		die();
 	}
@@ -453,37 +454,6 @@ class AdminAjaxService extends ServiceProvider {
 		}
 
 		return array();
-	}
-
-	public function sby_do_locator() {
-		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sbi' ) === false ) {
-			die( 'invalid feed ID');
-		}
-
-		$feed_id = sanitize_text_field( $_POST['feed_id'] );
-
-		$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
-		if ( is_array( $atts_raw ) ) {
-			array_map( 'sanitize_text_field', $atts_raw );
-		} else {
-			$atts_raw = array();
-		}
-		$atts = $atts_raw; // now sanitized
-
-		$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( $_POST['location'] ) : 'unknown';
-		$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
-		$feed_details = array(
-			'feed_id' => $feed_id,
-			'atts' => $atts,
-			'location' => array(
-				'post_id' => $post_id,
-				'html' => $location
-			)
-		);
-
-		$this->sby_do_background_tasks( $feed_details );
-
-		wp_die( 'locating success' );
 	}
 
 	/**

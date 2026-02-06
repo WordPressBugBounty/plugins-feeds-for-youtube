@@ -3,7 +3,6 @@
 namespace Smashballoon\Customizer\Tabs;
 
 use Smashballoon\Stubs\Traits\Singleton;
-/** @internal */
 class Manager
 {
     use Singleton;

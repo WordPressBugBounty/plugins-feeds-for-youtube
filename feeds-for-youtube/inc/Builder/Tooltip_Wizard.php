@@ -7,6 +7,8 @@
  */
 namespace SmashBalloon\YouTubeFeed\Builder;
 
+use SmashBalloon\YouTubeFeed\Helpers\Util;
+
 class Tooltip_Wizard {
 
 	/**
@@ -38,14 +40,14 @@ class Tooltip_Wizard {
 
 		wp_enqueue_style(
 			'sby_tooltipster',
-			SBY_PLUGIN_URL . 'css/tooltipster.css',
+			Util::getPluginAssets('css', 'tooltipster'),
 			null,
 			SBYVER
 		);
 
 		wp_enqueue_script(
 			'tooltipster',
-			SBY_PLUGIN_URL . 'js/jquery.tooltipster.min.js',
+			Util::getPluginAssets('js', 'jquery.tooltipster.min', true),
 			[ 'jquery' ],
 			SBYVER,
 			true
@@ -53,7 +55,7 @@ class Tooltip_Wizard {
 
 		wp_enqueue_script(
 			'sby-admin-tooltip-wizard',
-			SBY_PLUGIN_URL . 'js/tooltip-wizard.js',
+			Util::getPluginAssets('js', 'tooltip-wizard'), 
 			[ 'jquery' ],
 			SBYVER
 		);

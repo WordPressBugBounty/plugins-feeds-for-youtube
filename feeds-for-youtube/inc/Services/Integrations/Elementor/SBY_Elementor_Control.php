@@ -4,6 +4,7 @@ namespace SmashBalloon\YouTubeFeed\Services\Integrations\Elementor;
 
 use \Elementor\Base_Data_Control;
 use \Elementor\Controls_Manager;
+use SmashBalloon\YouTubeFeed\Helpers\Util;
 
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
@@ -15,9 +16,11 @@ class SBY_Elementor_Control extends Base_Data_Control {
 	}
 
 	public function enqueue(){
+
+
 		wp_enqueue_style(
 			'sby-elementor-style',
-			SBY_PLUGIN_URL . 'css/sb-elementor.css' ,
+			Util::getPluginAssets('css', 'sb-elementor'),
 			null,
 			SBYVER
 		);

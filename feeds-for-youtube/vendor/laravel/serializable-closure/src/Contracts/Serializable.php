@@ -2,7 +2,6 @@
 
 namespace SmashBalloon\YoutubeFeed\Vendor\Laravel\SerializableClosure\Contracts;
 
-/** @internal */
 interface Serializable
 {
     /**

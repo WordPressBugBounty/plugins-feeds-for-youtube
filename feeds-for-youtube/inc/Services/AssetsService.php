@@ -91,30 +91,21 @@ class AssetsService extends ServiceProvider {
 			$sby_settings = $global_settings;
 		}
 
-		//Register the script to make it available
-		$assets_url = trailingslashit( SBY_PLUGIN_URL );
-		$js_file = $assets_url . 'js/sb-youtube.min.js';
-
-		if ( isset( $_GET['sb_debug'] ) ) {
-			$js_file = $assets_url . 'js/sb-youtube-debug.js';
-		}
-
-		if(!Util::isProduction()) {
-			$js_file = 'http://localhost:9005/sb-youtube.min.js';
-		}
+		$js_file = Util::getPluginAssets('js', 'sb-youtube');
 
 		$enqueue_in_head = isset($global_settings['enqueue_js_in_head']) ? $global_settings['enqueue_js_in_head'] : false;
 		wp_register_script( 'sby_scripts', $js_file, array('jquery'), SBYVER, !$enqueue_in_head );
 
-		$css_free_file_name = 'sb-youtube-free.min.css';
-		$css_pro_file_name = 'sb-youtube.min.css';
-		$css_file_name = sby_is_pro() ? $css_pro_file_name : $css_free_file_name;
 
+		$css_common_file = Util::getPluginAssets('css', 'sb-youtube-common');
+		$css_file = sby_is_pro() ? Util::getPluginAssets('css', 'sb-youtube') : Util::getPluginAssets('css', 'sb-youtube-free');
 
 		if ( !empty( $sby_settings['enqueue_css_in_shortcode'] ) ) {
-			wp_register_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/' . $css_file_name, array(), SBYVER );
+			wp_register_style( 'sby_common_styles', $css_common_file, array(), SBYVER );
+			wp_register_style( 'sby_styles', $css_file, array(), SBYVER );
 		} else {
-			wp_enqueue_style( 'sby_styles', trailingslashit( SBY_PLUGIN_URL ) . 'css/' . $css_file_name, array(), SBYVER );
+			wp_enqueue_style( 'sby_common_styles', $css_common_file, array(), SBYVER );
+			wp_enqueue_style( 'sby_styles', $css_file, array(), SBYVER );
 		}
 
 		$data = array(
@@ -133,6 +124,7 @@ class AssetsService extends ServiceProvider {
 		);
 		//Pass option to JS file
 		wp_localize_script('sby_scripts', 'sbyOptions', $data );
+		wp_enqueue_style( 'sby_common_styles' );
 		wp_enqueue_style( 'sby_styles' );
 		wp_enqueue_script( 'sby_scripts' );
 	}

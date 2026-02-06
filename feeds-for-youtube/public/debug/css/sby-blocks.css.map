@@ -1,0 +1,1 @@
+{"version":3,"file":"css/sby-blocks.css","mappings":";;;AAAA;IACI,+BAA+B;AACnC,C","sources":["webpack://youtube-feed-pro/./css/sby-blocks.css"],"sourcesContent":[".sb_youtube {\n    pointer-events: none !important;\n}"],"names":[],"ignoreList":[],"sourceRoot":""}

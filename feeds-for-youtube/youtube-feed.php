@@ -3,7 +3,7 @@
 Plugin Name: Feeds for YouTube
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.4.0
+Version: 2.6.2
 Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
@@ -54,7 +54,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.4.0' );
+    define( 'SBYVER', '2.6.2' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.3' );
@@ -122,15 +122,6 @@ if ( ! function_exists( 'sby_init' ) ) {
         if ( ! defined( 'SBY_SEARCH_NAME' ) ) {
             define( 'SBY_SEARCH_NAME', 'sbys' );
         }
-        if ( ! defined( 'SBY_PLUGIN_NAME' ) ) {
-            define( 'SBY_PLUGIN_NAME', __( 'Feeds for YouTube', 'feeds-for-youtube' ) );
-        }
-        if ( ! defined( 'SBY_INDEF_ART' ) ) {
-            define( 'SBY_INDEF_ART', __( 'a', 'feeds-for-youtube' ) );
-        }
-        if ( ! defined( 'SBY_SOCIAL_NETWORK' ) ) {
-            define( 'SBY_SOCIAL_NETWORK', __( 'YouTube', 'feeds-for-youtube' ) );
-        }
         if ( ! defined( 'SBY_SETUP_URL' ) ) {
             define( 'SBY_SETUP_URL', 'https://smashballoon.com/youtube-feed/free' );
         }
@@ -151,21 +142,62 @@ if ( ! function_exists( 'sby_init' ) ) {
             define( 'SBY_MENU_SLUG', 'sby-feed-builder' );
         }
         require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/sby-functions.php';
+    }
 
-        $container = new \SmashBalloon\YouTubeFeed\Services\ServiceContainer();
-        $container->register();
+    /**
+     * Load text domain for translations.
+     *
+     * @return void
+     */
+    function sby_load_text_domain() {
+        $plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages';
+        load_plugin_textdomain( 'feeds-for-youtube', false, $plugin_rel_path );
+    }
+
+    /**
+     * Define translatable constants after text domain is loaded.
+     *
+     * @return void
+     */
+    function sby_define_translatable_constants() {
+        if ( ! defined( 'SBY_PLUGIN_NAME' ) ) {
+            define( 'SBY_PLUGIN_NAME', __( 'Feeds for YouTube', 'feeds-for-youtube' ) );
+        }
+        if ( ! defined( 'SBY_INDEF_ART' ) ) {
+            define( 'SBY_INDEF_ART', __( 'a', 'feeds-for-youtube' ) );
+        }
+        if ( ! defined( 'SBY_SOCIAL_NETWORK' ) ) {
+            define( 'SBY_SOCIAL_NETWORK', __( 'YouTube', 'feeds-for-youtube' ) );
+        }
+    }
+
+    /**
+     * Initialize settings after text domain is loaded.
+     *
+     * @return void
+     */
+    function sby_init_settings() {
         global $sby_settings;
         $sby_settings = get_option( 'sby_settings', array() );
         $sby_settings = wp_parse_args( $sby_settings, sby_settings_defaults() );
+    }
 
-    		$sby_blocks = new SBY_Blocks( \Smashballoon\Customizer\Feed_Builder::instance(), new Smashballoon\Customizer\DB );
+    /**
+     * Initialize plugin components after text domain is loaded.
+     *
+     * @return void
+     */
+    function sby_init_components() {
+        $container = new \SmashBalloon\YouTubeFeed\Services\ServiceContainer();
+        $container->register();
+
+        $sby_blocks = new SBY_Blocks( \Smashballoon\Customizer\Feed_Builder::instance(), new Smashballoon\Customizer\DB );
 
         if ( $sby_blocks->allow_load() ) {
             $sby_blocks->load();
         }
         if ( is_admin() ) {
             require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/Admin/admin-functions.php';
-            sby_admin_init();
 
             $admin_container = new AdminServiceContainer();
             $admin_container->register();
@@ -197,7 +229,37 @@ if ( ! function_exists( 'sby_init' ) ) {
         ) ) );
     }
 
-    add_action( 'plugins_loaded', 'sby_init' );
+    /**
+     * Run the plugin initialization and set up hooks.
+     *
+     * @return void
+     */
+    function sby_run() {
+        // Load text domain early (priority 1) to ensure translations are available
+        add_action( 'init', 'sby_load_text_domain', 1 );
+
+        // Define translatable constants after text domain loads (priority 2)
+        add_action( 'init', 'sby_define_translatable_constants', 2 );
+
+        // Initialize settings after text domain and constants (priority 3)
+        add_action( 'init', 'sby_init_settings', 3 );
+
+        // Initialize plugin components after settings (priority 4)
+        add_action( 'init', 'sby_init_components', 4 );
+
+        // Defer admin initialization until after text domain is loaded
+        // Using priority 10 for better compatibility with other plugins
+        if ( is_admin() ) {
+            add_action( 'init', 'sby_admin_init', 10 );
+        }
+    }
+
+    // Initialize the plugin on plugins_loaded to ensure WordPress is ready
+    // Priority 10 ensures WordPress core and other plugins are initialized
+    add_action( 'plugins_loaded', function() {
+        sby_init();
+        sby_run();
+    }, 10 );
 
     /**
      * Add the custom interval of 30 minutes for cron caching
@@ -330,7 +392,7 @@ if ( ! function_exists( 'sby_init' ) ) {
      * Activation redirect
      *
      * @since  2.2.4
-     * 
+     *
      * @return bool|void
      */
     function sby_activation_plugin_redirect() {
@@ -388,7 +450,7 @@ if ( ! function_exists( 'sby_init' ) ) {
                 wp_schedule_event( $six_am_local, 'sbyweekly', 'sby_notification_update' );
             }
         }
-        
+
 
     }
 

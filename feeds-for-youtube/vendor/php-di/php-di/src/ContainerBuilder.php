@@ -29,7 +29,6 @@ use SmashBalloon\YoutubeFeed\Vendor\Psr\Container\ContainerInterface;
  *
  * @since  3.2
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 class ContainerBuilder
 {
@@ -94,7 +93,7 @@ class ContainerBuilder
     /**
      * Build a container configured for the dev environment.
      */
-    public static function buildDevContainer() : Container
+    public static function buildDevContainer(): Container
     {
         return new Container();
     }
@@ -112,7 +111,7 @@ class ContainerBuilder
      */
     public function build()
     {
-        $sources = \array_reverse($this->definitionSources);
+        $sources = array_reverse($this->definitionSources);
         if ($this->useAnnotations) {
             $autowiring = new AnnotationBasedAutowiring($this->ignorePhpDocErrors);
             $sources[] = $autowiring;
@@ -122,11 +121,11 @@ class ContainerBuilder
         } else {
             $autowiring = new NoAutowiring();
         }
-        $sources = \array_map(function ($definitions) use($autowiring) {
-            if (\is_string($definitions)) {
+        $sources = array_map(function ($definitions) use ($autowiring) {
+            if (is_string($definitions)) {
                 // File
                 return new DefinitionFile($definitions, $autowiring);
-            } elseif (\is_array($definitions)) {
+            } elseif (is_array($definitions)) {
                 return new DefinitionArray($definitions, $autowiring);
             }
             return $definitions;
@@ -149,7 +148,7 @@ class ContainerBuilder
             $compiledContainerFile = $compiler->compile($source, $this->compileToDirectory, $containerClass, $this->containerParentClass, $this->useAutowiring || $this->useAnnotations);
             // Only load the file if it hasn't been already loaded
             // (the container can be created multiple times in the same process)
-            if (!\class_exists($containerClass, \false)) {
+            if (!class_exists($containerClass, \false)) {
                 require $compiledContainerFile;
             }
         }
@@ -171,7 +170,7 @@ class ContainerBuilder
      * @param string $containerClass Name of the compiled class. Customize only if necessary.
      * @param string $containerParentClass Name of the compiled container parent class. Customize only if necessary.
      */
-    public function enableCompilation(string $directory, string $containerClass = 'CompiledContainer', string $containerParentClass = CompiledContainer::class) : self
+    public function enableCompilation(string $directory, string $containerClass = 'CompiledContainer', string $containerParentClass = CompiledContainer::class): self
     {
         $this->ensureNotLocked();
         $this->compileToDirectory = $directory;
@@ -186,7 +185,7 @@ class ContainerBuilder
      *
      * @return $this
      */
-    public function useAutowiring(bool $bool) : self
+    public function useAutowiring(bool $bool): self
     {
         $this->ensureNotLocked();
         $this->useAutowiring = $bool;
@@ -199,7 +198,7 @@ class ContainerBuilder
      *
      * @return $this
      */
-    public function useAnnotations(bool $bool) : self
+    public function useAnnotations(bool $bool): self
     {
         $this->ensureNotLocked();
         $this->useAnnotations = $bool;
@@ -210,7 +209,7 @@ class ContainerBuilder
      *
      * @return $this
      */
-    public function ignorePhpDocErrors(bool $bool) : self
+    public function ignorePhpDocErrors(bool $bool): self
     {
         $this->ensureNotLocked();
         $this->ignorePhpDocErrors = $bool;
@@ -229,7 +228,7 @@ class ContainerBuilder
      * @throws InvalidArgumentException when writeToFile is set to true and the proxy directory is null
      * @return $this
      */
-    public function writeProxiesToFile(bool $writeToFile, string $proxyDirectory = null) : self
+    public function writeProxiesToFile(bool $writeToFile, string $proxyDirectory = null): self
     {
         $this->ensureNotLocked();
         $this->writeProxiesToFile = $writeToFile;
@@ -245,7 +244,7 @@ class ContainerBuilder
      *
      * @return $this
      */
-    public function wrapContainer(ContainerInterface $otherContainer) : self
+    public function wrapContainer(ContainerInterface $otherContainer): self
     {
         $this->ensureNotLocked();
         $this->wrapperContainer = $otherContainer;
@@ -259,12 +258,12 @@ class ContainerBuilder
      *                                                      or a DefinitionSource object.
      * @return $this
      */
-    public function addDefinitions(...$definitions) : self
+    public function addDefinitions(...$definitions): self
     {
         $this->ensureNotLocked();
         foreach ($definitions as $definition) {
-            if (!\is_string($definition) && !\is_array($definition) && !$definition instanceof DefinitionSource) {
-                throw new InvalidArgumentException(\sprintf('%s parameter must be a string, an array or a DefinitionSource object, %s given', 'ContainerBuilder::addDefinitions()', \is_object($definition) ? \get_class($definition) : \gettype($definition)));
+            if (!is_string($definition) && !is_array($definition) && !$definition instanceof DefinitionSource) {
+                throw new InvalidArgumentException(sprintf('%s parameter must be a string, an array or a DefinitionSource object, %s given', 'ContainerBuilder::addDefinitions()', is_object($definition) ? get_class($definition) : gettype($definition)));
             }
             $this->definitionSources[] = $definition;
         }
@@ -290,7 +289,7 @@ class ContainerBuilder
      * @param string $cacheNamespace use unique namespace per container when sharing a single APC memory pool to prevent cache collisions
      * @return $this
      */
-    public function enableDefinitionCache(string $cacheNamespace = '') : self
+    public function enableDefinitionCache(string $cacheNamespace = ''): self
     {
         $this->ensureNotLocked();
         $this->sourceCache = \true;
@@ -300,7 +299,7 @@ class ContainerBuilder
     /**
      * Are we building a compiled container?
      */
-    public function isCompilationEnabled() : bool
+    public function isCompilationEnabled(): bool
     {
         return (bool) $this->compileToDirectory;
     }

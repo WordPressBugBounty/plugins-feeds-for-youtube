@@ -10,7 +10,6 @@ use SmashBalloon\YoutubeFeed\Vendor\DI\Definition\Exception\InvalidDefinition;
  *
  * @since 4.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
- * @internal
  */
 interface DefinitionResolver
 {
@@ -31,5 +30,5 @@ interface DefinitionResolver
      * @param Definition $definition Object that defines how the value should be obtained.
      * @param array      $parameters Optional parameters to use to build the entry.
      */
-    public function isResolvable(Definition $definition, array $parameters = []) : bool;
+    public function isResolvable(Definition $definition, array $parameters = []): bool;
 }

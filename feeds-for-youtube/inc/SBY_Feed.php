@@ -4,6 +4,7 @@ namespace SmashBalloon\YouTubeFeed;
 
 use Smashballoon\Customizer\Feed_Builder;
 use SmashBalloon\YouTubeFeed\Services\AdminAjaxService;
+use SmashBalloon\YouTubeFeed\Helpers\Util;
 
 class SBY_Feed
 {
@@ -1590,7 +1591,7 @@ class SBY_Feed
 		$encoded_options = wp_json_encode( $js_options );
 
 		$js_option_html = '<script type="text/javascript">if (typeof sbyOptions === "undefined") var sbyOptions = ' . $encoded_options . ';</script>';
-		$js_option_html .= "<script type='text/javascript' src='" . trailingslashit( SBY_PLUGIN_URL ) . 'js/sb-youtube.min.js?ver=' . SBYVER . "'></script>";
+		$js_option_html .= "<script type='text/javascript' src='" . Util::getPluginAssets('js', 'sb-youtube') . "'></script>";
 
 		return $js_option_html;
 	}

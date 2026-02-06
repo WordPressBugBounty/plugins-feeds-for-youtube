@@ -4,6 +4,7 @@ namespace SmashBalloon\YouTubeFeed\Services\Admin;
 
 
 use Smashballoon\Stubs\Services\ServiceProvider;
+use SmashBalloon\YouTubeFeed\Helpers\Util;
 
 class AssetsService extends ServiceProvider {
 
@@ -26,8 +27,8 @@ class AssetsService extends ServiceProvider {
 		);
 	}
 	public function sby_admin_style() {
-		wp_enqueue_style( SBY_SLUG . '_admin_notices_css', SBY_PLUGIN_URL . 'css/sby-notices.css', array(), SBYVER );
-		wp_enqueue_style( SBY_SLUG . '_admin_css', SBY_PLUGIN_URL . 'css/admin.css', array(), SBYVER );
+		wp_enqueue_style( SBY_SLUG . '_admin_notices_css', Util::getPluginAssets('css', 'sby-notices'), array(), SBYVER );
+		wp_enqueue_style( SBY_SLUG . '_admin_css', Util::getPluginAssets('css', 'admin'), array(), SBYVER );
 		if ( ! sby_is_admin_page() ) {
 			return;
 		}
@@ -38,7 +39,7 @@ class AssetsService extends ServiceProvider {
 
 	public function sby_admin_scripts() {
 		// We need to enqueue this globally
-		wp_enqueue_script( SBY_SLUG . '_sby_admin_js', SBY_PLUGIN_URL . 'js/sby-admin.js', array(), SBYVER );
+		wp_enqueue_script( SBY_SLUG . '_sby_admin_js', Util::getPluginAssets('js', 'sby-admin'), array(), SBYVER );
 
 		// wp_enqueue_script( SBY_SLUG . '_admin_js', SBY_PLUGIN_URL . 'js/admin.js', array(), SBYVER );
 		wp_localize_script( SBY_SLUG . '_sby_admin_js', 'sby_admin', array(

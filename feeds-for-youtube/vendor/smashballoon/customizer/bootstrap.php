@@ -16,7 +16,7 @@ $container = Container::getInstance();
 //Setting tabs manager singleton
 $container->set(Manager::class, Manager::getInstance());
 //Load .env variables
-if (\class_exists('SmashBalloon\\YoutubeFeed\\Vendor\\Dotenv\\Dotenv')) {
+if (\class_exists('SmashBalloon\YoutubeFeed\Vendor\Dotenv\Dotenv')) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     if (\is_file(__DIR__ . '/.env')) {
         $dotenv->safeLoad();

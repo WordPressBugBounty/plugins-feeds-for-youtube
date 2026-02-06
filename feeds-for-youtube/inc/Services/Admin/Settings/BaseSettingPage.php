@@ -124,6 +124,11 @@ abstract class BaseSettingPage extends ServiceProvider {
 			'notifications' => $this->get_notifications(),
 			'shouldShowPostGracePeriodNotice'	=> Util::expiredLicenseWithGracePeriodEnded(),
 			'isLicenseInactive'	=> empty( Util::get_license_key() ),
+			'licenseKey'	=> Util::get_license_key(),
+			'licenseData'	=> get_option( 'sby_license_data' ),
+			'licenseStatus'	=> get_option( 'sby_license_status' ),
+			'isLicenseUpgraded'   => get_option('sby_islicence_upgraded'),
+			'licenseUpgradedInfo' => get_option('sby_upgraded_info')
 		] );
 	}
 }

@@ -65,9 +65,11 @@ class SBY_Blocks {
 	 */
 	public function register_block() {
 
+		
+
 		wp_register_style(
 			'sby-blocks-styles',
-			trailingslashit( SBY_PLUGIN_URL ) . 'css/sby-blocks.css',
+			Util::getPluginAssets('css', 'sby-blocks'),
 			array( 'wp-edit-blocks' ),
 			SBYVER
 		);
@@ -104,7 +106,7 @@ class SBY_Blocks {
 		wp_enqueue_style( 'sby-blocks-styles' );
 		wp_enqueue_script(
 			'sby-feed-block',
-			trailingslashit( SBY_PLUGIN_URL ) . 'js/sby-blocks.js',
+			Util::getPluginAssets('js', 'sby-blocks'),
 			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
 			SBYVER,
 			true

@@ -80,11 +80,11 @@ class SBY_Divi_Handler
 	public function builder_scripts()
 	{
 		
-		$css_free_file_name = 'sb-youtube-free.min.css';
-		$css_pro_file_name = 'sb-youtube.min.css';
-		$css_file_name = sby_is_pro() ? $css_pro_file_name : $css_free_file_name;
+		$css_common_file = Util::getPluginAssets('css', 'sb-youtube-common');
+		$css_file = sby_is_pro() ? Util::getPluginAssets('css', 'sb-youtube') : Util::getPluginAssets('css', 'sb-youtube-free');
 
-		wp_enqueue_style('sby_styles', trailingslashit(SBY_PLUGIN_URL) . 'css/' . $css_file_name, array(), SBYVER);
+		wp_enqueue_style('sby_common_styles', $css_common_file, array(), SBYVER);
+		wp_enqueue_style('sby_styles', $css_file, array(), SBYVER);
 
 		$data = array(
 		'isAdmin' => is_admin(),
@@ -104,17 +104,16 @@ class SBY_Divi_Handler
 
 		wp_enqueue_script(
 			'sbyscripts',
-			SBY_PLUGIN_URL . 'js/sb-youtube.min.js',
+			Util::getPluginAssets('js', 'sb-youtube'),
 			array('jquery'),
 			SBYVER,
 			true
 		);
 		wp_localize_script('sbyscripts', 'sbyOptions', $data);
-
+		
 		wp_enqueue_script(
 			'sbyoutube-divi',
-			// The unminified version is not supported by the browser.
-			SBY_PLUGIN_URL . 'js/divi-handler.min.js',
+			Util::getPluginAssets('js', 'divi-handler.min', true),
 			['react', 'react-dom', 'jquery'],
 			SBYVER,
 			true
@@ -122,8 +121,7 @@ class SBY_Divi_Handler
 
 		wp_enqueue_script(
 			'sby-divi-handler',
-			// The unminified version is not supported by the browser.
-			SBY_PLUGIN_URL . 'js/divi-preview-handler.js',
+			Util::getPluginAssets('js', 'divi-preview-handler'),
 			['jquery'],
 			SBYVER,
 			true
