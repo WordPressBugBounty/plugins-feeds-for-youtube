@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 2.6.2
+Stable tag: 2.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ The Feeds for YouTube plugin allows you to display customizable YouTube feeds fr
 == Description ==
 **Display customizable YouTube channel feeds on your website. Feed YouTube channel content automatically to your website in a powerful and customizable gallery.**
 
-https://www.youtube.com/watch?v=zYHeHelzwVw
+https://vimeo.com/1166356320
 
 ### YouTube Feed Features
 * **Completely Customizable** YouTube feeds - by default inherits your theme's styles
@@ -167,6 +167,9 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.6.3 =
+* Tweak: Added optional deactivation feedback survey to help us improve the plugin.
 
 = 2.6.2 =
 * Fix: Additional plugin hardening.

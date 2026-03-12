@@ -5,11 +5,11 @@
  *
  * @package Notices
  */
-namespace Smashballoon\Framework\Packages\Notification\Notices;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Notification\Notices;
 
-use Smashballoon\Framework\Packages\Notification\Notices\AdminNotice;
-use function Smashballoon\Framework\sb_map_notice_hooks;
-use function Smashballoon\Framework\sb_get_plugin_type;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Notification\Notices\AdminNotice;
+use function SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_map_notice_hooks;
+use function SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_get_plugin_type;
 if (!defined('ABSPATH')) {
     exit;
 }

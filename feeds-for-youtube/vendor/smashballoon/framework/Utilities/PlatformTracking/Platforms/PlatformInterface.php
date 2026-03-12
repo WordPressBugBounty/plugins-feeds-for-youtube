@@ -1,6 +1,6 @@
 <?php
 
-namespace Smashballoon\Framework\Utilities\PlatformTracking\Platforms;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms;
 
 interface PlatformInterface
 {

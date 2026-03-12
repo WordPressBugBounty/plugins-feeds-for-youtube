@@ -9,7 +9,7 @@
 namespace SmashBalloon\YouTubeFeed\Admin;
 
 use Smashballoon\Customizer\DB;
-use Smashballoon\Framework\Utilities\UsageTracking;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\UsageTracking;
 use SmashBalloon\YouTubeFeed\Builder\SBY_Db;
 use SmashBalloon\YouTubeFeed\Builder\SBY_Feed_Saver;
 

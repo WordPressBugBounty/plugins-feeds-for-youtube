@@ -1,8 +1,8 @@
 <?php
 
-namespace Smashballoon\Framework\Utilities\PlatformTracking\Platforms;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms;
 
-class SiteGround implements \Smashballoon\Framework\Utilities\PlatformTracking\Platforms\PlatformInterface
+class SiteGround implements PlatformInterface
 {
     /**
      * @inheritDoc

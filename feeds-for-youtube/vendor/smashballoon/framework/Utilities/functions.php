@@ -1,8 +1,8 @@
 <?php
 
-namespace Smashballoon\Framework;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework;
 
-if (!function_exists('Smashballoon\Framework\sb_doing_it_wrong')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_doing_it_wrong')) {
     /**
      * Wrapper for _doing_it_wrong().
      *
@@ -25,7 +25,7 @@ if (!function_exists('Smashballoon\Framework\sb_doing_it_wrong')) {
         // @codingStandardsIgnoreEnd
     }
 }
-if (!function_exists('Smashballoon\Framework\sb_locate_template')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_locate_template')) {
     /**
      * Locate a template and return the path for inclusion.
      *
@@ -60,7 +60,7 @@ if (!function_exists('Smashballoon\Framework\sb_locate_template')) {
         return apply_filters('sb_locate_template', $template, $template_name, $template_path);
     }
 }
-if (!function_exists('Smashballoon\Framework\sb_get_template')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_get_template')) {
     /**
      * Get other templates passing attributes and including the file.
      *
@@ -102,7 +102,7 @@ if (!function_exists('Smashballoon\Framework\sb_get_template')) {
         do_action('sb_after_template_part', $action_args['template_name'], $action_args['template_path'], $action_args['located'], $action_args['args']);
     }
 }
-if (!function_exists('Smashballoon\Framework\sb_map_notice_hooks')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_map_notice_hooks')) {
     /**
      * Map notices hooks as per plugin name.
      *
@@ -117,7 +117,7 @@ if (!function_exists('Smashballoon\Framework\sb_map_notice_hooks')) {
         return $plugin_hook;
     }
 }
-if (!function_exists('Smashballoon\Framework\sb_get_plugin_type')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_get_plugin_type')) {
     /**
      * Check if the plugin is free or pro.
      *
@@ -132,7 +132,7 @@ if (!function_exists('Smashballoon\Framework\sb_get_plugin_type')) {
         return $plugin_type;
     }
 }
-if (!function_exists('Smashballoon\Framework\flatten_array')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\flatten_array')) {
     /**
      * Flatten a multidimensional array.
      * 
@@ -153,7 +153,7 @@ if (!function_exists('Smashballoon\Framework\flatten_array')) {
         return $result;
     }
 }
-if (!function_exists('Smashballoon\Framework\sb_get_active_plugins')) {
+if (!function_exists('SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_get_active_plugins')) {
     /**
      * Get active plugins.
      *

@@ -7,7 +7,7 @@ use Smashballoon\Customizer\Feed_Builder;
 use SmashBalloon\YouTubeFeed\Helpers\Util;
 use SmashBalloon\YouTubeFeed\Services\AssetsService;
 use SmashBalloon\YouTubeFeed\Services\LicenseNotification;
-use Smashballoon\Framework\Packages\Blocks\RecommendedBlocks;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Blocks\RecommendedBlocks;
 
 /**
  * Instagram Feed block with live preview.

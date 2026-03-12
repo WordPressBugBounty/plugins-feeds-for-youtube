@@ -7,16 +7,16 @@ namespace Composer\Autoload;
 class ComposerStaticInit053be8708e57641def40bd994b33aefd
 {
     public static $files = array (
-        'sb_ytf_b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
         'sb_ytf_b1eb330aa001ae4915f07005b4e993c2' => __DIR__ . '/..' . '/smashballoon/framework/Utilities/functions.php',
+        'sb_ytf_a5f44a166aafa87e1c96130802135926' => __DIR__ . '/..' . '/smashballoon/framework/Packages/php-di/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'S' =>
         array (
             'Smashballoon\\Stubs\\' => 19,
-            'Smashballoon\\Framework\\' => 23,
             'Smashballoon\\Customizer\\' => 24,
+            'SmashBalloon\\YoutubeFeed\\Vendor\\Smashballoon\\Framework\\' => 55,
             'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' => 46,
             'SmashBalloon\\YoutubeFeed\\Vendor\\PhpDocReader\\' => 45,
             'SmashBalloon\\YoutubeFeed\\Vendor\\Laravel\\SerializableClosure\\' => 60,
@@ -27,39 +27,39 @@ class ComposerStaticInit053be8708e57641def40bd994b33aefd
     );
 
     public static $prefixDirsPsr4 = array (
-        'Smashballoon\\Stubs\\' => 
+        'Smashballoon\\Stubs\\' =>
         array (
             0 => __DIR__ . '/..' . '/smashballoon/stubs/src',
         ),
-        'Smashballoon\\Framework\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/smashballoon/framework',
-        ),
-        'Smashballoon\\Customizer\\' => 
+        'Smashballoon\\Customizer\\' =>
         array (
             0 => __DIR__ . '/..' . '/smashballoon/customizer/app',
         ),
-        'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' => 
+        'SmashBalloon\\YoutubeFeed\\Vendor\\Smashballoon\\Framework\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/smashballoon/framework',
+        ),
+        'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'SmashBalloon\\YoutubeFeed\\Vendor\\PhpDocReader\\' => 
+        'SmashBalloon\\YoutubeFeed\\Vendor\\PhpDocReader\\' =>
         array (
             0 => __DIR__ . '/..' . '/php-di/phpdoc-reader/src/PhpDocReader',
         ),
-        'SmashBalloon\\YoutubeFeed\\Vendor\\Laravel\\SerializableClosure\\' => 
+        'SmashBalloon\\YoutubeFeed\\Vendor\\Laravel\\SerializableClosure\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/serializable-closure/src',
         ),
-        'SmashBalloon\\YoutubeFeed\\Vendor\\Invoker\\' => 
+        'SmashBalloon\\YoutubeFeed\\Vendor\\Invoker\\' =>
         array (
             0 => __DIR__ . '/..' . '/php-di/invoker/src',
         ),
-        'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' => 
+        'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' =>
         array (
-            0 => __DIR__ . '/..' . '/php-di/php-di/src',
+            0 => __DIR__ . '/..' . '/smashballoon/framework/Packages/php-di/src',
         ),
-        'SmashBalloon\\YouTubeFeed\\' => 
+        'SmashBalloon\\YouTubeFeed\\' =>
         array (
             0 => __DIR__ . '/../..' . '/inc',
         ),

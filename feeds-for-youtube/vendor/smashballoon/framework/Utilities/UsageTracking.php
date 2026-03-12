@@ -1,8 +1,8 @@
 <?php
 
-namespace Smashballoon\Framework\Utilities;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities;
 
-use Smashballoon\Framework\Utilities\PlatformTracking\PlatformTracking;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\PlatformTracking;
 class UsageTracking
 {
     const LIB_VERSION = '1.0.0';

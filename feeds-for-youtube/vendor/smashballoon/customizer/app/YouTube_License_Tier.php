@@ -7,7 +7,7 @@
  */
 namespace Smashballoon\Customizer;
 
-use Smashballoon\Framework\Packages\License_Tier\License_Tier;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\License_Tier\License_Tier;
 class YouTube_License_Tier extends License_Tier
 {
     /**

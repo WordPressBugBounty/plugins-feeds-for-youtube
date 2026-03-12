@@ -5,7 +5,7 @@
  *
  * @package Notices
  */
-namespace Smashballoon\Framework\Packages\Notification\Notices;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Notification\Notices;
 
 if (!defined('ABSPATH')) {
     exit;

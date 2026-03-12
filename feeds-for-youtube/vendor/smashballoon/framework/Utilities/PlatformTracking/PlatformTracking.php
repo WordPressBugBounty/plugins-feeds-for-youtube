@@ -1,13 +1,13 @@
 <?php
 
-namespace Smashballoon\Framework\Utilities\PlatformTracking;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking;
 
-use Smashballoon\Framework\Utilities\PlatformTracking\Platforms\Bluehost;
-use Smashballoon\Framework\Utilities\PlatformTracking\Platforms\Flywheel;
-use Smashballoon\Framework\Utilities\PlatformTracking\Platforms\GoDadddy;
-use Smashballoon\Framework\Utilities\PlatformTracking\Platforms\Kinsta;
-use Smashballoon\Framework\Utilities\PlatformTracking\Platforms\SiteGround;
-use Smashballoon\Framework\Utilities\PlatformTracking\Platforms\WPEngine;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms\Bluehost;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms\Flywheel;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms\GoDadddy;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms\Kinsta;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms\SiteGround;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Utilities\PlatformTracking\Platforms\WPEngine;
 class PlatformTracking
 {
     /**

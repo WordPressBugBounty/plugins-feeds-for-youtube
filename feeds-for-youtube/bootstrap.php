@@ -57,3 +57,15 @@ if (class_exists('Dotenv\Dotenv') && method_exists('Dotenv\Dotenv', 'createImmut
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->safeLoad();
 }
+
+// Initialize the deactivation feedback survey.
+if (class_exists('\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Feedback\FeedbackManager')) {
+    $sby_is_pro = defined('SBY_PRO') && SBY_PRO;
+    \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Feedback\FeedbackManager::init([
+        'plugin_slug'    => $sby_is_pro ? 'feeds-for-youtube-pro' : 'feeds-for-youtube',
+        'plugin_name'    => $sby_is_pro ? 'Smash Balloon Feeds for YouTube Pro' : 'Smash Balloon Feeds for YouTube',
+        'plugin_version' => defined('SBYVER') ? SBYVER : '',
+        'plugin_file'    => $sby_is_pro ? dirname(__FILE__) . '/youtube-feed-pro.php' : dirname(__FILE__) . '/youtube-feed.php',
+        'support_url'    => 'https://smashballoon.com/support/',
+    ]);
+}

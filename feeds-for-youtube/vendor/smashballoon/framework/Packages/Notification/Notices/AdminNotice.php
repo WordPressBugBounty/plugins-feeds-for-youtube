@@ -5,9 +5,9 @@
  *
  * @package Notices
  */
-namespace Smashballoon\Framework\Packages\Notification\Notices;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Notification\Notices;
 
-use function Smashballoon\Framework\sb_get_template;
+use function SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\sb_get_template;
 if (!defined('ABSPATH')) {
     exit;
     // Exit if accessed directly.
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 /**
  * Admin notice class.
  */
-class AdminNotice extends \Smashballoon\Framework\Packages\Notification\Notices\Notice
+class AdminNotice extends Notice
 {
     /**
      * Display notice.
@@ -30,47 +30,47 @@ class AdminNotice extends \Smashballoon\Framework\Packages\Notification\Notices\
         foreach ($fields as $field => $value) {
             switch ($field) {
                 case 'id':
-                    $fields['id'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_id($this->id);
+                    $fields['id'] = NoticeFields::get_id($this->id);
                     break;
                 case 'class':
                     $class = 'notice-' . $this->type . ' ' . $this->class;
                     if ($this->dismissible) {
                         $class .= ' is-dismissible';
                     }
-                    $fields['class'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_class($class);
+                    $fields['class'] = NoticeFields::get_class($class);
                     break;
                 case 'wrap_id':
-                    $fields['wrap_id'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_id($this->wrap_id);
+                    $fields['wrap_id'] = NoticeFields::get_id($this->wrap_id);
                     break;
                 case 'wrap_class':
-                    $fields['wrap_class'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_class($this->wrap_class);
+                    $fields['wrap_class'] = NoticeFields::get_class($this->wrap_class);
                     break;
                 case 'styles':
-                    $fields['styles'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_styles($this->styles);
+                    $fields['styles'] = NoticeFields::get_styles($this->styles);
                     break;
                 case 'data':
-                    $fields['data'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_data($this->data);
+                    $fields['data'] = NoticeFields::get_data($this->data);
                     break;
                 case 'image':
-                    $fields['image'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_image($this->image);
+                    $fields['image'] = NoticeFields::get_image($this->image);
                     break;
                 case 'icon':
-                    $fields['icon'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_image($this->icon);
+                    $fields['icon'] = NoticeFields::get_image($this->icon);
                     break;
                 case 'title':
-                    $fields['title'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_title($this->title);
+                    $fields['title'] = NoticeFields::get_title($this->title);
                     break;
                 case 'message':
-                    $fields['message'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_content($this->message);
+                    $fields['message'] = NoticeFields::get_content($this->message);
                     break;
                 case 'buttons':
-                    $fields['buttons'] = \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_buttons($this->buttons, $this->buttons_wrap_start, $this->buttons_wrap_end);
+                    $fields['buttons'] = NoticeFields::get_buttons($this->buttons, $this->buttons_wrap_start, $this->buttons_wrap_end);
                     break;
                 case 'dismiss':
-                    $fields['dismiss'] = $this->dismissible ? \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_dismiss($this->dismiss) : '';
+                    $fields['dismiss'] = $this->dismissible ? NoticeFields::get_dismiss($this->dismiss) : '';
                     break;
                 case 'navigation':
-                    $fields['navigation'] = $this->nav ? \Smashballoon\Framework\Packages\Notification\Notices\NoticeFields::get_navigation($this->navigation) : '';
+                    $fields['navigation'] = $this->nav ? NoticeFields::get_navigation($this->navigation) : '';
                     break;
                 default:
                     $fields[$field] = $value;

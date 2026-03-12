@@ -7,12 +7,12 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Smashballoon\\Stubs\\' => array($vendorDir . '/smashballoon/stubs/src'),
-    'Smashballoon\\Framework\\' => array($vendorDir . '/smashballoon/framework'),
     'Smashballoon\\Customizer\\' => array($vendorDir . '/smashballoon/customizer/app'),
+    'SmashBalloon\\YoutubeFeed\\Vendor\\Smashballoon\\Framework\\' => array($vendorDir . '/smashballoon/framework'),
     'SmashBalloon\\YoutubeFeed\\Vendor\\Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'SmashBalloon\\YoutubeFeed\\Vendor\\PhpDocReader\\' => array($vendorDir . '/php-di/phpdoc-reader/src/PhpDocReader'),
     'SmashBalloon\\YoutubeFeed\\Vendor\\Laravel\\SerializableClosure\\' => array($vendorDir . '/laravel/serializable-closure/src'),
     'SmashBalloon\\YoutubeFeed\\Vendor\\Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
-    'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' => array($vendorDir . '/php-di/php-di/src'),
+    'SmashBalloon\\YoutubeFeed\\Vendor\\DI\\' => array($vendorDir . '/smashballoon/framework/Packages/php-di/src'),
     'SmashBalloon\\YouTubeFeed\\' => array($baseDir . '/inc'),
 );

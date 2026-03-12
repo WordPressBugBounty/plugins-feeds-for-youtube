@@ -8,7 +8,7 @@
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
-namespace Smashballoon\Framework\Packages\Blocks;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Blocks;
 
 require_once \ABSPATH . 'wp-admin/includes/class-wp-upgrader-skin.php';
 use Plugin_Installer_Skin;

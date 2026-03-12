@@ -5,9 +5,9 @@
  *
  * @package Notices
  */
-namespace Smashballoon\Framework\Packages\Notification\Notices;
+namespace SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Notification\Notices;
 
-use Smashballoon\Framework\Packages\Notification\Notices\NoticeFields;
+use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Notification\Notices\NoticeFields;
 if (!defined('ABSPATH')) {
     exit;
     // Exit if accessed directly.
