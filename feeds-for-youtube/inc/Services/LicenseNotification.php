@@ -112,6 +112,13 @@ class LicenseNotification extends ServiceProvider {
 	 * @since 2.2.0
 	 */
 	public function sby_recheck_connection() {
+		// Security: Verify nonce and capability
+		check_ajax_referer( 'sby-admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Permission denied.' ) );
+		}
+
 		delete_option("sby_islicence_upgraded");
 		delete_option("sby_upgraded_info");
 
