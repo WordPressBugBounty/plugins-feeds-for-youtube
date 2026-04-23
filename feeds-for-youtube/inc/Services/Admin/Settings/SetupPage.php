@@ -276,6 +276,7 @@ class SetupPage extends BaseSettingPage
 			'youtube' 		=> 'sby_plugin_do_activation_redirect',
 			'twitter' 		=> 'ctf_plugin_do_activation_redirect',
 			'reviews' 		=> 'sbr_plugin_do_activation_redirect',
+			'wpchat' 		=> 'wpchat_plugin_do_activation_redirect',
 		];
 
 		if(!empty($smash_list[self::$plugin_name])){

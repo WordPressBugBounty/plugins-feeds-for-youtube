@@ -772,6 +772,15 @@ function sby_get_active_plugins_info() {
 		$is_reviews_installed = true;
 	}
 
+	$is_wpchat_installed = false;
+	$wpchat_plugin       = 'smashballoon-wpchat-livechat-customer-support/wp-chat.php';
+	if ( isset( $installed_plugins['wp-chat-pro/wp-chat-pro.php'] ) ) {
+		$is_wpchat_installed = true;
+		$wpchat_plugin       = 'wp-chat-pro/wp-chat-pro.php';
+	} elseif ( isset( $installed_plugins['smashballoon-wpchat-livechat-customer-support/wp-chat.php'] ) ) {
+		$is_wpchat_installed = true;
+	}
+
 	$is_social_wall_installed = isset( $installed_plugins['social-wall/social-wall.php'] ) ? true : false;
 	$social_wall_plugin = 'social-wall/social-wall.php';
 
@@ -785,6 +794,7 @@ function sby_get_active_plugins_info() {
 		'is_youtube_installed' => $is_youtube_installed,
 		'is_tiktok_installed' => $is_tiktok_installed,
 		'is_reviews_installed' => $is_reviews_installed,
+		'is_wpchat_installed' => $is_wpchat_installed,
 		'is_social_wall_installed' => $is_social_wall_installed,
 		'is_feed_analytics_installed' => $is_feed_analytics_installed,
 		'facebook_plugin' => $facebook_plugin,
@@ -793,6 +803,7 @@ function sby_get_active_plugins_info() {
 		'youtube_plugin' => $youtube_plugin,
 		'tiktok_plugin' => $tiktok_plugin,
 		'reviews_plugin' => $reviews_plugin,
+		'wpchat_plugin' => $wpchat_plugin,
 		'social_wall_plugin' => $social_wall_plugin,
 		'feed_analytics_plugin' => $feed_analytics_plugin,
 		'installed_plugins' => $installed_plugins
@@ -1040,6 +1051,9 @@ if ( !function_exists( 'sby_upload_featured_image' ) ) {
 		}
 
 		$file = SBY_Parse::get_media_url( $api_data );
+		if ( empty( $file ) ) {
+			return;
+		}
 		$filename = SBY_Parse::get_video_id( $api_data );
 		$title = SBY_Parse::get_video_title( $api_data );
 		$uploaddir = wp_upload_dir();

@@ -232,6 +232,15 @@ class AboutPage extends BaseSettingPage {
 				'installed'       => isset( $sb_other_plugins['is_reviews_installed'] ) && $sb_other_plugins['is_reviews_installed'] == true,
 				'activated'       => is_plugin_active( $sb_other_plugins['reviews_plugin'] ),
 			),
+			'wpchat'   => array(
+				'plugin'          => $sb_other_plugins['wpchat_plugin'],
+				'download_plugin' => 'https://downloads.wordpress.org/plugin/smashballoon-wpchat-livechat-customer-support.zip',
+				'title'           => __( 'WPChat', 'feeds-for-youtube' ),
+				'description'     => __( 'Install WPChat and connect with customers on WhatsApp, Messenger, Telegram & Instagram and more', 'feeds-for-youtube' ),
+				'icon'            => 'wpchat-icon.svg',
+				'installed'       => isset( $sb_other_plugins['is_wpchat_installed'] ) && $sb_other_plugins['is_wpchat_installed'] == true,
+				'activated'       => is_plugin_active( $sb_other_plugins['wpchat_plugin'] ),
+			),
 			'feed_analytics'   => array(
 				'plugin'          => $sb_other_plugins['feed_analytics_plugin'],
 				'title'           => __( 'Feed Analytics', 'feeds-for-youtube' ),

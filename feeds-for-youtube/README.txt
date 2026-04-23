@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 2.6.4
+Stable tag: 2.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -168,7 +168,11 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 
 == Changelog ==
 
-= 2.6.4 = 
+= 2.6.5 =
+* Fix: Elementor CSS no longer double-prefixes, preventing 301 redirects on preview URLs.
+* Fix: Cron update no longer triggers a PHP 8.x fatal when a source video has been deleted or set private.
+
+= 2.6.4 =
 * Fix: Additional plugin hardening.
 
 = 2.6.3 =

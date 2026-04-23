@@ -131,14 +131,14 @@ class SBY_Elementor_Base
 
 		wp_register_style(
 			'sby-common-styles',
-			SBY_PLUGIN_URL . 'css/' . $css_common_file,
+			$css_common_file,
 			array(),
 			SBYVER
 		);
 
 		wp_register_style(
 			'sby-styles',
-			SBY_PLUGIN_URL . 'css/' . $css_file,
+			$css_file,
 			array(),
 			SBYVER
 		);
