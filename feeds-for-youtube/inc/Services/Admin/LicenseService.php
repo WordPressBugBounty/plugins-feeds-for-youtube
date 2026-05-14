@@ -37,7 +37,7 @@ class LicenseService extends ServiceProvider {
 		$settings['licenseStatus'] = $this->get_license_status();
 		$settings['licenseData']   = $this->get_license_data();
 		$settings['licenseKey']    = $license_key;
-		$settings['upgradeUrl']    = sprintf( 'https://smashballoon.com/pricing/youtube-feed/?license_key=%s&upgrade=true&utm_campaign=youtube-pro&utm_source=settings&utm_medium=upgrade-license', $this->get_license_key() );
+		$settings['upgradeUrl']    = sprintf( 'https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?license_key=%s&upgrade=true&utm_campaign=youtube-free&utm_source=settings&utm_medium=upgrade-license', $this->get_license_key() );
 		return $settings;
 	}
 
@@ -542,7 +542,7 @@ class LicenseService extends ServiceProvider {
 
 		$license_key = $this->get_license_key();
 
-		$upgrade_url    = sprintf( 'https://smashballoon.com/youtube-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=youtube-pro&utm_source=settings&utm_medium=upgrade-license', $license_key );
+		$upgrade_url    = sprintf( 'https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?edd_license_key=%s&upgrade=true&utm_campaign=youtube-free&utm_source=settings&utm_medium=upgrade-license', $license_key );
 		$renew_url      = sprintf( 'https://smashballoon.com/checkout/?edd_license_key=%s&download_id=%s&utm_campaign=youtube-pro&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', $license_key, $sby_download_id );
 		$learn_more_url = 'https://smashballoon.com/doc/my-license-key-wont-activate/?utm_campaign=youtube-pro&utm_source=settings&utm_medium=license&utm_content=learn-more';
 

@@ -427,7 +427,7 @@ class SBY_Feed_Builder
 			'advanced'                          => __('Advanced', 'feeds-for-youtube'),
 			'error'                             => __('Error:', 'feeds-for-youtube'),
 			'errorNotice'                       => __('There was an error when trying to connect to Instagram.', 'feeds-for-youtube'),
-			'errorDirections'                   => '<a href="https://smashballoon.com/instagram-feed/docs/errors/" target="_blank" rel="noopener">' . __('Directions on How to Resolve This Issue', 'feeds-for-youtube') . '</a>',
+			'errorDirections'                   => '<a href="https://smashballoon.com/instagram-feed/docs/errors/?utm_campaign=' . sby_utm_campaign() . '&utm_source=builder&utm_medium=error-directions" target="_blank" rel="noopener">' . __('Directions on How to Resolve This Issue', 'feeds-for-youtube') . '</a>',
 			'errorSource'                       => __('Source Invalid', 'feeds-for-youtube'),
 			'errorEncryption'                   => __('Encryption Error', 'feeds-for-youtube'),
 			'invalid'                           => __('Invalid', 'feeds-for-youtube'),
@@ -592,7 +592,7 @@ class SBY_Feed_Builder
 				'connectAccountDescription'  => __('This does not give us permission to manage your Instagram account, it simply allows the plugin to see a list of them and retrieve their public content from the API.', 'feeds-for-youtube'),
 				'connect'                    => __('Connect', 'feeds-for-youtube'),
 				'enterEventToken'            => __('Enter Events Access Token', 'feeds-for-youtube'),
-				'enterEventTokenDescription' => sprintf(__('Due to restrictions by Facebook, you need to create a Facebook app and then paste that app Access Token here. We have a guide to help you with just that, which you can read %1$shere%2$s', 'feeds-for-youtube'), '<a href="https://smashballoon.com/instagram-feed/page-token/" target="_blank" rel="noopener">', '</a>'),
+				'enterEventTokenDescription' => sprintf(__('Due to restrictions by Facebook, you need to create a Facebook app and then paste that app Access Token here. We have a guide to help you with just that, which you can read %1$shere%2$s', 'feeds-for-youtube'), '<a href="https://smashballoon.com/instagram-feed/page-token/?utm_campaign=' . sby_utm_campaign() . '&utm_source=builder&utm_medium=page-token" target="_blank" rel="noopener">', '</a>'),
 				'alreadyHave'                => __('Already have a API Token and Access Key for your account?', 'feeds-for-youtube'),
 				'addManuallyLink'            => __('Add Account Manually', 'feeds-for-youtube'),
 				'selectAccount'              => __('Select an Instagram Account', 'feeds-for-youtube'),
@@ -861,7 +861,7 @@ class SBY_Feed_Builder
 			'upgrade'        => array(
 				'name' => __('Upgrade to Pro', 'feeds-for-youtube'),
 				'icon' => 'instagram',
-				'link' => 'https://smashballoon.com/instagram-feed/',
+				'link' => 'https://smashballoon.com/instagram-feed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=balloon&utm_medium=upgrade',
 			),
 			'platforms'      => array(
 				array(
@@ -926,7 +926,7 @@ class SBY_Feed_Builder
 			'type'        => $type,
 			'legacyFeeds' => array(
 				'heading'     => __('Legacy Feed Settings', 'feeds-for-youtube'),
-				'description' => sprintf(__('These settings will impact %1$s legacy feeds on your site. You can learn more about what legacy feeds are and how they differ from new feeds %2$shere%3$s.', 'feeds-for-youtube'), '<span class="cff-fb-count-placeholder"></span>', '<a href="https://smashballoon.com/doc/facebook-legacy-feeds/" target="_blank" rel="noopener">', '</a>'),
+				'description' => sprintf(__('These settings will impact %1$s legacy feeds on your site. You can learn more about what legacy feeds are and how they differ from new feeds %2$shere%3$s.', 'feeds-for-youtube'), '<span class="cff-fb-count-placeholder"></span>', '<a href="https://smashballoon.com/doc/facebook-legacy-feeds/?utm_campaign=' . sby_utm_campaign() . '&utm_source=builder&utm_medium=legacy-feeds" target="_blank" rel="noopener">', '</a>'),
 			),
 			'getStarted'  => __('You can now create and customize feeds individually. Click "Add New" to get started.', 'feeds-for-youtube'),
 		);
@@ -1134,7 +1134,7 @@ class SBY_Feed_Builder
 					'postDateDescription'        => __('The date of the post', 'feeds-for-youtube'),
 					'format'                     => __('Format', 'feeds-for-youtube'),
 					'custom'                     => __('Custom', 'feeds-for-youtube'),
-					'learnMoreFormats'           => '<a href="https://smashballoon.com/doc/date-formatting-reference/" target="_blank" rel="noopener">' . __('Learn more about custom formats', 'feeds-for-youtube') . '</a>',
+					'learnMoreFormats'           => '<a href="https://smashballoon.com/doc/date-formatting-reference/?utm_campaign=' . sby_utm_campaign() . '&utm_source=builder&utm_medium=date-format" target="_blank" rel="noopener">' . __('Learn more about custom formats', 'feeds-for-youtube') . '</a>',
 					'addTextBefore'              => __('Add text before date', 'feeds-for-youtube'),
 					'addTextBeforeEG'            => __('E.g. Posted', 'feeds-for-youtube'),
 					'addTextAfter'               => __('Add text after date', 'feeds-for-youtube'),

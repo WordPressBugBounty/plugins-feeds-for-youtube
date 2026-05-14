@@ -128,7 +128,7 @@ class SBY_API_Connect
 					}
 					$error_message .= '</p>';
 
-					$error_message .= '<a href="https://smashballoon.com/youtube-feed/docs/errors/" target="blank" rel="noopener nofollow">' . __( 'Directions on how to resolve this issue', 'feeds-for-youtube' ) . '</a>';
+					$error_message .= '<a href="https://smashballoon.com/youtube-feed/docs/errors/?utm_campaign=' . sby_utm_campaign() . '&utm_source=feed&utm_medium=error-directions" target="blank" rel="noopener nofollow">' . __( 'Directions on how to resolve this issue', 'feeds-for-youtube' ) . '</a>';
 				} else {
 					$error_message .= '</p>';
 				}

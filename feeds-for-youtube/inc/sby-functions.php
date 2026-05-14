@@ -832,7 +832,7 @@ function sby_get_installed_plugin_info() {
 			'activated' => is_plugin_active( $sb_other_plugins['facebook_plugin'] ),
 			'plugin' => $sb_other_plugins['facebook_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/custom-facebook-feed.zip',
-			'website_link' => 'https://smashballoon.com/custom-facebook-feed/'
+			'website_link' => 'https://smashballoon.com/custom-facebook-feed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=other-plugins'
 		),
 		'instagram' => array(
 			'displayName' => __( 'Instagram', 'feeds-for-youtube' ),
@@ -846,7 +846,7 @@ function sby_get_installed_plugin_info() {
 			'activated' => is_plugin_active( $sb_other_plugins['instagram_plugin'] ),
 			'plugin' => $sb_other_plugins['instagram_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/instagram-feed.zip',
-			'website_link' => 'https://smashballoon.com/instagram-feed/'
+			'website_link' => 'https://smashballoon.com/instagram-feed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=other-plugins'
 		),
 		'twitter' => array(
 			'displayName' => __( 'Twitter', 'feeds-for-youtube' ),
@@ -860,7 +860,7 @@ function sby_get_installed_plugin_info() {
 			'activated' => is_plugin_active( $sb_other_plugins['twitter_plugin'] ),
 			'plugin' => $sb_other_plugins['twitter_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/custom-twitter-feeds.zip',
-			'website_link' => 'https://smashballoon.com/custom-twitter-feeds/'
+			'website_link' => 'https://smashballoon.com/custom-twitter-feeds/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=other-plugins'
 		),
 		'tiktok' => array(
 			'displayName' => __( 'Tiktok', 'feeds-for-youtube' ),
@@ -874,7 +874,7 @@ function sby_get_installed_plugin_info() {
 			'activated' => is_plugin_active( $sb_other_plugins['tiktok_plugin'] ),
 			'plugin' => $sb_other_plugins['tiktok_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/feeds-for-tiktok.zip',
-			'website_link' => 'https://smashballoon.com/tiktok-feeds/'
+			'website_link' => 'https://smashballoon.com/tiktok-feeds/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=other-plugins'
 		),
 		'reviews' => array(
 			'displayName' => __( 'Reviews', 'feeds-for-youtube' ),
@@ -888,12 +888,12 @@ function sby_get_installed_plugin_info() {
 			'activated' => is_plugin_active( $sb_other_plugins['reviews_plugin'] ),
 			'plugin' => $sb_other_plugins['reviews_plugin'],
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/reviews-feed.zip',
-			'website_link' => 'https://smashballoon.com/reviews-feed/'
+			'website_link' => 'https://smashballoon.com/reviews-feed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=other-plugins'
 		),
 		'youtube' => [
 			'installed' => $sb_other_plugins['is_youtube_installed'],
 			'class' => 'SBY_Elementor_Widget',
-			'link' => 'https://smashballoon.com/youtube-feed/',
+			'link' => 'https://smashballoon.com/youtube-feed/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=other-plugins',
 			'icon' => '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 22.5L22.785 18L15 13.5V22.5ZM32.34 10.755C32.535 11.46 32.67 12.405 32.76 13.605C32.865 14.805 32.91 15.84 32.91 16.74L33 18C33 21.285 32.76 23.7 32.34 25.245C31.965 26.595 31.095 27.465 29.745 27.84C29.04 28.035 27.75 28.17 25.77 28.26C23.82 28.365 22.035 28.41 20.385 28.41L18 28.5C11.715 28.5 7.8 28.26 6.255 27.84C4.905 27.465 6.035 26.595 3.66 25.245C3.465 24.54 3.33 23.595 3.24 22.395C3.135 21.195 3.09 20.16 3.09 19.26L3 18C3 14.715 3.24 12.3 3.66 10.755C6.035 9.405 4.905 8.535 6.255 8.16C6.96 7.965 8.25 7.83 10.23 7.74C12.18 7.635 13.965 7.59 15.615 7.59L18 7.5C24.285 7.5 28.2 7.74 29.745 8.16C31.095 8.535 31.965 9.405 32.34 10.755Z" fill="#EB2121"></path></svg>',
 			'description' => __('YouTube Feeds is a highly customizable way to display tweets from your YouTube account. Promote your latest content and update your site content automatically.', 'feeds-for-youtube'),
 			'download_plugin' => 'https://downloads.wordpress.org/plugin/feeds-for-youtube.zip',

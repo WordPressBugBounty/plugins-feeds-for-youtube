@@ -42,12 +42,12 @@ class SBY_RSS_Connect
 			if ( ! $this->is_live_stream ) {
 				$error_message = '<p><b>'. __( 'Unable to retrieve new videos without an API key.', 'feeds-for-youtube' ) .'</b></p>';
 				if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-					$error_message .= '<p>' . sprintf( __( 'Due to your server configuration, an API key is required to update your feed. See %sthis FAQ%s to set up an API key.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-api-key/" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
+					$error_message .= '<p>' . sprintf( __( 'Due to your server configuration, an API key is required to update your feed. See %sthis FAQ%s to set up an API key.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-api-key/?utm_campaign=' . sby_utm_campaign() . '&utm_source=feed&utm_medium=api-key-error" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
 				}
 			} else {
 				$error_message = '<p><b>'. __( 'Unable to retrieve new videos due to server configuration.', 'feeds-for-youtube' ) .'</b></p>';
 				if ( current_user_can( 'manage_youtube_feed_options' ) ) {
-					$error_message .= '<p>' . sprintf( __( 'You must have the allow_url_fopen directive enabled in your server\'s php.ini file to retrieve live streams.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-api-key/" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
+					$error_message .= '<p>' . sprintf( __( 'You must have the allow_url_fopen directive enabled in your server\'s php.ini file to retrieve live streams. See %sthis FAQ%s to set up an API key.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-api-key/?utm_campaign=' . sby_utm_campaign() . '&utm_source=feed&utm_medium=api-key-error" target="_blank" rel="noopener nofollow">', '</a>' ) . '</p>';
 				}
 			}
 

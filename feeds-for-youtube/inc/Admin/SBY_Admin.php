@@ -1043,7 +1043,7 @@ class SBY_Admin extends SBY_Admin_Abstract {
 			'callback' => 'checkbox',
 			'title' => __( 'Enable Custom Templates', 'feeds-for-youtube' ),
 			'default' => false,
-			'tooltip_info' => __( 'The default HTML for the feed can be replaced with custom templates added to your theme\'s folder. Enable this setting to use these templates. See <a href="https://smashballoon.com/youtube-custom-templates/" target="_blank">this guide</a>', 'feeds-for-youtube' )
+			'tooltip_info' => sprintf( __( 'The default HTML for the feed can be replaced with custom templates added to your theme\'s folder. Enable this setting to use these templates. See %sthis guide%s', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-custom-templates/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=custom-templates" target="_blank">', '</a>' )
 		);
 		$this->add_settings_field( $args );
 
@@ -1207,9 +1207,9 @@ class SBY_Admin extends SBY_Admin_Abstract {
                 <p><span><?php _e("No", 'feeds-for-youtube' ); ?>:</span> <?php _e("The plugin will still make some requests to display and play videos directly from YouTube.", 'feeds-for-youtube' ); ?></p>
 
 
-                <p><span><?php _e("Automatic", 'feeds-for-youtube' ); ?>:</span> <?php echo sprintf( __( 'The plugin will only videos if consent has been given by one of these integrated %s', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/doc/gdpr-plugin-list/?youtube" target="_blank" rel="noopener">' . __( 'GDPR cookie plugins', 'feeds-for-youtube' ) . '</a>' ); ?></p>
+                <p><span><?php _e("Automatic", 'feeds-for-youtube' ); ?>:</span> <?php echo sprintf( __( 'The plugin will only videos if consent has been given by one of these integrated %s', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/doc/gdpr-plugin-list/?youtube&utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=gdpr" target="_blank" rel="noopener">' . __( 'GDPR cookie plugins', 'feeds-for-youtube' ) . '</a>' ); ?></p>
 
-                <p><?php echo sprintf( __( '%s to learn more about GDPR compliance in the YouTube Feeds plugin.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/doc/feeds-for-youtube-gdpr-compliance/?youtube" target="_blank" rel="noopener">'. __( 'Click here', 'feeds-for-youtube' ).'</a>' ); ?></p>
+                <p><?php echo sprintf( __( '%s to learn more about GDPR compliance in the YouTube Feeds plugin.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/doc/feeds-for-youtube-gdpr-compliance/?youtube&utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=gdpr" target="_blank" rel="noopener">'. __( 'Click here', 'feeds-for-youtube' ).'</a>' ); ?></p>
             </div>
         </div>
 
@@ -1261,7 +1261,7 @@ class SBY_Admin extends SBY_Admin_Abstract {
 				<?php else: ?>
                     <div class="sbspf_box">
                         <div class="sbspf_box_setting">
-                            <p><?php _e( 'No GDPR consent plugin detected. Install a compatible <a href="https://smashballoon.com/doc/gdpr-plugin-list/?youtube" target="_blank">GDPR consent plugin</a>, or manually enable the setting above to display a GDPR compliant version of the feed to all visitors.', 'feeds-for-youtube' ); ?></p>
+                            <p><?php echo sprintf( __( 'No GDPR consent plugin detected. Install a compatible %sGDPR consent plugin%s, or manually enable the setting above to display a GDPR compliant version of the feed to all visitors.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/doc/gdpr-plugin-list/?youtube&utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=gdpr" target="_blank">', '</a>' ); ?></p>
                         </div>
                     </div>
 				<?php endif; ?>
@@ -1291,7 +1291,7 @@ class SBY_Admin extends SBY_Admin_Abstract {
             <div class="sbspf_col sbspf_one">&nbsp;
             </div>
             <div class="sbspf_col sbspf_two sbspf_custom_search_wrap">
-                <input id="sbspf_usecustomsearch" type="checkbox" name="sby_settings[usecustomsearch]"<?php echo $checked; ?>><label for="sbspf_usecustomsearch">use a custom search</label> <a href="https://smashballoon.com/youtube-feed/custom-search-guide/" target="_blank" rel="noopener">Custom Search Guide</a>
+                <input id="sbspf_usecustomsearch" type="checkbox" name="sby_settings[usecustomsearch]"<?php echo $checked; ?>><label for="sbspf_usecustomsearch">use a custom search</label> <a href="https://smashballoon.com/youtube-feed/custom-search-guide/?utm_campaign=<?php echo sby_utm_campaign(); ?>&utm_source=settings&utm_medium=custom-search" target="_blank" rel="noopener">Custom Search Guide</a>
                 <div id="sbspf_usecustomsearch_reveal">
                     <label>Custom Search</label><br>
                     <textarea name="sby_settings[customsearch]" id="sbspf_customsearch" type="text" style="width: 100%;"><?php echo esc_attr( $custom_search_string ); ?></textarea>
@@ -1397,7 +1397,7 @@ class SBY_Admin extends SBY_Admin_Abstract {
         </div>
         <div class="sbspf_sub_option_setting sby_customdate_wrap">
             <label><?php _e( 'Custom Format', 'feeds-for-youtube' ); ?></label><br>
-            <input name="sby_settings[customdate]" id="sby_settings_customdate" type="text" placeholder="F j, Y g:i a" value="<?php echo esc_attr( $value ); ?>"><a href="https://smashballoon.com/youtube-feed/docs/date/" class="sbspf-external-link sbspf_note" target="_blank" rel="noopener"><?php _e( 'Examples', 'feeds-for-youtube' ); ?></a>
+            <input name="sby_settings[customdate]" id="sby_settings_customdate" type="text" placeholder="F j, Y g:i a" value="<?php echo esc_attr( $value ); ?>"><a href="https://smashballoon.com/youtube-feed/docs/date/?utm_campaign=<?php echo sby_utm_campaign(); ?>&utm_source=settings&utm_medium=date-format" class="sbspf-external-link sbspf_note" target="_blank" rel="noopener"><?php _e( 'Examples', 'feeds-for-youtube' ); ?></a>
         </div>
 	    <?php
     }

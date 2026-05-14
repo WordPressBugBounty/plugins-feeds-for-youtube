@@ -306,7 +306,7 @@ class SBY_New_User extends SBY_Notifications {
 			// check if this is a review notice
 			if( $type == 'review' ) {
 				$review_consent = get_option( 'sby_review_consent' );
-				$sby_open_feedback_url = 'https://smashballoon.com/feedback/?plugin=youtube-free';
+				$sby_open_feedback_url = 'https://smashballoon.com/feedback/?plugin=youtube-free&utm_campaign=' . sby_utm_campaign() . '&utm_source=new-user&utm_medium=feedback';
 				// step #1 for the review notice
 				if ( ! $review_consent ) {
 					?>

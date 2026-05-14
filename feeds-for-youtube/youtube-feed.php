@@ -3,7 +3,7 @@
 Plugin Name: Feeds for YouTube
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.6.5
+Version: 2.6.6
 Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
@@ -54,7 +54,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.6.5' );
+    define( 'SBYVER', '2.6.6' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.3' );
@@ -123,16 +123,16 @@ if ( ! function_exists( 'sby_init' ) ) {
             define( 'SBY_SEARCH_NAME', 'sbys' );
         }
         if ( ! defined( 'SBY_SETUP_URL' ) ) {
-            define( 'SBY_SETUP_URL', 'https://smashballoon.com/youtube-feed/free' );
+            define( 'SBY_SETUP_URL', 'https://smashballoon.com/youtube-feed/free?utm_campaign=youtube-free&utm_source=plugin&utm_medium=setup' );
         }
         if ( ! defined( 'SBY_SUPPORT_URL' ) ) {
-            define( 'SBY_SUPPORT_URL', 'https://smashballoon.com/youtube-feed/support' );
+            define( 'SBY_SUPPORT_URL', 'https://smashballoon.com/youtube-feed/support?utm_campaign=youtube-free&utm_source=plugin&utm_medium=support' );
         }
         if ( ! defined( 'SBY_OAUTH_PROCESSOR_URL' ) ) {
             define( 'SBY_OAUTH_PROCESSOR_URL', 'https://smashballoon.com/youtube-login/?return_uri=' );
         }
         if ( ! defined( 'SBY_DEMO_URL' ) ) {
-            define( 'SBY_DEMO_URL', 'https://smashballoon.com/youtube-feed/demo' );
+            define( 'SBY_DEMO_URL', 'https://smashballoon.com/youtube-feed/demo?utm_campaign=youtube-free&utm_source=plugin&utm_medium=demo' );
         }
         if ( ! defined( 'SBY_PRO_LOGO' ) ) {
             define( 'SBY_PRO_LOGO', 'https://smashballoon.com/wp-content/themes/smashballoon/img/smash-balloon-logo-small.png' );

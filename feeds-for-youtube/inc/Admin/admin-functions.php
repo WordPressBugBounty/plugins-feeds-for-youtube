@@ -103,7 +103,7 @@ function sby_admin_init() {
 			'note' => __( 'Eg: Search Term', 'feeds-for-youtube' ),
 			'example' => 'cats',
 			'description' => __( 'Display a feed of matching search results (search)', 'feeds-for-youtube' ),
-			'tooltip' => '<p>' . __( 'Enter any search term or phrase. Separate multiple terms with commas. You can add your own additional query vars using the <a href="https://smashballoon.com/youtube-feed/custom-search-guide/" target="_blank" rel="noopener">guide on our website</a> and the input field above.', 'feeds-for-youtube' ) . '</p>',
+			'tooltip' => '<p>' . sprintf( __( 'Enter any search term or phrase. Separate multiple terms with commas. You can add your own additional query vars using the %sguide on our website%s and the input field above.', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/youtube-feed/custom-search-guide/?utm_campaign=' . sby_utm_campaign() . '&utm_source=settings&utm_medium=custom-search" target="_blank" rel="noopener">', '</a>' ) . '</p>',
 			'onselect' => 'search_query_string'
 		),
 		array(

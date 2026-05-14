@@ -603,7 +603,7 @@ class SBY_Notifications {
 				$step1_img_html = sprintf('<div class="bell"><img src="%s" alt="notice"></div>', $step1_img);
 
 				$review_consent = get_option( 'sby_review_consent' );
-				$sby_open_feedback_url = 'https://smashballoon.com/feedback/?plugin=' . sby_utm_campaign();
+				$sby_open_feedback_url = 'https://smashballoon.com/feedback/?plugin=youtube-free&utm_campaign=' . sby_utm_campaign() . '&utm_source=notifications&utm_medium=feedback';
 				// step #1 for the review notice
 				if ( ! $review_consent ) {
 					$step1_btns = sprintf(

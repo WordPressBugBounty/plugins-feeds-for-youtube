@@ -288,7 +288,7 @@ class SBY_Settings_Tab {
 				'type'                => 'switcher',
 				'id'                  => 'customtemplates',
 				'label'               => __( 'Custom Templates', 'feeds-for-youtube' ),
-				'description'         => sprintf( __( 'The default HTML for the feed can be replaced with custom templates added to your theme\'s folder. Enable this setting to use these templates. Custom templates are not used in the feed editor. %1$sLearn More%2$s', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/guide-to-creating-custom-templates/?utm_source=plugin-pro&utm_campaign=sbi&utm_medium=customizer" target="_blank">', '</a>' ),
+				'description'         => sprintf( __( 'The default HTML for the feed can be replaced with custom templates added to your theme\'s folder. Enable this setting to use these templates. Custom templates are not used in the feed editor. %1$sLearn More%2$s', 'feeds-for-youtube' ), '<a href="https://smashballoon.com/guide-to-creating-custom-templates/?utm_campaign=' . sby_utm_campaign() . '&utm_source=customizer&utm_medium=custom-templates" target="_blank">', '</a>' ),
 				'descriptionPosition' => 'bottom',
 				'reverse'             => 'true',
 				'strongHeading'       => 'true',

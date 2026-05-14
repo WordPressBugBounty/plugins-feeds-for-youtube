@@ -583,12 +583,12 @@ class AdminAjaxService extends ServiceProvider {
 			wp_send_json_error();
 		}
 		$license_key = Util::get_license_key();
-		$upgrade_url = sprintf('https://smashballoon.com/pricing/youtube-feed/?license_key=%s&upgrade=true&utm_campaign=youtube-pro&utm_source=feed-type&utm_medium=youtube-feed&utm_content=upgrade', $license_key);
+		$upgrade_url = sprintf('https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?license_key=%s&upgrade=true&utm_campaign=youtube-pro&utm_source=feed-type&utm_medium=upgrade-link&utm_content=upgrade', $license_key);
 		$heading = __('Convert YouTube videos to Wordpress Posts with Pro', 'feeds-for-youtube');
 		$youtube_utm_campaign = 'youtube-pro';
 
 		if (!\sby_is_pro()) {
-			$upgrade_url = 'https://smashballoon.com/pricing/youtube-feed/?utm_campaign=youtube-free&utm_source=single-videos-to-cpt&utm_medium=youtube-feed&utm_content=upgrade';
+			$upgrade_url = 'https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?utm_campaign=youtube-free&utm_source=single-videos-to-cpt&utm_medium=upgrade-link&utm_content=upgrade';
 			$youtube_utm_campaign = 'youtube-free';
 		} else {
 			$heading = __('Upgrade to Plus to Convert YouTube videos to WordPress Posts', 'feeds-for-youtube');

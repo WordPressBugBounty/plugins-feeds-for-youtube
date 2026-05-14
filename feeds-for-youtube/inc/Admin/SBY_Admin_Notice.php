@@ -35,7 +35,7 @@ class SBY_Admin_Notice {
 
         $output = '';
 
-        $upgrade_url = 'https://smashballoon.com/youtube-feed/demo/?utm_campaign='. sby_utm_campaign() .'&utm_source=lite-upgrade-bar';
+        $upgrade_url = 'https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?utm_campaign='. sby_utm_campaign() .'&utm_source=lite-upgrade-bar&utm_medium=upgrade-link';
         $output .= '<div id="sbc-notice-bar" class="sbc-header-notice">';
         $output .= sprintf(
             '<span class="sbc-notice-bar-message">%s <a href="%s" target="_blank" rel="noopener noreferrer">%s</a></span>',

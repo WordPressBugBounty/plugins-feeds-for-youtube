@@ -93,7 +93,7 @@ class SBY_Source {
 					}
 				}
 			}
-			$message .= ' <a href="https://smashballoon.com/instagram-feed/docs/errors/" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'feeds-for-youtube' ) . '</a>';
+			$message .= ' <a href="https://smashballoon.com/instagram-feed/docs/errors/?utm_campaign=' . sby_utm_campaign() . '&utm_source=builder&utm_medium=error-directions" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'feeds-for-youtube' ) . '</a>';
 
 			$return_html  = '<div class="sb-alerts-wrap"><div class="sb-alert">';
 			$return_html .= '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">';
@@ -458,7 +458,7 @@ class SBY_Source {
 				'error' => array(
 					'code'    => 'No Accounts Found',
 					'message' => __( 'Couldn\'t find Business Profile', 'feeds-for-youtube' ),
-					'details' => sprintf( __( 'Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile. If you are, in fact, logged-in to the correct account please make sure you have Instagram accounts connected with your Facebook account by following %3$sthis FAQ%4$s', 'feeds-for-youtube' ), '<a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">', '</a>', '<a href="https://smashballoon.com/reconnecting-an-instagram-business-profile/" target="_blank" rel="noopener noreferrer">', '</a>' ),
+					'details' => sprintf( __( 'Uh oh. It looks like this Facebook account is not currently connected to an Instagram Business profile. Please check that you are logged into the %1$sFacebook account%2$s in this browser which is associated with your Instagram Business Profile. If you are, in fact, logged-in to the correct account please make sure you have Instagram accounts connected with your Facebook account by following %3$sthis FAQ%4$s', 'feeds-for-youtube' ), '<a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">', '</a>', '<a href="https://smashballoon.com/reconnecting-an-instagram-business-profile/?utm_campaign=' . sby_utm_campaign() . '&utm_source=builder&utm_medium=reconnect-ig" target="_blank" rel="noopener noreferrer">', '</a>' ),
 				),
 			);
 		}

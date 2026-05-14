@@ -108,7 +108,7 @@ class Tooltip_Wizard {
 			<div class="sby-tlp-wizard-content">
 				<strong class="sby-tooltip-wizard-head"><?php echo __('Add a Block','feeds-for-youtube') ?></strong>
 				<p class="sby-tooltip-wizard-txt"><?php echo __('Click the plus button, search for Feeds for YouTube','feeds-for-youtube'); ?>
-                    <br/><?php echo __('Feed, and click the block to embed it.','feeds-for-youtube') ?> <a href="https://smashballoon.com/doc/wordpress-5-block-page-editor-gutenberg/?youtube" rel="noopener" target="_blank" rel="nofollow noopener"><?php echo __('Learn More','feeds-for-youtube') ?></a></p>
+                    <br/><?php echo __('Feed, and click the block to embed it.','feeds-for-youtube') ?> <a href="https://smashballoon.com/doc/wordpress-5-block-page-editor-gutenberg/?youtube&utm_campaign=<?php echo sby_utm_campaign(); ?>&utm_source=builder&utm_medium=gutenberg-tooltip" rel="noopener" target="_blank" rel="nofollow noopener"><?php echo __('Learn More','feeds-for-youtube') ?></a></p>
 				<div class="sby-tooltip-wizard-actions">
 					<button class="sby-tlp-wizard-close"><?php echo __('Done','feeds-for-youtube') ?></button>
 				</div>

@@ -32,7 +32,7 @@ class Settings_Tab extends Tab {
 	 * @return array
 	*/
 	public function get_sections() {
-		$learn_more = 'https://smashballoon.com/pricing/youtube-feed?utm_campaign=youtube-free&utm_source=moderation&utm_medium=learn-more';
+		$learn_more = 'https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?utm_campaign=youtube-free&utm_source=moderation&utm_medium=learn-more';
 		return array(
 			'settings_feedtype'           => array(
 				'heading'  => __( 'Feed Type', 'feeds-for-youtube' ),

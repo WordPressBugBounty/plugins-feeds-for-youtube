@@ -66,6 +66,6 @@ if (class_exists('\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packag
         'plugin_name'    => $sby_is_pro ? 'Smash Balloon Feeds for YouTube Pro' : 'Smash Balloon Feeds for YouTube',
         'plugin_version' => defined('SBYVER') ? SBYVER : '',
         'plugin_file'    => $sby_is_pro ? dirname(__FILE__) . '/youtube-feed-pro.php' : dirname(__FILE__) . '/youtube-feed.php',
-        'support_url'    => 'https://smashballoon.com/support/',
+        'support_url'    => 'https://smashballoon.com/support/?utm_campaign=' . ( $sby_is_pro ? 'youtube-pro' : 'youtube-free' ) . '&utm_source=support&utm_medium=support',
     ]);
 }

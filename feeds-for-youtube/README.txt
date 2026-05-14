@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 2.6.5
+Stable tag: 2.6.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ https://vimeo.com/1166356320
 * Includes a header at the top of your feed
 * Enter your own custom CSS or JavaScript for even deeper customization
 
-For simple step-by-step directions on how to set up the Feeds for YouTube plugin please refer to our [setup guide](http://smashballoon.com/youtube-feed/free/?utm_source=wordpress&utm_campaign=sby 'Feeds for YouTube setup guide').
+For simple step-by-step directions on how to set up the Feeds for YouTube plugin please refer to our [setup guide](https://smashballoon.com/youtube-feed/free/?utm_campaign=youtube-free&utm_source=readme&utm_medium=setup-guide 'Feeds for YouTube setup guide').
 
 ### Benefits
 * **Increase social engagement** between you and your subscribers
@@ -45,12 +45,12 @@ For simple step-by-step directions on how to set up the Feeds for YouTube plugin
 While other YouTube plugins load a low-performing iframe when your page loads to show YouTube videos, Feeds for YouTube uses the YouTube API to retrieve and display your videos. This means your YouTube videos are loaded lightning fast and won't slow down your visitor's experience with your website. But we don't stop there. Our YouTube plugin also waits until a site visitor interacts with your YouTube feed before adding the video player to the page. This results in visitors loving your site and encouraging them to stick around longer.
 
 ### Feedback or Support
-Customer support is a huge deal to us. We pride ourselves on always providing quick, effective, and courteous support to all of our users. If you're having an issue with our plugin then just let us know and we'll be there to help as soon as possible.  You can either open a ticket on the support forum on [WordPress.org](https://wordpress.org/support/plugin/feeds-for-youtube/ "YouTube Feed Free support forum"), or directly on [our website](https://smashballoon.com/youtube-feed/support/ "YouTube Feed website support form").
+Customer support is a huge deal to us. We pride ourselves on always providing quick, effective, and courteous support to all of our users. If you're having an issue with our plugin then just let us know and we'll be there to help as soon as possible.  You can either open a ticket on the support forum on [WordPress.org](https://wordpress.org/support/plugin/feeds-for-youtube/ "YouTube Feed Free support forum"), or directly on [our website](https://smashballoon.com/youtube-feed/support/?utm_campaign=youtube-free&utm_source=readme&utm_medium=support "YouTube Feed website support form").
 
-If you like the plugin then please consider leaving a review, as it really helps to support the plugin. If you have an issue then please allow us to help you fix it before leaving a review. Just [let us know](https://smashballoon.com/youtube-feed/support/?utm_source=wordpress&utm_campaign=sby 'Feeds for YouTube Support') what the problem is and we'll get back to you right away.
+If you like the plugin then please consider leaving a review, as it really helps to support the plugin. If you have an issue then please allow us to help you fix it before leaving a review. Just [let us know](https://smashballoon.com/youtube-feed/support/?utm_campaign=youtube-free&utm_source=readme&utm_medium=support 'Feeds for YouTube Support') what the problem is and we'll get back to you right away.
 
 ### Pro Version
-For even more feed types and display options, consider upgrading to our [Pro version](http://smashballoon.com/youtube-feed/?utm_source=wordpress&utm_campaign=sby 'Feeds for YouTube Pro') which includes some awesome additional features to help you display your content in even more powerful ways:
+For even more feed types and display options, consider upgrading to our [Pro version](https://smashballoon.com/youtube-feed/?utm_campaign=youtube-free&utm_source=readme&utm_medium=upgrade-pro 'Feeds for YouTube Pro') which includes some awesome additional features to help you display your content in even more powerful ways:
 
 * Integrate the **YouTube Live API** to show live streaming videos on your site.
 * Display a YouTube gallery in a carousel slider
@@ -70,13 +70,13 @@ One of our main priorities has always been to make our plugins as easy as possib
 
 That's it!  You can return to the settings page to edit any feed.
 
-For full step-by-step setup directions with screenshots, see [here](https://smashballoon.com/youtube-feed/free/ "YouTube Feed Free Setup Doc").
+For full step-by-step setup directions with screenshots, see [here](https://smashballoon.com/youtube-feed/free/?utm_campaign=youtube-free&utm_source=readme&utm_medium=setup-doc "YouTube Feed Free Setup Doc").
 
 ### Who's behind this plugin?
 
 We're Smash Balloon; a fun-loving WordPress plugin development company birthed into existence in early 2013. We specialize in creating social media plugins (for Facebook, Instagram, Twitter, and YouTube) that are not only intuitive and simple to use, but also designed to integrate seamlessly into your website and allow you to display your social media content in powerful and unique ways. Over 1 million awesome people have decided to actively use our free plugins, which is an incredible honor that we don't take lightly. This compels us to try to provide the quickest and most effective customer support that we can, blowing users away with the best customer service they've ever experienced.
 
-To find out more about the team, see [here](https://smashballoon.com/about/ "Team Smash Balloon").
+To find out more about the team, see [here](https://smashballoon.com/about/?utm_campaign=youtube-free&utm_source=readme&utm_medium=about "Team Smash Balloon").
 
 == Installation ==
 1. Install the plugin either via the WordPress plugin directory, or by uploading the files to your web server (in the /wp-content/plugins/ directory).
@@ -85,7 +85,7 @@ To find out more about the team, see [here](https://smashballoon.com/about/ "Tea
 4. Use the shortcode [youtube-feed feed=1] in your page, post or widget to display your YouTube feed.
 5. You can display multiple feeds with different configurations by specifying the necessary parameters directly in the shortcode: [youtube-feed feed=2].
 
-For simple step-by-step directions on how to set up the plugin please refer to our [setup guide](http://smashballoon.com/youtube-feed/free/?utm_source=wordpress&utm_campaign=sby 'Feeds for YouTube setup guide').
+For simple step-by-step directions on how to set up the plugin please refer to our [setup guide](https://smashballoon.com/youtube-feed/free/?utm_campaign=youtube-free&utm_source=readme&utm_medium=setup-guide 'Feeds for YouTube setup guide').
 
 = Setting up the plugin =
 
@@ -167,6 +167,9 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.6.6 =
+* Fix: Additional plugin hardening.
 
 = 2.6.5 =
 * Fix: Elementor CSS no longer double-prefixes, preventing 301 redirects on preview URLs.
