@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact,PSR12.Classes.OpeningBraceSpace.Found,PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace,PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace,PSR12.Operators.OperatorSpacing.NoSpaceAfter,PSR12.Operators.OperatorSpacing.NoSpaceBefore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.CloseBraceAfterBody,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Methods.FunctionCallSignature.Indent,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,PSR2.Methods.FunctionClosingBrace.SpacingBeforeClose,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.FunctionComment.MissingParamTag,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Commenting.VariableComment.Missing,Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine,Squiz.WhiteSpace.SuperfluousWhitespace.EndLine
 
 namespace SmashBalloon\YouTubeFeed\Blocks;
 
@@ -7,6 +7,7 @@ use Smashballoon\Customizer\Feed_Builder;
 use SmashBalloon\YouTubeFeed\Helpers\Util;
 use SmashBalloon\YouTubeFeed\Services\AssetsService;
 use SmashBalloon\YouTubeFeed\Services\LicenseNotification;
+use SmashBalloon\YouTubeFeed\SBY_Settings;
 use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Blocks\RecommendedBlocks;
 
 /**
@@ -44,6 +45,10 @@ class SBY_Blocks {
 	 */
 	public function load() {
 		$this->hooks();
+
+		$modern_block = new SBY_Modern_Feed_Block();
+		$modern_block->register_hooks();
+
 		$recommended_blocks = new RecommendedBlocks();
 		$recommended_blocks->setup();
 	}
@@ -55,7 +60,8 @@ class SBY_Blocks {
 	 */
 	protected function hooks() {
 		add_action( 'init', array( $this, 'register_block' ) );
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ), SBY_Modern_Feed_Block::EDITOR_ASSETS_PRIORITY );
+		add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_content_assets' ) );
 	}
 
 	/**
@@ -89,10 +95,25 @@ class SBY_Blocks {
 		register_block_type(
 			'sby/sby-feed-block',
 			array(
+				'api_version'     => 3,
 				'attributes'      => $attributes,
 				'render_callback' => array( $this, 'get_feed_html' ),
+				'supports'        => array( 'inserter' => false ),
 			)
 		);
+	}
+
+	/**
+	 * Enqueue feed frontend assets so the legacy block preview renders inside
+	 * the WP 6.7+ iframe block editor. Mirrors SB_Feed_Block::enqueue_block_content_assets().
+	 *
+	 * @since 2.7.0
+	 */
+	public function enqueue_block_content_assets() {
+		if ( ! is_admin() ) {
+			return;
+		}
+		do_action( 'sby_enqueue_scripts', true );
 	}
 
 	/**
@@ -101,8 +122,6 @@ class SBY_Blocks {
 	 * @since 1.7.1
 	 */
 	public function enqueue_block_editor_assets() {
-		do_action('sby_enqueue_scripts', true);
-
 		wp_enqueue_style( 'sby-blocks-styles' );
 		wp_enqueue_script(
 			'sby-feed-block',
@@ -126,14 +145,38 @@ class SBY_Blocks {
 			$shortcode_settings = 'feed="' . (int) $_GET['sby_wizard'] . '"';
 		}
 
+		// Mirror the data that AssetsService::sby_scripts_enqueue() localizes onto
+		// the sby_scripts handle. The editor JS injects sb-youtube.js into the
+		// WP 7.0 iframe head and needs sbyOptions defined inside the iframe
+		// before that script runs.
+		$database_settings   = sby_get_database_settings();
+		$sby_global_settings = ( new SBY_Settings( [], $database_settings ) )->get_settings();
+		$sby_options         = array(
+			'isAdmin'                   => is_admin(),
+			'adminAjaxUrl'              => admin_url( 'admin-ajax.php' ),
+			'placeholder'               => trailingslashit( SBY_PLUGIN_URL ) . 'img/placeholder.png',
+			'placeholderNarrow'         => trailingslashit( SBY_PLUGIN_URL ) . 'img/placeholder-narrow.png',
+			'lightboxPlaceholder'       => trailingslashit( SBY_PLUGIN_URL ) . 'img/lightbox-placeholder.png',
+			'lightboxPlaceholderNarrow' => trailingslashit( SBY_PLUGIN_URL ) . 'img/lightbox-placeholder-narrow.png',
+			'autoplay'                  => isset( $sby_global_settings['playvideo'] ) && $sby_global_settings['playvideo'] === 'automatically',
+			'semiEagerload'             => isset( $sby_global_settings['eagerload'] ) ? $sby_global_settings['eagerload'] : false,
+			'eagerload'                 => false,
+			'nonce'                     => wp_create_nonce( 'sby_nonce' ),
+			'isPro'                     => sby_is_pro(),
+			'isCustomizer'              => \sby_doing_customizer( $sby_global_settings ),
+		);
+
 		wp_localize_script(
 			'sby-feed-block',
 			'sby_block_editor',
 			array(
-				'wpnonce'  => wp_create_nonce( 'sby-blocks' ),
-				'canShowFeed' => true,
-				'shortcodeSettings'    => $shortcode_settings,
-				'i18n'     => $i18n,
+				'wpnonce'           => wp_create_nonce( 'sby-blocks' ),
+				'canShowFeed'       => true,
+				'shortcodeSettings' => $shortcode_settings,
+				'i18n'              => $i18n,
+				'iframeScriptUrl'   => Util::getPluginAssets( 'js', 'sb-youtube' ),
+				'jqueryUrl'         => includes_url( 'js/jquery/jquery.min.js' ),
+				'sbyOptions'        => $sby_options,
 			)
 		);
 	}

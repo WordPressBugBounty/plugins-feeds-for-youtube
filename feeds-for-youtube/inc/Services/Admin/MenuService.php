@@ -70,6 +70,7 @@ class MenuService extends ServiceProvider {
                 '<span class="sby_get_cff">' . __( 'Facebook Feed', 'feeds-for-youtube' ) . '</span>',
                 'manage_options',
                 'admin.php?page=sby-feed-builder&tab=more',
+                '',
                 5
             );
 		}
@@ -81,6 +82,7 @@ class MenuService extends ServiceProvider {
                 '<span class="sby_get_sbi">' . __( 'Instagram Feed', 'feeds-for-youtube' ) . '</span>',
                 'manage_options',
                 'admin.php?page=sby-feed-builder&tab=more',
+                '',
                 6
             );
 		}
@@ -92,6 +94,7 @@ class MenuService extends ServiceProvider {
                 '<span class="sby_get_ctf">' . __( 'Twitter Feed', 'feeds-for-youtube' ) . '</span>',
                 'manage_options',
                 'admin.php?page=sby-feed-builder&tab=more',
+                '',
                 7
             );
 		}
@@ -103,6 +106,7 @@ class MenuService extends ServiceProvider {
                 '<span class="sby_get_sbtt">' . __( 'Tiktok Feed', 'feeds-for-youtube' ) . '</span>',
                 'manage_options',
                 'admin.php?page=sby-feed-builder&tab=more',
+                '',
                 8
             );
 		}
@@ -114,6 +118,7 @@ class MenuService extends ServiceProvider {
                 '<span class="sby_get_sbr">' . __( 'Reviews Feed', 'feeds-for-youtube' ) . '</span>',
                 'manage_options',
                 'admin.php?page=sby-feed-builder&tab=more',
+                '',
                 9
             );
 		}

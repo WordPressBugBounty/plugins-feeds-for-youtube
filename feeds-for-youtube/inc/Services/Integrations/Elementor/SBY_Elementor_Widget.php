@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:disable Generic.ControlStructures.InlineControlStructure.NotAllowed,Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed,PSR12.Classes.OpeningBraceSpace.Found,PSR12.Files.ImportStatement.LeadingSlash,PSR12.Operators.OperatorSpacing.NoSpaceAfter,PSR12.Operators.OperatorSpacing.NoSpaceBefore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.CloseBraceAfterBody,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Files.EndFileNewline.NoneFound,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.BlockComment.WrongEnd,Squiz.Commenting.ClassComment.WrongStyle,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine,WordPress.Security.EscapeOutput.OutputNotEscaped
 
 namespace SmashBalloon\YouTubeFeed\Services\Integrations\Elementor;
 
@@ -23,6 +23,12 @@ class SBY_Elementor_Widget extends Widget_Base {
     }
     public function get_categories() {
         return array('smash-balloon');
+    }
+    public function show_in_panel() {
+        return false;
+    }
+    public function hide_on_search() {
+        return true;
     }
     public function get_script_depends() {
         return [

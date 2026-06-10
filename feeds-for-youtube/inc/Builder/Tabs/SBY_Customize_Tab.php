@@ -610,8 +610,7 @@ class SBY_Customize_Tab {
 				'condition'   => array( 'showheader' => array( true ) ),
 
 				'label'       => __( 'Show Bio Text', 'feeds-for-youtube' ),
-				'tooltip'     => __( 'Use your own custom bio text in the feed header. This is automatically retrieved from Instagram for Business accounts, but it not available for Personal accounts.
-', 'feeds-for-youtube' ),
+				'tooltip'     => __( 'Use your own custom bio text in the feed header. This is automatically retrieved from Instagram for Business accounts, but it is not available for Personal accounts.', 'feeds-for-youtube' ),
 				'stacked'     => 'true',
 				'labelStrong' => 'true',
 				'options'     => array(
@@ -730,7 +729,7 @@ class SBY_Customize_Tab {
 				'conditionHide' => true,
 				'stacked'       => 'true',
 				'heading'       => __( 'Resolution', 'feeds-for-youtube' ),
-				'description'   => __( 'By default we auto-detect image width and fetch a optimal resolution.', 'feeds-for-youtube' ),
+				'description'   => __( 'By default we auto-detect image width and fetch an optimal resolution.', 'feeds-for-youtube' ),
 				'options'       => array(
 					'auto'   => __( 'Auto-detect (recommended)', 'feeds-for-youtube' ),
 					'thumb'  => __( 'Thumbnail (150x150)', 'feeds-for-youtube' ),

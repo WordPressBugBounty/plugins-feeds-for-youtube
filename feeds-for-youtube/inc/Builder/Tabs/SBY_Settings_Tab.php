@@ -86,7 +86,7 @@ class SBY_Settings_Tab {
 				'moderationTypes' => array(
 					'allow' => array(
 						'label'       => __( 'Allow List', 'feeds-for-youtube' ),
-						'description' => __( 'Hides post by default so you can select the ones you want to show', 'feeds-for-youtube' ),
+						'description' => __( 'Hides posts by default so you can select the ones you want to show', 'feeds-for-youtube' ),
 					),
 					'block' => array(
 						'label'       => __( 'Block List', 'feeds-for-youtube' ),

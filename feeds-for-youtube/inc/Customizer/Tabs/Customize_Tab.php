@@ -782,7 +782,7 @@ class Customize_Tab extends Tab {
 				'id' 				=> 'video_styling_title',
 				'separator'			=> 'none',
 				'heading' 			=> __( 'Video Title', 'feeds-for-youtube' ),
-				'description' 		=> __( 'The video title that\'s shown at the bottom of each video thumbnails', 'feeds-for-youtube' ),
+				'description' => __( 'The video title that\'s shown at the bottom of each video thumbnail', 'feeds-for-youtube' ),
 				'controls'			=> Styling_Tab::video_styling_title(),
 			]
 		];
@@ -817,7 +817,7 @@ class Customize_Tab extends Tab {
 				'id' 				=> 'user_styling_title',
 				'separator'			=> 'none',
 				'heading' 			=> __( 'Username', 'feeds-for-youtube' ),
-				'description' 		=> __( 'The username that\'s shown at the bottom of each video thumbnails', 'feeds-for-youtube' ),
+				'description' => __( 'The username that\'s shown at the bottom of each video thumbnail', 'feeds-for-youtube' ),
 				'controls'			=> Styling_Tab::user_styling_title(),
 			]
 		];
@@ -907,7 +907,7 @@ class Customize_Tab extends Tab {
 				'id' 				=> 'views_styling_title',
 				'separator'			=> 'none',
 				'heading' 			=> __( 'Views Actions', 'feeds-for-youtube' ),
-				'description' 		=> __( 'Video views that\'s shown below the video thumbnails', 'feeds-for-youtube' ),
+				'description' => __( 'Video views that are shown below the video thumbnails', 'feeds-for-youtube' ),
 				'controls'			=> Styling_Tab::views_styling_title(),
 			]
 		];

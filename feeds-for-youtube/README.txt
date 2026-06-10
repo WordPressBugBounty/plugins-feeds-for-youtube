@@ -5,8 +5,8 @@ Support Website: http://smashballoon/youtube-feed/
 Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
-Tested up to: 6.9
-Stable tag: 2.6.6
+Tested up to: 7.0
+Stable tag: 2.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,17 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.7.0 =
+* New: Added a modern Gutenberg block for the YouTube feed. Existing feeds using the legacy block continue to render without reconfiguration.
+* New: WPConsent integration for GDPR cookie consent compliance, including a GDPR step in the onboarding wizard.
+* New: Added a Help widget for in-app access to documentation and support.
+* Tweak: Compatibility with WP 7.
+* Tweak: Corrected typos and grammar in plugin UI strings.
+* Fix: Feed blocks now render a live preview correctly inside the WP 7.0+ iframed block editor.
+* Fix: Setup wizard tooltips now display correctly in the iframed block editor.
+* Fix: Legacy Elementor widgets are hidden from the element search, and the widget title is now translatable.
+* Fix: Block preview now uses a limited query to prevent unintended data exposure.
 
 = 2.6.6 =
 * Fix: Additional plugin hardening.

@@ -166,7 +166,7 @@ class SBY_Feed_Builder
 							'toolTip'               => __('What are Legacy Feeds?', 'feeds-for-youtube'),
 							'toolTipExpanded'       => array(
 								__('Legacy feeds are older feeds from before the version 6 update. You can edit settings for these feeds by using the "Settings" button to the right. These settings will apply to all legacy feeds, just like the settings before version 6, and work in the same way that they used to.', 'feeds-for-youtube'),
-								__('You can also create a new feed, which will now have it\'s own individual settings. Modifying settings for new feeds will not affect other feeds.', 'feeds-for-youtube'),
+								__( 'You can also create a new feed, which will now have its own individual settings. Modifying settings for new feeds will not affect other feeds.', 'feeds-for-youtube' ),
 							),
 							'toolTipExpandedAction' => array(
 								__('Legacy feeds represent shortcodes of old feeds found on your website before <br/>the version 6 update.', 'feeds-for-youtube'),
@@ -506,7 +506,7 @@ class SBY_Feed_Builder
 			'andMuchMore'                       => __('And Much More!', 'feeds-for-youtube'),
 			'sbiFreeCTAFeatures'                => array(
 				__('Filter posts', 'feeds-for-youtube'),
-				__('Popup photo/video lighbox', 'feeds-for-youtube'),
+				__( 'Popup photo/video lightbox', 'feeds-for-youtube' ),
 				__('30 day money back guarantee', 'feeds-for-youtube'),
 				__('Multiple post layout options', 'feeds-for-youtube'),
 				__('Video player (HD, 360, Live)', 'feeds-for-youtube'),
@@ -533,7 +533,7 @@ class SBY_Feed_Builder
 		return array(
 			'mainHeading'               => __('Select one or more sources', 'feeds-for-youtube'),
 			'description'               => __('Sources are Instagram accounts your feed will display content from', 'feeds-for-youtube'),
-			'emptySourceDescription'    => __('Looks like you have not added any source.<br/>Use “Add Source” to add a new one.', 'feeds-for-youtube'),
+			'emptySourceDescription'    => __( 'Looks like you have not added any sources.<br/>Use “Add Source” to add a new one.', 'feeds-for-youtube' ),
 			'mainHashtagHeading'        => __('Enter Public Hashtags', 'feeds-for-youtube'),
 			'hashtagDescription'        => __('Add one or more hashtags separated by comma', 'feeds-for-youtube'),
 			'hashtagGetBy'              => __('Fetch posts that are', 'feeds-for-youtube'),
@@ -593,7 +593,7 @@ class SBY_Feed_Builder
 				'connect'                    => __('Connect', 'feeds-for-youtube'),
 				'enterEventToken'            => __('Enter Events Access Token', 'feeds-for-youtube'),
 				'enterEventTokenDescription' => sprintf(__('Due to restrictions by Facebook, you need to create a Facebook app and then paste that app Access Token here. We have a guide to help you with just that, which you can read %1$shere%2$s', 'feeds-for-youtube'), '<a href="https://smashballoon.com/instagram-feed/page-token/?utm_campaign=' . sby_utm_campaign() . '&utm_source=builder&utm_medium=page-token" target="_blank" rel="noopener">', '</a>'),
-				'alreadyHave'                => __('Already have a API Token and Access Key for your account?', 'feeds-for-youtube'),
+				'alreadyHave'                => __( 'Already have an API Token and Access Key for your account?', 'feeds-for-youtube' ),
 				'addManuallyLink'            => __('Add Account Manually', 'feeds-for-youtube'),
 				'selectAccount'              => __('Select an Instagram Account', 'feeds-for-youtube'),
 				'showing'                    => __('Showing', 'feeds-for-youtube'),
@@ -801,7 +801,7 @@ class SBY_Feed_Builder
 				'displayName'         => __('Facebook', 'feeds-for-youtube'),
 				'name'                => __('Facebook Feed', 'feeds-for-youtube'),
 				'author'              => __('By Smash Balloon', 'feeds-for-youtube'),
-				'description'         => __('To display a Facebook feed, our Facebook plugin is required. </br> It provides a clean and beautiful way to add your Facebook posts to your website. Grab your visitors attention and keep them engaged with your site longer.', 'feeds-for-youtube'),
+				'description'         => __( 'To display a Facebook feed, our Facebook plugin is required. </br> It provides a clean and beautiful way to add your Facebook posts to your website. Grab your visitors\' attention and keep them engaged with your site longer.', 'feeds-for-youtube' ),
 				'dashboard_permalink' => admin_url('admin.php?page=cff-feed-builder'),
 				'svgIcon'             => '<svg viewBox="0 0 14 15"  width="36" height="36"><path d="M7.00016 0.860001C3.3335 0.860001 0.333496 3.85333 0.333496 7.54C0.333496 10.8733 2.7735 13.64 5.96016 14.14V9.47333H4.26683V7.54H5.96016V6.06667C5.96016 4.39333 6.9535 3.47333 8.48016 3.47333C9.20683 3.47333 9.96683 3.6 9.96683 3.6V5.24667H9.12683C8.30016 5.24667 8.04016 5.76 8.04016 6.28667V7.54H9.8935L9.5935 9.47333H8.04016V14.14C9.61112 13.8919 11.0416 13.0903 12.0734 11.88C13.1053 10.6697 13.6704 9.13043 13.6668 7.54C13.6668 3.85333 10.6668 0.860001 7.00016 0.860001Z" fill="rgb(0, 107, 250)"/></svg>',
 				'installed'           => $is_facebook_installed,
@@ -825,7 +825,7 @@ class SBY_Feed_Builder
 				'displayName'         => __('YouTube', 'feeds-for-youtube'),
 				'name'                => __('YouTube Feeds', 'feeds-for-youtube'),
 				'author'              => __('By Smash Balloon', 'feeds-for-youtube'),
-				'description'         => __('To display a YouTube feed, our YouTube plugin is required. It provides a simple yet powerful way to display videos from YouTube on your website, Increasing engagement with your channel while keeping visitors on your website.', 'feeds-for-youtube'),
+				'description'         => __( 'To display a YouTube feed, our YouTube plugin is required. It provides a simple yet powerful way to display videos from YouTube on your website, increasing engagement with your channel while keeping visitors on your website.', 'feeds-for-youtube' ),
 				'dashboard_permalink' => admin_url('admin.php?page=sby-feed-builder'),
 				'svgIcon'             => '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 22.5L22.785 18L15 13.5V22.5ZM32.34 10.755C32.535 11.46 32.67 12.405 32.76 13.605C32.865 14.805 32.91 15.84 32.91 16.74L33 18C33 21.285 32.76 23.7 32.34 25.245C31.965 26.595 31.095 27.465 29.745 27.84C29.04 28.035 27.75 28.17 25.77 28.26C23.82 28.365 22.035 28.41 20.385 28.41L18 28.5C11.715 28.5 7.8 28.26 6.255 27.84C4.905 27.465 6.035 26.595 3.66 25.245C3.465 24.54 3.33 23.595 3.24 22.395C3.135 21.195 3.09 20.16 3.09 19.26L3 18C3 14.715 3.24 12.3 3.66 10.755C6.035 9.405 4.905 8.535 6.255 8.16C6.96 7.965 8.25 7.83 10.23 7.74C12.18 7.635 13.965 7.59 15.615 7.59L18 7.5C24.285 7.5 28.2 7.74 29.745 8.16C31.095 8.535 31.965 9.405 32.34 10.755Z" fill="#EB2121"/></svg>',
 				'installed'           => $is_youtube_installed,
@@ -1174,15 +1174,15 @@ class SBY_Feed_Builder
 				'postType'            => __('Post Type', 'feeds-for-youtube'),
 				'boxed'               => __('boxed', 'feeds-for-youtube'),
 				'regular'             => __('Regular', 'feeds-for-youtube'),
-				'indvidualProperties' => __('Indvidual Properties', 'feeds-for-youtube'),
+				'indvidualProperties' => __( 'Individual Properties', 'feeds-for-youtube' ),
 				'backgroundColor'     => __('Background Color', 'feeds-for-youtube'),
 				'borderRadius'        => __('Border Radius', 'feeds-for-youtube'),
 				'boxShadow'           => __('Box Shadow', 'feeds-for-youtube'),
 			),
 			'shoppableFeedScreen' => array(
 				'heading1'     => __('Make your Instagram Feed Shoppable', 'feeds-for-youtube'),
-				'description1' => __('This feature links the post to the one specificed in your caption.<br/><br/>Don’t want to add links to the caption? You can add links manually to each post.<br/><br/>Enable it to get started.', 'feeds-for-youtube'),
-				'heading2'     => __('Tap “Add” or “Update” on an<br/>image to add/update it’s URL', 'feeds-for-youtube'),
+				'description1' => __( 'This feature links the post to the one specified in your caption.<br/><br/>Don’t want to add links to the caption? You can add links manually to each post.<br/><br/>Enable it to get started.', 'feeds-for-youtube' ),
+				'heading2'     => __( 'Tap “Add” or “Update” on an<br/>image to add/update its URL', 'feeds-for-youtube' ),
 
 			),
 		);

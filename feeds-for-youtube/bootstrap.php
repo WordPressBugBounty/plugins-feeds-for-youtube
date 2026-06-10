@@ -62,10 +62,23 @@ if (class_exists('Dotenv\Dotenv') && method_exists('Dotenv\Dotenv', 'createImmut
 if (class_exists('\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Feedback\FeedbackManager')) {
     $sby_is_pro = defined('SBY_PRO') && SBY_PRO;
     \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Feedback\FeedbackManager::init([
-        'plugin_slug'    => $sby_is_pro ? 'feeds-for-youtube-pro' : 'feeds-for-youtube',
-        'plugin_name'    => $sby_is_pro ? 'Smash Balloon Feeds for YouTube Pro' : 'Smash Balloon Feeds for YouTube',
-        'plugin_version' => defined('SBYVER') ? SBYVER : '',
-        'plugin_file'    => $sby_is_pro ? dirname(__FILE__) . '/youtube-feed-pro.php' : dirname(__FILE__) . '/youtube-feed.php',
-        'support_url'    => 'https://smashballoon.com/support/?utm_campaign=' . ( $sby_is_pro ? 'youtube-pro' : 'youtube-free' ) . '&utm_source=support&utm_medium=support',
+        'plugin_slug'        => $sby_is_pro ? 'feeds-for-youtube-pro' : 'feeds-for-youtube',
+        'plugin_name'        => $sby_is_pro ? 'Smash Balloon Feeds for YouTube Pro' : 'Smash Balloon Feeds for YouTube',
+        'plugin_version'     => defined('SBYVER') ? SBYVER : '',
+        'plugin_file'        => $sby_is_pro ? dirname(__FILE__) . '/youtube-feed-pro.php' : dirname(__FILE__) . '/youtube-feed.php',
+        'support_url'        => 'https://smashballoon.com/support/?utm_campaign=' . ( $sby_is_pro ? 'youtube-pro' : 'youtube-free' ) . '&utm_source=support&utm_medium=support',
+        'enable_help_widget' => true,
+        'help_url'           => 'https://smashballoon.com/docs/youtube/',
+        // Settings/Help/About/Single-Videos/Setup pages use the SBY_SLUG
+        // ('youtube-feed') prefix, which isn't in the Help Widget's built-in
+        // slug→prefix map (only 'sb-youtube'/'sby'/'feeds-for-youtube' are).
+        // Without these the FAB only renders on the 'sby-feed-builder' page.
+        'help_widget_screens' => [
+            'youtube-feed-settings',
+            'youtube-feed-support',
+            'youtube-feed-about',
+            'youtube-feed-single-videos',
+            'youtube-feed-setup',
+        ],
     ]);
 }

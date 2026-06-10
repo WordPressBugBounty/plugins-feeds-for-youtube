@@ -40,7 +40,6 @@ class AdminAjaxService extends ServiceProvider {
 		// Check nonce for security
 		check_ajax_referer( 'sby_nonce', 'nonce' );
 
-
 		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sby' ) === false ) {
 			die( 'invalid feed ID');
 		}
@@ -309,7 +308,7 @@ class AdminAjaxService extends ServiceProvider {
 	 * Posts that need resized images are processed after being sent to the server
 	 * using AJAX
 	 *
-	 * @return string
+	 * @return void
 	 */
 	public function sby_process_wp_posts() {
 		// Check nonce for security
@@ -584,7 +583,7 @@ class AdminAjaxService extends ServiceProvider {
 		}
 		$license_key = Util::get_license_key();
 		$upgrade_url = sprintf('https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?license_key=%s&upgrade=true&utm_campaign=youtube-pro&utm_source=feed-type&utm_medium=upgrade-link&utm_content=upgrade', $license_key);
-		$heading = __('Convert YouTube videos to Wordpress Posts with Pro', 'feeds-for-youtube');
+		$heading = __( 'Convert YouTube videos to WordPress Posts with Pro', 'feeds-for-youtube' );
 		$youtube_utm_campaign = 'youtube-pro';
 
 		if (!\sby_is_pro()) {
@@ -620,7 +619,7 @@ class AdminAjaxService extends ServiceProvider {
 					<svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<rect width="4" height="4" fill="#0096CC"></rect>
 					</svg>
-					<span class="sb-small-p">Covert videos to WP Posts</span>
+					<span class="sb-small-p">Convert videos to WP Posts</span>
 					</div>
 					<div class="ctf-extension-single-bullet">
 					<svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">

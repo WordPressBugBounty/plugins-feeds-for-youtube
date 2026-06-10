@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:disable Generic.ControlStructures.InlineControlStructure.NotAllowed,PSR12.Classes.OpeningBraceSpace.Found,PSR12.Files.ImportStatement.LeadingSlash,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.ClassComment.WrongStyle,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
 
 namespace SmashBalloon\YouTubeFeed\Services\Integrations\Elementor;
 
@@ -21,6 +21,12 @@ class SBI_Elementor_Widget extends Widget_Base {
 	}
 	public function get_categories() {
 		return array('smash-balloon');
+	}
+	public function show_in_panel() {
+		return false;
+	}
+	public function hide_on_search() {
+		return true;
 	}
 	public function get_script_depends() {
 		return [

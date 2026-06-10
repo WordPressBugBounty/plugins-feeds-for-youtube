@@ -243,7 +243,7 @@ abstract class SBY_Admin_Abstract {
 			'shortcode' => array(
 				'key' => 'layout',
 				'example' => 'list',
-				'description' => __( 'How your posts are display visually.', 'feeds-for-youtube' ),
+				'description' => __( 'How your posts are displayed visually.', 'feeds-for-youtube' ),
 				'display_section' => 'layout'
 			)
 		);

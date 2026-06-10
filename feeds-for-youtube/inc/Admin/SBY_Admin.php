@@ -631,7 +631,7 @@ class SBY_Admin extends SBY_Admin_Abstract {
 			'shortcode' => array(
 				'key' => 'buttontext',
 				'example' => '"More Videos"',
-				'description' => __( 'The text that appers on the "Load More" button.', 'feeds-for-youtube' ),
+				'description' => __( 'The text that appears on the "Load More" button.', 'feeds-for-youtube' ),
 				'display_section' => 'button'
 			)
 		);
@@ -700,7 +700,7 @@ class SBY_Admin extends SBY_Admin_Abstract {
 			'shortcode' => array(
 				'key' => 'subscribetext',
 				'example' => '"Subscribe to My Channel"',
-				'description' => __( 'The text that appers on the "Subscribe" button.', 'feeds-for-youtube' ),
+				'description' => __( 'The text that appears on the "Subscribe" button.', 'feeds-for-youtube' ),
 				'display_section' => 'subscribe'
 			)
 		);

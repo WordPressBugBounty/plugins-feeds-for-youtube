@@ -6,6 +6,7 @@ use Smashballoon\Customizer\Container;
 use Smashballoon\Customizer\Feed_Builder;
 use SmashBalloon\YouTubeFeed\Services\AdminAjaxService;
 use SmashBalloon\YouTubeFeed\Helpers\Util;
+use SmashBalloon\YouTubeFeed\SBY_GDPR_Integrations;
 
 class SetupPage extends BaseSettingPage
 {
@@ -51,6 +52,15 @@ class SetupPage extends BaseSettingPage
 	public function filter_settings_object($settings)
 	{
 		$settings['onboardWizardYoutubeAccountConnectURL'] =  Feed_Builder::oauth_connet_url(admin_url('admin.php?page=youtube-feed-setup&step=2'));
+
+		$wpconsent_file = 'wpconsent-cookies-banner-privacy-suite/wpconsent.php';
+		$settings['wpconsentScreen'] = [
+			'isPluginInstalled' => file_exists( WP_PLUGIN_DIR . '/' . $wpconsent_file ),
+			'isPluginActive'    => is_plugin_active( $wpconsent_file ),
+			'pluginFile'        => $wpconsent_file,
+			'downloadUrl'       => 'https://downloads.wordpress.org/plugin/wpconsent-cookies-banner-privacy-suite.zip',
+		];
+		$settings['activeGdprPlugin'] = SBY_GDPR_Integrations::gdpr_plugins_active();
 
 		return $settings;
 	}
@@ -104,11 +114,11 @@ class SetupPage extends BaseSettingPage
 
 		// Check for file system permissions.
 		if ( false === $creds ) {
-			wp_send_json_error( $error );
+			return false;
 		}
 
 		if ( ! WP_Filesystem( $creds ) ) {
-			wp_send_json_error( $error );
+			return false;
 		}
 
 		/*
@@ -124,7 +134,7 @@ class SetupPage extends BaseSettingPage
 
 		// Error check.
 		if ( ! method_exists( $installer, 'install' ) || empty( $plugin_url ) ) {
-			wp_send_json_error( $error );
+			return false;
 		}
 
 		$installer->install( esc_url_raw( wp_unslash( $plugin_url ) ) );
@@ -171,9 +181,13 @@ class SetupPage extends BaseSettingPage
 
 			if( $key && 'plugins' === $key && !empty($onboarding_data[$key]) && current_user_can( 'install_plugins' ) ){
 				foreach ($onboarding_data[$key] as $single) {
-
-					if(!empty($single['url']) && !empty($single['slug'])) {
+					if ( ! empty( $single['file'] ) && file_exists( WP_PLUGIN_DIR . '/' . $single['file'] ) ) {
+						activate_plugin( $single['file'] );
+					} elseif(!empty($single['url']) && !empty($single['slug'])) {
 						@self::install_single_plugin($single['url']);
+					}
+
+					if ( ! empty( $single['slug'] ) ) {
 						$this->disable_installed_plugins_redirect($single['slug']);
 					}
 				}
@@ -184,6 +198,7 @@ class SetupPage extends BaseSettingPage
 		// If in the future we need to support settings.
 		//update_option( 'sby_settings', $sby_settings );
 
+		wp_send_json_success();
 	}
 
 
@@ -242,6 +257,13 @@ class SetupPage extends BaseSettingPage
 		//PushEngage
 		if( 'pushengage' === $plugin_slug ) {
 			delete_transient( 'pushengage_activation_redirect' );
+		}
+
+		//WPConsent
+		if( 'wpconsent' === $plugin_slug ) {
+			delete_transient( 'wpconsent_activation_redirect' );
+			delete_transient( 'wpconsent_onboarding_redirect' );
+			update_option( 'wpconsent_activated', array( 'wpconsent' => time(), 'version' => '0' ) );
 		}
 
 		//WP SMTP

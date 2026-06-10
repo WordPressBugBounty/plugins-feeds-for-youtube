@@ -54,7 +54,7 @@ function sby_admin_init() {
 			'note' => __( 'Eg: Channel ID or User Name', 'feeds-for-youtube' ),
 			'example' => 'smashballoon',
 			'description' => __( 'Display videos from a YouTube channel (channel)', 'feeds-for-youtube' ),
-			'tooltip' => '<p>' . __( 'Enter any channel ID or user name to display all of an accounts latest videos starting with the most recently published.', 'feeds-for-youtube' ) . '</p><p><ul>
+			'tooltip' => '<p>' . __( 'Enter any channel ID or user name to display all of an account\'s latest videos starting with the most recently published.', 'feeds-for-youtube' ) . '</p><p><ul>
                                     <li><b>' . __( 'Channel ID or User Name', 'feeds-for-youtube' ).'</b><br>
                                         ' . __( 'You can find the ID or User Name of your YouTube Channel from the URL. In each URL format, the text you need to use is highlighted below:', 'feeds-for-youtube' ).'<br><br>
                                     ' . __( 'URL Format 1:', 'feeds-for-youtube' ).' <code>https://www.youtube.com/channel/<span class="sbspf-highlight">UC1a2b3c4D5F6g7i8j9k</span></code>
@@ -212,7 +212,7 @@ function sby_admin_init() {
 			'slug' => 'list',
 			'label' => __( 'List', 'feeds-for-youtube' ),
 			'image' => 'img/list.png',
-			'note' => __( 'A single columns of videos that play when clicked.', 'feeds-for-youtube' ),
+			'note' => __( 'A single column of videos that play when clicked.', 'feeds-for-youtube' ),
 		),
 		array(
 			'slug' => 'carousel',

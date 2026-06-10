@@ -88,7 +88,7 @@ class AboutPage extends BaseSettingPage {
 			)
 		);
 
-		$creds = request_filesystem_credentials( $url, '', false, false, null );
+		$creds = request_filesystem_credentials( $url, '', false, '', null );
 
 		// Check for file system permissions.
 		if ( false === $creds ) {
@@ -330,6 +330,16 @@ class AboutPage extends BaseSettingPage {
 	                'icon' =>  'plugin-push.png',
 	                'installed' => isset( $installed_plugins['pushengage/main.php'] ) ? true : false,
 	                'activated' => is_plugin_active('pushengage/main.php'),
+					'installs_number' => __('10 Thousand+ Installs', 'feeds-for-youtube')
+                ),
+                'wpconsent'  => array(
+	                'plugin' => 'wpconsent-cookies-banner-privacy-suite/wpconsent.php',
+	                'download_plugin' => 'https://downloads.wordpress.org/plugin/wpconsent-cookies-banner-privacy-suite.zip',
+	                'title' => __('WPConsent', 'feeds-for-youtube'),
+	                'description' => __('Detect all the plugins that use cookies and sets a consent banner in just a few clicks. Works well with Smash Balloon plugins.', 'feeds-for-youtube'),
+	                'icon' =>  'plugin-wpconsent.png',
+	                'installed' => isset( $installed_plugins['wpconsent-cookies-banner-privacy-suite/wpconsent.php'] ) ? true : false,
+	                'activated' => is_plugin_active('wpconsent-cookies-banner-privacy-suite/wpconsent.php'),
 					'installs_number' => __('10 Thousand+ Installs', 'feeds-for-youtube')
                 )
 			),

@@ -66,17 +66,17 @@
         },
         {
             "name": "php-di\/invoker",
-            "version": "2.3.4",
-            "version_normalized": "2.3.4.0",
+            "version": "2.3.7",
+            "version_normalized": "2.3.7.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/PHP-DI\/Invoker.git",
-                "reference": "33234b32dafa8eb69202f950a1fc92055ed76a86"
+                "reference": "3c1ddfdef181431fbc4be83378f6d036d59e81e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/PHP-DI\/Invoker\/zipball\/33234b32dafa8eb69202f950a1fc92055ed76a86",
-                "reference": "33234b32dafa8eb69202f950a1fc92055ed76a86",
+                "url": "https:\/\/api.github.com\/repos\/PHP-DI\/Invoker\/zipball\/3c1ddfdef181431fbc4be83378f6d036d59e81e1",
+                "reference": "3c1ddfdef181431fbc4be83378f6d036d59e81e1",
                 "shasum": ""
             },
             "require": {
@@ -86,9 +86,9 @@
             "require-dev": {
                 "athletic\/athletic": "~0.1.8",
                 "mnapoli\/hard-mode": "~0.3.0",
-                "phpunit\/phpunit": "^9.0"
+                "phpunit\/phpunit": "^9.0 || ^10 || ^11 || ^12"
             },
-            "time": "2023-09-08T09:24:21+00:00",
+            "time": "2025-08-30T10:22:22+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -112,7 +112,7 @@
             ],
             "support": {
                 "issues": "https:\/\/github.com\/PHP-DI\/Invoker\/issues",
-                "source": "https:\/\/github.com\/PHP-DI\/Invoker\/tree\/2.3.4"
+                "source": "https:\/\/github.com\/PHP-DI\/Invoker\/tree\/2.3.7"
             },
             "funding": [
                 {
@@ -270,12 +270,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:awesomemotive\/sb-common.git",
-                "reference": "77aa1314e55e645ff8c79e17b2f2f4de382facbd"
+                "reference": "7d98a252e7a338c8cd506aad5a3d862eaa4f50f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-common\/zipball\/77aa1314e55e645ff8c79e17b2f2f4de382facbd",
-                "reference": "77aa1314e55e645ff8c79e17b2f2f4de382facbd",
+                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-common\/zipball\/7d98a252e7a338c8cd506aad5a3d862eaa4f50f3",
+                "reference": "7d98a252e7a338c8cd506aad5a3d862eaa4f50f3",
                 "shasum": ""
             },
             "require": {
@@ -292,7 +292,7 @@
                 "phpcompatibility\/php-compatibility": "^9.3",
                 "squizlabs\/php_codesniffer": "^3.7"
             },
-            "time": "2026-02-11T20:26:46+00:00",
+            "time": "2026-06-04T14:48:21+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

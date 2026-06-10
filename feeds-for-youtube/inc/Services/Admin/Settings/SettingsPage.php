@@ -7,6 +7,7 @@ use Smashballoon\Customizer\Feed_Builder;
 use Smashballoon\Customizer\Feed_Saver;
 use SmashBalloon\YouTubeFeed\Helpers\Util;
 use SmashBalloon\YouTubeFeed\Pro\SBY_CPT;
+use SmashBalloon\YouTubeFeed\SBY_GDPR_Integrations;
 use SmashBalloon\YouTubeFeed\SBY_Settings;
 
 class SettingsPage extends BaseSettingPage {
@@ -39,6 +40,8 @@ class SettingsPage extends BaseSettingPage {
 		parent::register();
 
 		add_action( 'wp_ajax_sby_update_settings', [ $this, 'handle_settings_update' ] );
+		add_action( 'wp_ajax_sby_install_wpconsent', [ $this, 'ajax_install_wpconsent' ] );
+		add_action( 'wp_ajax_sby_activate_wpconsent', [ $this, 'ajax_activate_wpconsent' ] );
 		add_filter( 'sby_localized_settings', [ $this, 'filter_settings_object' ] );
 	}
 
@@ -131,6 +134,54 @@ class SettingsPage extends BaseSettingPage {
 		return sprintf(__('<strong>Next check: %s %s (%s)</strong> - Note: Clicking "Clear All Caches" will reset this schedule.', 'feeds-for-youtube'), $date_string, strtoupper($am_pm), $interval_string);
 	}
 
+	public function ajax_install_wpconsent() {
+		Util::ajaxPreflightChecks();
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error( __( 'You do not have permission to install plugins.', 'feeds-for-youtube' ) );
+		}
+
+		$download_url = 'https://downloads.wordpress.org/plugin/wpconsent-cookies-banner-privacy-suite.zip';
+		SetupPage::install_single_plugin( $download_url );
+
+		$plugin_file = 'wpconsent-cookies-banner-privacy-suite/wpconsent.php';
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
+			delete_transient( 'wpconsent_activation_redirect' );
+			delete_transient( 'wpconsent_onboarding_redirect' );
+			update_option( 'wpconsent_activated', array( 'wpconsent' => time(), 'version' => '0' ) );
+			wp_send_json_success( array(
+				'msg'       => __( 'WPConsent installed and activated.', 'feeds-for-youtube' ),
+				'installed' => true,
+				'activated' => is_plugin_active( $plugin_file ),
+			) );
+		}
+
+		wp_send_json_error( __( 'Could not install WPConsent.', 'feeds-for-youtube' ) );
+	}
+
+	public function ajax_activate_wpconsent() {
+		Util::ajaxPreflightChecks();
+
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json_error( __( 'You do not have permission to activate plugins.', 'feeds-for-youtube' ) );
+		}
+
+		$plugin_file = 'wpconsent-cookies-banner-privacy-suite/wpconsent.php';
+		$activated = activate_plugin( $plugin_file );
+
+		if ( ! is_wp_error( $activated ) ) {
+			delete_transient( 'wpconsent_activation_redirect' );
+			delete_transient( 'wpconsent_onboarding_redirect' );
+			update_option( 'wpconsent_activated', array( 'wpconsent' => time(), 'version' => '0' ) );
+			wp_send_json_success( array(
+				'msg'       => __( 'WPConsent activated.', 'feeds-for-youtube' ),
+				'activated' => true,
+			) );
+		}
+
+		wp_send_json_error( __( 'Could not activate WPConsent.', 'feeds-for-youtube' ) );
+	}
+
 	public function filter_settings_object( $settings ) {
 		$settings['settings'] = $this->settings->get_settings();
 		$settings['sources']  = $this->feed_saver->get_source_list();
@@ -139,6 +190,15 @@ class SettingsPage extends BaseSettingPage {
 		$settings['feeds']  = Container::getInstance()->get(Feed_Builder::class)->get_feed_list();
 		$settings['next_cron'] = $this->get_next_cron_schedule();
 		$settings['connect_site_parameters'] = sby_builder_pro()->oauth_connet_parameters();
+
+		$wpconsent_file = 'wpconsent-cookies-banner-privacy-suite/wpconsent.php';
+		$settings['wpconsentScreen'] = [
+			'isPluginInstalled' => file_exists( WP_PLUGIN_DIR . '/' . $wpconsent_file ),
+			'isPluginActive'    => is_plugin_active( $wpconsent_file ),
+			'pluginFile'        => $wpconsent_file,
+			'downloadUrl'       => 'https://downloads.wordpress.org/plugin/wpconsent-cookies-banner-privacy-suite.zip',
+		];
+		$settings['activeGdprPlugin'] = SBY_GDPR_Integrations::gdpr_plugins_active();
 
 		return $settings;
 	}

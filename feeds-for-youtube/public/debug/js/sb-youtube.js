@@ -11472,6 +11472,8 @@ if (!sby_js_exists) {
                   var f, g, h, i, j, k, l;
                   var sbyArrowWidth = 100;
                   d.attr("src", c.album[b].link), f = a(e), d.width(e.width), d.height(e.height), c.options.fitImagesInViewport && (l = a(window).width(), k = a(window).height(), j = l - c.containerLeftPadding - c.containerRightPadding - 20 - sbyArrowWidth, i = k - c.containerTopPadding - c.containerBottomPadding - 150, (e.width > j || e.height > i) && (e.width / j > e.height / i ? (h = j, g = parseInt(e.height / (e.width / h), 10), d.width(h), d.height(g)) : (g = i, h = parseInt(e.width / (e.height / g), 10), d.width(h), d.height(g)))), c.sizeContainer(d.width(), d.height());
+                }, e.onerror = function () {
+                  c.showImage();
                 }, e.src = this.album[b].link, this.currentImageIndex = b;
               }, b.prototype.sizeOverlay = function () {
                 this.$overlay.width(a(window).width()).height(a(document).height());
@@ -12763,9 +12765,11 @@ if (!sby_js_exists) {
             $(this).removeAttr('data-sby-lightbox');
           });
         }
+        $(feed.el).find('.sby-comment-container').hide();
       },
       applyFullFeatures: function applyFullFeatures() {
         var feed = this;
+        $(feed.el).find('.sby-comment-container').show();
         $(feed.el).find('.sby_header_img img').attr('src', $(feed.el).find('.sby_header_img').attr('data-avatar-url'));
         if (typeof $(feed.el).find('.sby_video_thumbnail').first().attr('data-sby-lightbox') === 'undefined' && feed.settings.lightboxEnabled) {
           $(feed.el).find('.sby_video_thumbnail').each(function () {
@@ -13608,6 +13612,7 @@ if (!sby_js_exists) {
     window.addEventListener('wpconsent_consent_saved', function (event) {
       setTimeout(function () {
         $.each(window.sby.feeds, function (index) {
+          window.sby.feeds[index].settings.consentGiven = false;
           window.sby.feeds[index].afterConsentToggled();
         });
       }, 1000);
@@ -13615,6 +13620,7 @@ if (!sby_js_exists) {
     window.addEventListener('wpconsent_consent_updated', function (event) {
       setTimeout(function () {
         $.each(window.sby.feeds, function (index) {
+          window.sby.feeds[index].settings.consentGiven = false;
           window.sby.feeds[index].afterConsentToggled();
         });
       }, 1000);
@@ -14094,6 +14100,13 @@ function openComments() {
   if (!window.sbyOptions.isPro) {
     return false;
   }
+  if (window.sby && window.sby.feeds && Object.keys(window.sby.feeds).length) {
+    var feedKeys = Object.keys(window.sby.feeds);
+    var feed = window.sby.feeds[feedKeys[0]];
+    if (feed.settings.gdpr && !feed.settings.consentGiven) {
+      return false;
+    }
+  }
   var openCommentTrigger = jQuery('.sby-comments-trigger');
   openCommentTrigger.unbind('click');
   openCommentTrigger.click(function () {
@@ -14179,6 +14192,14 @@ function sbyAjax(submitData, onSuccess) {
  */
 
 function generateCommentSection(videoId, atts, target, commentCount) {
+  if (window.sby && window.sby.feeds && Object.keys(window.sby.feeds).length) {
+    var feedKeys = Object.keys(window.sby.feeds);
+    var feed = window.sby.feeds[feedKeys[0]];
+    if (feed.settings.gdpr && !feed.settings.consentGiven) {
+      toggleReadMore();
+      return;
+    }
+  }
   var submitData = {
     action: 'sby_get_comments',
     video_id: videoId,

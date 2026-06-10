@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:disable PSR12.Classes.OpeningBraceSpace.Found,PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace,PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FileComment.MissingPackageTag,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.FunctionComment.MissingParamComment,Squiz.Commenting.FunctionComment.MissingParamTag,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Commenting.InlineComment.NoSpaceBefore,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine,Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen,Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose,WordPress.DB.PreparedSQL.NotPrepared,WordPress.WP.AlternativeFunctions.json_encode_json_encode,WordPress.WP.AlternativeFunctions.unlink_unlink
 /**
  * YouTube Feeds Database
  *
@@ -361,6 +361,22 @@ class SBY_Db {
 			}
 		}
 		return $feeds_elementor;
+	}
+
+	/**
+	 * Query feeds list for the modern Elementor widget.
+	 *
+	 * Returns feed objects with id and feed_name properties,
+	 * suitable for localized script data.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return array
+	 */
+	public static function elementor_feeds_list() {
+		global $wpdb;
+		$feeds_table_name = $wpdb->prefix . 'sby_feeds';
+		return $wpdb->get_results( "SELECT id, feed_name FROM $feeds_table_name" );
 	}
 
 
