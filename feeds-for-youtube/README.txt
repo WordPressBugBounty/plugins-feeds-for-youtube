@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 2.7.0
+Stable tag: 2.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,14 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.8.0 =
+* Tweak: Improved accessibility of the YouTube feed to meet WCAG 2.x requirements, including screen reader landmarks and list semantics, headings for video titles, a visible keyboard focus indicator on the feed, and correct focus handling on Load More.
+* Tweak: The plugin now appears as "Smash Balloon YouTube Feed" on the WordPress Plugins screen so all Smash Balloon plugins group together.
+* Fix: Keyboard focus is now visible on all plugin admin screens, including Settings, About, and Support.
+* Fix: Screen readers now announce a video's title instead of its internal post ID when reading feed video links.
+* Fix: Resolved a "translation loading was triggered too early" notice caused by the custom cron schedule labels.
+* Fix: Plugin security hardening.
 
 = 2.7.0 =
 * New: Added a modern Gutenberg block for the YouTube feed. Existing feeds using the legacy block continue to render without reconfiguration.

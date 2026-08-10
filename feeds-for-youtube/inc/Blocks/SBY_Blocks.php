@@ -212,9 +212,26 @@ class SBY_Blocks {
 			}
 		}
 
+		// Parse the free-text block attribute into real shortcode atts instead of
+		// splicing it into the tag as raw text — spliced text could carry '[' and
+		// reach do_shortcode() as arbitrary extra shortcodes. Keys are limited to
+		// att-name characters and values to bracket/quote-free text so the rebuilt
+		// string cannot break out of the [youtube-feed] tag; SBY_Settings then
+		// applies the attribute allowlist like any other shortcode (SMASH-1799).
 		$shortcode_settings = str_replace(array( '[youtube-feed', ']' ), '', $shortcode_settings );
+		$parsed_atts = shortcode_parse_atts( trim( $shortcode_settings ) );
+		$parsed_atts = is_array( $parsed_atts ) ? $parsed_atts : array();
 
-		$return .= do_shortcode( '[youtube-feed '.$shortcode_settings.']' );
+		$rebuilt_settings = '';
+		foreach ( $parsed_atts as $key => $value ) {
+			if ( ! is_string( $key ) || ! preg_match( '/^[a-zA-Z0-9_-]+$/', $key ) || ! is_scalar( $value ) ) {
+				continue;
+			}
+			$value = str_replace( array( '[', ']', '"' ), '', (string) $value );
+			$rebuilt_settings .= ' ' . $key . '="' . $value . '"';
+		}
+
+		$return .= do_shortcode( '[youtube-feed' . $rebuilt_settings . ']' );
 
 		return $return;
 

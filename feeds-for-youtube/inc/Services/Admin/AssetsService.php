@@ -27,8 +27,12 @@ class AssetsService extends ServiceProvider {
 		);
 	}
 	public function sby_admin_style() {
+		// SMASH-1378: design-token mirror providing --sb-focus-ring. Enqueued
+		// as a dependency of the admin stylesheet so the :focus-visible ring
+		// in css/admin.css always has the token defined ahead of it.
+		wp_register_style( 'sby_tokens_local', trailingslashit( SBY_PLUGIN_URL ) . 'assets/tokens/sby-tokens-local.css', array(), SBYVER );
 		wp_enqueue_style( SBY_SLUG . '_admin_notices_css', Util::getPluginAssets('css', 'sby-notices'), array(), SBYVER );
-		wp_enqueue_style( SBY_SLUG . '_admin_css', Util::getPluginAssets('css', 'admin'), array(), SBYVER );
+		wp_enqueue_style( SBY_SLUG . '_admin_css', Util::getPluginAssets('css', 'admin'), array( 'sby_tokens_local' ), SBYVER );
 		if ( ! sby_is_admin_page() ) {
 			return;
 		}

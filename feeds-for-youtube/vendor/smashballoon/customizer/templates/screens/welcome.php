@@ -11,12 +11,12 @@
 	<div class="sbc-yt-wlcm-header sbc-yt-fs">
 		<h2>{{welcomeScreen.mainHeading}}</h2>
         <div class="sb-positioning-wrap" >
-            <div class="sbc-yt-btn sbc-yt-btn-new sbc-btn-orange" @click.prevent.default="switchScreen('pageScreen', 'selectFeed')">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <button type="button" class="sbc-yt-btn sbc-yt-btn-new sbc-btn-orange" @click.prevent.default="switchScreen('pageScreen', 'selectFeed')">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                     <path d="M9.66537 5.66659H5.66536V9.66659H4.33203V5.66659H0.332031V4.33325H4.33203V0.333252H5.66536V4.33325H9.66537V5.66659Z" fill="white"/>
                 </svg>
                 <span>{{genericText.addNew}}</span>
-            </div>
+            </button>
         </div>
 	</div>
 	<?php

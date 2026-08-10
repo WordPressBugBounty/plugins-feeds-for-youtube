@@ -17,8 +17,8 @@
 	include_once CUSTOMIZER_ABSPATH . 'templates/sections/popup/extensions-popup.php';
     include_once CUSTOMIZER_ABSPATH . 'templates/sections/popup/onboarding-customizer-popup.php';
 ?>
-<div class="sb-notification-ctn" :data-active="notificationElement.shown" :data-type="notificationElement.type">
-	<div class="sb-notification-icon" v-html="svgIcons[notificationElement.type+'Notification']"></div>
+<div class="sb-notification-ctn" :role="notificationElement.type === 'error' ? 'alert' : 'status'" :aria-live="notificationElement.type === 'error' ? 'assertive' : 'polite'" aria-atomic="true" :data-active="notificationElement.shown" :data-type="notificationElement.type">
+	<div class="sb-notification-icon" aria-hidden="true" v-html="svgIcons[notificationElement.type+'Notification']"></div>
 	<span class="sb-notification-text" v-html="notificationElement.text"></span>
 </div>
 
@@ -31,6 +31,12 @@
 		Loading...
 	</div>
 </div>
+
+<?php /* a11y (SMASH-1377, parity with React FullScreenLoader Announcer): the
+	visual loader is CSS display-toggled, which screen readers do not announce.
+	This persistent visually-hidden polite live region's text changes
+	empty -> "Loading…" when the loader shows, which IS announced. */ ?>
+<div class="sbc-screenreader" role="status" aria-live="polite">{{ fullScreenLoader ? '<?php echo esc_js( __( 'Loading, please wait', 'feeds-for-youtube' ) ); ?>' : '' }}</div>
 
 <sb-confirm-dialog-component
 :dialog-box.sync="dialogBox"

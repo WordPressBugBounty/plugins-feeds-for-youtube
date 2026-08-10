@@ -1,13 +1,13 @@
 <div class="sbc-api-pp-ctn sb-fs-boss sbc-popup-medium sbc-popup" v-if="viewsActive.accountAPIPopup" :class="{'account-connection-warning': showShowYTAccountWarning}">
-    <div class="sbc-api-popup sbc-pp-popup-inside">
-        <div class="sbc-pp-popup-cls" @click.prevent.default="activateView('accountAPIPopup')">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="sbc-api-popup sbc-pp-popup-inside" role="dialog" aria-modal="true" :aria-label="apiKeyPopupScreen.title" tabindex="-1">
+        <button type="button" class="sbc-pp-popup-cls" aria-label="<?php esc_attr_e('Close', 'feeds-for-youtube'); ?>" @click.prevent.default="activateView('accountAPIPopup')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                 <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#141B38"></path>
             </svg>
-        </div>
+        </button>
         <div>
             <div class="sbc-popup-header">
-                <span class="sbc-hide-api-form" @click.prevent.default="hideAPIConnectForm()" v-if="shouldShowFeedAPIBackBtn"><span v-html="svgIcons.chevronLeft"></span> Back</span>
+                <button type="button" class="sbc-hide-api-form" @click.prevent.default="hideAPIConnectForm()" v-if="shouldShowFeedAPIBackBtn"><span v-html="svgIcons.chevronLeft" aria-hidden="true"></span> Back</button>
                 <h3 v-if="!shouldShowManualConnect && !showShowYTAccountWarning">{{apiKeyPopupScreen.title}}</h3>
                 <p v-if="!shouldShowManualConnect && !showShowYTAccountWarning">{{apiKeyPopupScreen.description}}</p>
                 
@@ -26,11 +26,11 @@
                     <button class="sbc-btn sbc-btn-default sbc-popup-btn" @click.prevent.default="showYTAccountLimitations()">
                         {{apiKeyPopupScreen.btnTwo}}
                     </button>
-                    <a class="sbc-btn sbc-btn-default sbc-popup-btn sbc-manual-connect-btn" @click.prevent.default="showManualConnect()">{{apiKeyPopupScreen.btnThree}}</a>
+                    <button type="button" class="sbc-btn sbc-btn-default sbc-popup-btn sbc-manual-connect-btn" @click.prevent.default="showManualConnect()">{{apiKeyPopupScreen.btnThree}}</button>
                 </div>
                 <div class="sbc-api-form" v-if="shouldShowFeedAPIForm" :class="{'sbc-api-key-error': apiKeyError}">
                     <div>
-                        <input type="text" name="" id="" v-model="selectedFeedModel.apiKey" :placeholder="apiKeyPopupScreen.enterAPIKey">
+                        <input type="text" name="" id="" v-model="selectedFeedModel.apiKey" :aria-label="apiKeyPopupScreen.enterAPIKey" :placeholder="apiKeyPopupScreen.enterAPIKey">
                         <span class="sbc-api-key-error" v-if="apiKeyError">{{apiKeyPopupScreen.errorMsg}}</span>
                         <span class="sbc-input-error-icon" v-if="apiKeyError">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +58,7 @@
                 </div>
                 <div class="sbc-api-form" v-if="shouldShowManualConnect" :class="{'sbc-api-key-error': apiKeyError}">
                     <div>
-                        <input type="text" name="" id="" v-model="selectedFeedModel.accessToken" :placeholder="apiKeyPopupScreen.enterAccessToken">
+                        <input type="text" name="" id="" v-model="selectedFeedModel.accessToken" :aria-label="apiKeyPopupScreen.enterAccessToken" :placeholder="apiKeyPopupScreen.enterAccessToken">
                         <span class="sbc-api-key-error" v-if="accessTokenError" v-html="apiKeyPopupScreen.errorMsgAccessToken"></span>
                         <span class="sbc-input-error-icon" v-if="apiKeyError || accessTokenError">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

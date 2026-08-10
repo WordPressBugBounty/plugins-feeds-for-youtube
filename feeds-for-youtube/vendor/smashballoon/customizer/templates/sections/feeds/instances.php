@@ -1,11 +1,11 @@
 <div class="sb-fs-boss sbc-fb-center-boss" v-if="viewsActive.instanceFeedActive != null && (checkObjectArrayElement(feedsList, viewsActive.instanceFeedActive, 'id') || checkObjectArrayElement(legacyFeedsList, viewsActive.instanceFeedActive, 'feed_id'))">
-	<div class="sbc-fb-popup-inside sbc-fb-popup-feedinst">
-		<div class="sbc-fb-popup-cls" @click.prevent.default="switchScreen('instanceFeedActive', null)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<div class="sbc-fb-popup-inside sbc-fb-popup-feedinst" role="dialog" aria-modal="true" aria-labelledby="sbc-instances-popup-heading" tabindex="-1">
+		<button type="button" class="sbc-fb-popup-cls" aria-label="<?php esc_attr_e('Close', 'feeds-for-youtube'); ?>" @click.prevent.default="switchScreen('instanceFeedActive', null)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 				<path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#141B38"/>
 			</svg>
-		</div>
+		</button>
 		<div class="sbc-fb-source-top sbc-fb-fs">
-			<h3>{{viewsActive.instanceFeedActive.feed_name}}</h3>
+			<h3 id="sbc-instances-popup-heading">{{viewsActive.instanceFeedActive.feed_name}}</h3>
 			<div class="sbc-fb-fdinst-type sb-small">{{viewsActive.instanceFeedActive.feed_type}}</div>
 		</div>
 		<div class="sbc-fb-inst-tbl-ctn sbc-fb-fs">
@@ -32,16 +32,16 @@
 						<div class="sbc-fb-inst-tbl-shrtc">
 							<div class="sb-flex-center">
 								<span class="sbc-fd-lst-shortcode sb-caption sb-lighter">{{instance.shortcode}}</span>
-								<div class="sbc-fd-lst-shortcode-cp sbc-fd-lst-btn sbc-fb-tltp-parent">
-									<div class="sbc-fb-tltp-elem"><span>{{(genericText.copy +' '+ genericText.shortcode).replace(/ /g,"&nbsp;")}}</span></div>
-									<div v-html="svgIcons['copy']" @click.prevent.default="copyToClipBoard(instance.shortcode)"></div>
-								</div>
+								<button type="button" class="sbc-fd-lst-shortcode-cp sbc-fd-lst-btn sbc-fb-tltp-parent" :aria-label="genericText.copy +' '+ genericText.shortcode" @click.prevent.default="copyToClipBoard(instance.shortcode)">
+									<div class="sbc-fb-tltp-elem" aria-hidden="true"><span>{{(genericText.copy +' '+ genericText.shortcode).replace(/ /g,"&nbsp;")}}</span></div>
+									<div v-html="svgIcons['copy']"></div>
+								</button>
 							</div>
 						</div>
 					</td>
 					<td>
-						<a :href="instance.link" class="sbc-fd-lst-btn sb-button-no-border sb-icon-small sb-dark-hover">
-							<svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<a :href="instance.link" class="sbc-fd-lst-btn sb-button-no-border sb-icon-small sb-dark-hover" :aria-label="'View ' + instance.page_text">
+							<svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 								<path d="M1.3332 0L0.158203 1.175L3.97487 5L0.158203 8.825L1.3332 10L6.3332 5L1.3332 0Z" fill="#8C8F9A"/>
 							</svg>
 						</a>

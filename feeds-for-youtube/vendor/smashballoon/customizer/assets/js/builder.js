@@ -1,3 +1,27 @@
+/**
+ * Neutralise Vue mustache delimiters in a builder-preview string (SMASH-1798).
+ *
+ * The preview is mounted with <component :is="{template}">, which hands the string to
+ * Vue's runtime template COMPILER — so `{{ ... }}` inside it is an evaluated JavaScript
+ * expression rather than markup. Braces are not HTML metacharacters, so nothing on the
+ * server's render path (esc_html, esc_attr, wp_kses_post, htmlspecialchars) touches them:
+ * a feed value authored by a third party (a YouTube video title, a channel bio) reaches
+ * code execution in the administrator's session with no angle bracket, quote or on*
+ * attribute. Encoding the delimiters here means the compiler never tokenises a mustache,
+ * while the browser still renders the original characters as text.
+ *
+ * This is the package-level guarantee: it holds for every consumer, whether or not the
+ * consuming plugin also neutralises delimiters before handing the HTML over.
+ *
+ * @param {string} html Rendered feed HTML destined for the preview.
+ * @return {string}
+ */
+function sbcNeutralizeVueDelimiters(html) {
+	return String(html === null || typeof html === 'undefined' ? '' : html)
+		.split('{{').join('&#123;&#123;')
+		.split('}}').join('&#125;&#125;');
+}
+
 import {addAction, applyFilters, createHooks, doAction, hasFilter} from "@wordpress/hooks";
 let Builder,
 	sketch = VueColor.Sketch,
@@ -138,6 +162,34 @@ SB_Customizer.initPromise.then((customizer) => {
 			}
 		},
 		/**
+		 * Roving-tabindex arrow-key navigation for the customizer sidebar
+		 * tablist (Customize / Settings). Ported from instagram-feed-pro.
+		 *
+		 * @since 2.0
+		 */
+		handleCustomizerTabKeydown: function (event, direction) {
+			var self = this,
+				tabIds = Object.keys(self.customizerSidebarBuilder || {}),
+				currentIdx = tabIds.indexOf(self.customizerScreens.activeTab),
+				nextIdx = currentIdx;
+			if (tabIds.length === 0 || currentIdx === -1) return;
+			if (direction === 'right') {
+				nextIdx = (currentIdx + 1) % tabIds.length;
+			} else if (direction === 'left') {
+				nextIdx = (currentIdx - 1 + tabIds.length) % tabIds.length;
+			} else if (direction === 'home') {
+				nextIdx = 0;
+			} else if (direction === 'end') {
+				nextIdx = tabIds.length - 1;
+			}
+			if (nextIdx === currentIdx) return;
+			self.switchCustomizerTab(tabIds[nextIdx]);
+			self.$nextTick(function () {
+				var nextBtn = document.getElementById('sb-customizer-tab-' + tabIds[nextIdx]);
+				if (nextBtn) nextBtn.focus();
+			});
+		},
+		/**
 		 * Switch Customizer Tab
 		 *
 		 * @sicne 2.0
@@ -260,7 +312,7 @@ SB_Customizer.initPromise.then((customizer) => {
 				var data = _ref.data;
 				if( data !== false ){
 					self.updatedTimeStamp = new Date().getTime();
-					self.template = String("<div>"+data.feed_html+"</div>");
+					self.template = sbcNeutralizeVueDelimiters(String("<div>"+data.feed_html+"</div>"));
 					self.processNotification('cacheCleared');
 				}else{
 					self.processNotification("unkownError");
@@ -481,6 +533,92 @@ SB_Customizer.initPromise.then((customizer) => {
 
 			self.regenerateLayout(settingID);
 		},
+
+		/**
+		 * Roving tabindex + arrow-key navigation for radiogroup-pattern
+		 * controls (toggleset, togglebutton). Walks the rendered DOM so
+		 * we honor v-show / aria-disabled visibility, moves focus to the
+		 * target option, and auto-activates per the WAI-ARIA radio pattern.
+		 *
+		 * Cascade-port of IG Pro builder.js (commit 6f7e8f8b). Calls
+		 * changeSettingValue / checkExtensionActive, which are merged into
+		 * the Vue instance from the host customizer SDK extraMethods.
+		 *
+		 * @param {KeyboardEvent} event   Keyboard event from the current radio.
+		 * @param {Object}        control Control definition (id, options, ajaxAction).
+		 * @param {String}        action  'prev' | 'next' | 'first' | 'last'.
+		 * @since 6.0
+		 */
+		onTogglesetArrowKey: function (event, control, action) {
+			let self = this;
+			let currentEl = event.currentTarget;
+			if (!currentEl) {
+				return;
+			}
+			let group = currentEl.closest('[role="radiogroup"]');
+			if (!group) {
+				return;
+			}
+			// Only options that are currently rendered (v-show keeps the
+			// node but sets display:none) and not aria-disabled.
+			let radios = Array.prototype.filter.call(
+				group.querySelectorAll('[role="radio"]'),
+				function (el) {
+					if (el.getAttribute('aria-disabled') === 'true') {
+						return false;
+					}
+					// v-show toggles inline `display: none`.
+					return el.style.display !== 'none';
+				}
+			);
+			if (radios.length === 0) {
+				return;
+			}
+			let currentIndex = radios.indexOf(currentEl);
+			if (currentIndex === -1) {
+				currentIndex = 0;
+			}
+			let targetIndex;
+			switch (action) {
+				case 'prev':
+					targetIndex = (currentIndex - 1 + radios.length) % radios.length;
+					break;
+				case 'next':
+					targetIndex = (currentIndex + 1) % radios.length;
+					break;
+				case 'first':
+					targetIndex = 0;
+					break;
+				case 'last':
+					targetIndex = radios.length - 1;
+					break;
+				default:
+					return;
+			}
+			let targetEl = radios[targetIndex];
+			if (!targetEl) {
+				return;
+			}
+			let targetValue = targetEl.getAttribute('data-toggle-value');
+			if (targetValue === null) {
+				// Fall back to mapping by visible position in control.options.
+				let visibleOptions = (control.options || []).filter(function (opt) {
+					return opt.condition === undefined || self.checkControlCondition(opt.condition);
+				});
+				if (visibleOptions[targetIndex]) {
+					targetValue = visibleOptions[targetIndex].value;
+				}
+			}
+			targetEl.focus();
+			if (targetValue !== null && targetValue !== undefined) {
+				// Per ARIA radio pattern: arrow keys auto-activate.
+				let opt = (control.options || []).find(function (o) { return String(o.value) === String(targetValue); }) || {};
+				let doProcess = opt.checkExtension !== undefined ? self.checkExtensionActive(opt.checkExtension) : true;
+				let ajaxAction = control.ajaxAction !== undefined ? control.ajaxAction : false;
+				self.changeSettingValue(control.id, opt.value !== undefined ? opt.value : targetValue, doProcess, ajaxAction);
+			}
+		},
+
 		selectedFeedTypeCustomizer : function(feedtype){
 			var self 	= this,
 				result 	= false;
@@ -609,13 +747,83 @@ SB_Customizer.initPromise.then((customizer) => {
 		 *
 		 * @since 4.0
 		 */
-		hideColorPickerPospup : function(){
-			this.customizerScreens.activeColorPicker = null;
+		/**
+		 * Hide Color Picker
+		 *
+		 * a11y (SMASH-1381): when a controlId is passed (keyboard dismissal
+		 * via Esc), focus returns to the swatch button so tab order stays
+		 * predictable. The mouse-driven clickaway path calls this without an
+		 * argument, which skips the refocus so we don't steal focus from
+		 * wherever the user just clicked.
+		 */
+		hideColorPickerPospup : function(controlId){
+			var self = this;
+			self.customizerScreens.activeColorPicker = null;
+			if (typeof controlId === 'string' && controlId) {
+				self.$nextTick(function () {
+					var swatch = document.getElementById('sb-colorpicker-swatch-' + controlId);
+					if (swatch) swatch.focus();
+				});
+			}
+		},
+
+		/**
+		 * Toggle Color Picker (open if closed, close if open)
+		 *
+		 * a11y (SMASH-1381): wired to the swatch button's @click. On open,
+		 * focus moves into the picker dialog (sketch-picker hex input,
+		 * falling back to the dialog itself). showColorPickerPospup is
+		 * supplied by the host plugin's extraMethods SDK, so resolve it on
+		 * the merged instance with a state-mutation fallback.
+		 */
+		toggleColorPickerPospup : function(controlId){
+			var self = this;
+			if (self.customizerScreens.activeColorPicker === controlId) {
+				self.hideColorPickerPospup(controlId);
+				return;
+			}
+			if (typeof self.showColorPickerPospup === 'function') {
+				self.showColorPickerPospup(controlId);
+			} else {
+				self.customizerScreens.activeColorPicker = controlId;
+			}
+			self.$nextTick(function () {
+				var popup = document.getElementById('sb-colorpicker-popup-' + controlId);
+				if (!popup) return;
+				var focusable = popup.querySelector('input, [tabindex]:not([tabindex="-1"]), button');
+				if (focusable && focusable !== popup) {
+					focusable.focus();
+				} else {
+					popup.focus();
+				}
+			});
 		},
 
 		switchScreen: function(screenType, screenName){
 			this.viewsActive[screenType] = screenName;
 			Builder.$forceUpdate();
+			// a11y: when the feed-creation flow swaps steps, move focus to the
+			// step heading so keyboard/SR users aren't stranded (WCAG 2.4.3)
+			if (screenType === 'selectedFeedSection') {
+				this.$nextTick(function () {
+					var stepHeading = document.querySelector('.sbc-creation-step-heading');
+					if (stepHeading) stepHeading.focus();
+				});
+			}
+			// a11y: same for the embed popup's step_1 <-> step_2 view swap.
+			// Both step headings share a class and are v-show'd, so focus the
+			// visible one (offsetParent is null for the hidden heading).
+			if (screenType === 'embedPopupScreen') {
+				this.$nextTick(function () {
+					var headings = document.querySelectorAll('.sbc-embed-step-heading');
+					for (var i = 0; i < headings.length; i++) {
+						if (headings[i].offsetParent !== null) {
+							headings[i].focus();
+							break;
+						}
+					}
+				});
+			}
 		},
 
 		/**
@@ -1228,7 +1436,7 @@ SB_Customizer.initPromise.then((customizer) => {
 						var data = _ref.data;
 						if( data !== false ){
 							self.updatedTimeStamp = new Date().getTime();
-							self.template = String("<div>"+data.feed_html+"</div>");
+							self.template = sbcNeutralizeVueDelimiters(String("<div>"+data.feed_html+"</div>"));
 							// document.querySelector('body').classList.toggle('overflow-hidden');
 							self.setShortcodeGlobalSettings(true);
 							if(!hidePreviewNotification) {
@@ -1256,7 +1464,7 @@ SB_Customizer.initPromise.then((customizer) => {
 						if( data !== false ){
 							self.customizerFeedData.settings = data.customizerDataSettings;
 							self.updatedTimeStamp = new Date().getTime();
-							self.template = String("<div>"+data.feed_html+"</div>");
+							self.template = sbcNeutralizeVueDelimiters(String("<div>"+data.feed_html+"</div>"));
 							document.querySelector('body').classList.toggle('overflow-hidden');
 							self.processNotification("previewUpdated");
 							self.loadingBar = false;
@@ -1283,7 +1491,7 @@ SB_Customizer.initPromise.then((customizer) => {
 						if( data !== false ){
 							self.customizerFeedData.settings = data.customizerDataSettings;
 							self.updatedTimeStamp = new Date().getTime();
-							self.template = String("<div>"+data.feed_html+"</div>");
+							self.template = sbcNeutralizeVueDelimiters(String("<div>"+data.feed_html+"</div>"));
 							self.processNotification("previewUpdated");
 							document.querySelector('body').classList.toggle('overflow-hidden');
 							self.loadingBar = false;
@@ -1309,7 +1517,7 @@ SB_Customizer.initPromise.then((customizer) => {
 						if( data !== false ){
 							self.customizerFeedData.settings = data.customizerDataSettings;
 							self.updatedTimeStamp = new Date().getTime();
-							self.template = String("<div>"+data.feed_html+"</div>");
+							self.template = sbcNeutralizeVueDelimiters(String("<div>"+data.feed_html+"</div>"));
 							setTimeout(function(){
 								self.setShortcodeGlobalSettings(true);
 								self.loadingBar = false;
@@ -1335,7 +1543,7 @@ SB_Customizer.initPromise.then((customizer) => {
 						var data = _ref.data;
 						if( data !== false ){
 							self.updatedTimeStamp = new Date().getTime();
-							self.template = String("<div>"+data.feed_html+"</div>");
+							self.template = sbcNeutralizeVueDelimiters(String("<div>"+data.feed_html+"</div>"));
 							// document.querySelector('body').classList.toggle('overflow-hidden');
 							self.setShortcodeGlobalSettings(true);
 							self.processNotification("previewUpdated");
@@ -1362,7 +1570,7 @@ SB_Customizer.initPromise.then((customizer) => {
 						var data = _ref.data;
 						if( data !== false ){
 							self.updatedTimeStamp = new Date().getTime();
-							self.template = String("<div>"+data.feed_html+"</div>");
+							self.template = sbcNeutralizeVueDelimiters(String("<div>"+data.feed_html+"</div>"));
 							self.setShortcodeGlobalSettings(true);
 							self.customizerFeedData.settings = data.customizerDataSettings;
 							self.processNotification("previewUpdated");
@@ -1448,7 +1656,7 @@ SB_Customizer.initPromise.then((customizer) => {
 		...customizer.extraData,
 		$parent : this,
 		nonce : sbc_builder.nonce,
-		template :  sbc_builder.feedInitOutput,
+		template :  sbcNeutralizeVueDelimiters(sbc_builder.feedInitOutput),
 		freeCtaShowFeatures : false,
 		upgradeUrl : sbc_builder.upgradeUrl,
 		supportPageUrl: sbc_builder.supportPageUrl,

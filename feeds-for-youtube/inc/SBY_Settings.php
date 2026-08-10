@@ -50,6 +50,15 @@ class SBY_Settings {
 	public function __construct( $atts, $db, $preview_settings = false ) {
 		$atts = is_array( $atts ) ? $atts : array();
 
+		// Keep only the attributes a shortcode or block is meant to set. The
+		// wp_parse_args() merge below otherwise lets any caller-supplied key
+		// override the saved setting — including the style values echoed into a
+		// <style> element — reachable by naming a feed id that does not resolve.
+		// Every path that resolves a feed (shortcode render, AJAX handlers, cron
+		// updates) constructs this class, so they all filter identically and the
+		// transient name derived from these settings stays consistent (SMASH-1799).
+		$atts = self::filter_allowed_atts( $atts );
+
 		if ( ! empty( $atts['feed'] ) && $atts['feed'] !== 'legacy' ) {
 			$this->settings = self::get_settings_by_feed_id( $atts['feed'], $preview_settings );
 
@@ -163,6 +172,10 @@ class SBY_Settings {
 		}
 
 		if ( $atts && count( $atts ) > 0 ) {
+			// Same allowlist as the constructor merge: this legacy path also parses
+			// caller-supplied atts over stored settings, so an unfiltered key would
+			// override the saved value here even after the main merge is gated (SMASH-1799).
+			$atts = self::filter_allowed_atts( $atts );
 			$legacy_settings = wp_parse_args( $atts, $legacy_settings );
 			$legacy_settings = self::filter_legacy_shortcode_atts( $atts, $legacy_settings );
 		}
@@ -202,6 +215,89 @@ class SBY_Settings {
 		$legacy_settings['nummobile'] = $legacy_settings['num'];
 
 		return $legacy_settings;
+	}
+
+	/**
+	 * Attribute names a shortcode or block may set.
+	 *
+	 * Built from the plugin's own catalog of feed settings plus the
+	 * feed-resolving and customizer plumbing keys internal callers pass
+	 * ('feed' from the embed integrations, 'id'/'channel'/'playlist'/etc. for
+	 * legacy source resolution, 'customizer'/'feedtype' from the feed builder
+	 * preview, 'cachetime' injected by ShortcodeService::check_cron_status()).
+	 * custom_css and custom_js are removed: only the wp-admin settings page
+	 * sets them, and letting a shortcode attribute supply a CSS/JS blob would
+	 * hand document-wide style/script control to any role that can publish a
+	 * shortcode (SMASH-1799).
+	 *
+	 * @since 2.7.1
+	 *
+	 * @return array
+	 */
+	public static function get_allowed_shortcode_atts() {
+		$allowed = array_merge(
+			self::get_public_db_settings_keys(),
+			array(
+				// resolves which saved feed or API source to display
+				'feed',
+				'id',
+				'search',
+				'live',
+				'playlist',
+				'favorites',
+				'single',
+				// customizer preview plumbing, see Feed_Builder::add_customizer_att()
+				'customizer',
+				'feedtype',
+				// legacy page-load caching att, also injected by ShortcodeService::check_cron_status()
+				'cachetime',
+				// pro filtering/moderation settings a legacy shortcode could set
+				'includewords',
+				'excludewords',
+				'hidevideos',
+				'whitelist',
+				// legacy per-layout column atts, see filter_legacy_shortcode_atts()
+				'gridcols',
+				'gridcolsmobile',
+				'gallerycols',
+				'gallerycolsmobile',
+				// Per-feed subscribe-button colours. These are plain style settings that a
+				// shortcode could set before the allowlist, and they are absent from
+				// get_public_db_settings_keys() only because that list is hand-maintained.
+				// Dropping them would silently fall back to the saved value with no error, and
+				// they carry no privilege: both sinks — sby_custom_feed_styles() and the
+				// data_channel_header_colors payload in templates/feed.php — now validate them
+				// with sby_css_color(), which is the control that actually bounds them. (SMASH-1799)
+				'subscribelinkcolorbg',
+				'subscribebtnprimarycolor',
+				'subscribebtnsecondarycolor',
+				'subscribebtntextcolor',
+			)
+		);
+
+		$allowed = array_diff( $allowed, array( 'custom_css', 'custom_js' ) );
+
+		return apply_filters( 'sby_allowed_shortcode_atts', array_values( $allowed ) );
+	}
+
+	/**
+	 * Drops attributes that are not on the shortcode/block allowlist. Dropped
+	 * keys simply fall back to the saved setting rather than erroring. Applied
+	 * to both settings merges so the page render, the AJAX handlers, and cron
+	 * updates all resolve a feed from the same filtered attribute set (SMASH-1799).
+	 *
+	 * @since 2.7.1
+	 *
+	 * @param array $atts
+	 *
+	 * @return array
+	 */
+	public static function filter_allowed_atts( $atts ) {
+		if ( ! is_array( $atts ) || empty( $atts ) ) {
+			return array();
+		}
+
+		return array_intersect_key( $atts, array_flip( self::get_allowed_shortcode_atts() ) );
 	}
 
 	/**
@@ -443,13 +539,63 @@ class SBY_Settings {
 			$num_length = strlen( $num ) + 1;
 
 			//Add both parts of the caching string together and make sure it doesn't exceed 45
-			$sby_transient_name = substr( $sby_transient_name, 0, 45 - $num_length );
+			$sby_transient_name = self::truncate_transient_name( $sby_transient_name, 45 - $num_length );
 
 			$sby_transient_name .= '#' . $num;
 
 			$this->transient_name = $sby_transient_name;
 		}
 
+	}
+
+	/**
+	 * Cut a transient name down to the storage budget without making it ambiguous.
+	 *
+	 * The name is a concatenation of the resolved terms, so a plain substr() means the terms
+	 * past the cut point still steer the fetch but no longer appear in the name. Two different
+	 * term sets therefore produce the same name, and the nopriv handlers use that name as the
+	 * value the caller must match with hash_equals() — so a caller could append an extra
+	 * channel beyond the cut and have the fetched videos written into another feed's cache.
+	 * Appending a digest of the full string makes the name unique to the terms that produced
+	 * it, so a name can only be reproduced by the term set it belongs to.
+	 *
+	 * Names that already fit are returned byte-for-byte unchanged, so the overwhelming
+	 * majority of feeds keep their existing transient and their existing sby_videos post
+	 * associations. Only names that were previously truncated change, and those re-cache once.
+	 *
+	 * @since 2.7.1
+	 *
+	 * Shared by both editions so the digest math lives in one place — the Pro override needs
+	 * the same treatment plus its filter words folded in, which it passes as $digest_extra.
+	 *
+	 * @param string $name         Full concatenated name.
+	 * @param int    $budget       Maximum length available.
+	 * @param string $digest_extra Extra material that steers the fetch without appearing
+	 *                             verbatim in the name. Non-empty forces the digest.
+	 *
+	 * @return string
+	 */
+	public static function truncate_transient_name( $name, $budget, $digest_extra = '' ) {
+		$budget = (int) $budget;
+
+		// Lossy in either of two ways: the terms were cut to fit the budget, or the caller
+		// passed material that shapes the fetch without appearing verbatim in the name (the
+		// Pro filter words, which are reduced to three characters each). Either way the name
+		// stops identifying the values that produced it, so it needs the digest.
+		$is_lossy = strlen( $name ) > $budget || '' !== $digest_extra;
+
+		if ( $budget < 1 || ! $is_lossy ) {
+			return $name;
+		}
+
+		$digest = substr( md5( '' === $digest_extra ? $name : $name . '|' . $digest_extra ), 0, 6 );
+		$keep   = $budget - ( strlen( $digest ) + 1 );
+
+		if ( $keep < 1 ) {
+			return substr( $digest, 0, $budget );
+		}
+
+		return substr( $name, 0, $keep ) . '!' . $digest;
 	}
 
 	/**

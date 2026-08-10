@@ -1,6 +1,6 @@
 <div class="sbc-fd-lst-bigctn sbc-fb-fs">
     <div class="sbc-fd-lst-bulk-ctn sbc-fb-fs">
-        <select class="sbc-fd-lst-bulk-select sbc-fb-select sb-caption" v-model="selectedBulkAction">
+        <select class="sbc-fd-lst-bulk-select sbc-fb-select sb-caption" v-model="selectedBulkAction" :aria-label="allFeedsScreen.bulkActions">
             <option value="false">{{allFeedsScreen.bulkActions}}</option>
             <option value="delete">{{genericText.delete}}</option>
         </select>
@@ -21,7 +21,14 @@
             <thead class="sbc-fd-lst-thtf sbc-fd-lst-thead">
                 <tr>
                     <th>
-                        <div class="sbc-fd-lst-chkbx" @click.prevent.default="selectAllFeedCheckBox()" :data-active="checkAllFeedsActive()"></div>
+                        <div class="sbc-fd-lst-chkbx" role="checkbox"
+                             tabindex="0"
+                             :aria-checked="checkAllFeedsActive() ? 'true' : 'false'"
+                             aria-label="<?php esc_attr_e('Select all feeds', 'feeds-for-youtube'); ?>"
+                             @click.prevent.default="selectAllFeedCheckBox()"
+                             @keydown.enter.prevent.default="selectAllFeedCheckBox()"
+                             @keydown.space.prevent.default="selectAllFeedCheckBox()"
+                             :data-active="checkAllFeedsActive()"></div>
                     </th>
                     <th><span class="sb-caption sb-lighter">{{allFeedsScreen.columns.nameText}}</span></th>
                     <th><span class="sb-caption sb-lighter">{{allFeedsScreen.columns.shortcodeText}}</span></th>
@@ -32,7 +39,14 @@
             <tbody class="sbc-fd-lst-tbody">
                 <tr v-for="(feed, feedIndex) in feedsList">
                     <td>
-                        <div class="sbc-fd-lst-chkbx" @click.prevent.default="selectFeedCheckBox(feed.id)" :data-active="feedsSelected.includes(feed.id)"></div>
+                        <div class="sbc-fd-lst-chkbx" role="checkbox"
+                             tabindex="0"
+                             :aria-checked="feedsSelected.includes(feed.id) ? 'true' : 'false'"
+                             :aria-label="'Select feed ' + feed.feed_name"
+                             @click.prevent.default="selectFeedCheckBox(feed.id)"
+                             @keydown.enter.prevent.default="selectFeedCheckBox(feed.id)"
+                             @keydown.space.prevent.default="selectFeedCheckBox(feed.id)"
+                             :data-active="feedsSelected.includes(feed.id)"></div>
                     </td>
                     <td>
                         <a :href="builderUrl+'&feed_id='+feed.id" class="sby-fd-lst-name sb-small-p sb-bold">{{feed.feed_name}}</a>
@@ -41,38 +55,38 @@
                     <td>
                         <div class="sb-flex-center">
                             <span class="sby-fd-lst-shortcode sb-caption sb-lighter">[youtube-feed feed={{feed.id}}]</span>
-                            <div class="sbc-fd-lst-shortcode-cp sbc-fd-lst-btn sbc-fb-tltp-parent" @click.prevent.default="copyToClipBoard('[youtube-feed feed='+feed.id+']')">
-                                <div class="sbc-fb-tltp-elem"><span>{{(genericText.copy +' '+ genericText.shortcode).replace(/ /g,"&nbsp;")}}</span></div>
+                            <button type="button" class="sbc-fd-lst-shortcode-cp sbc-fd-lst-btn sbc-fb-tltp-parent" :aria-label="genericText.copy +' '+ genericText.shortcode" @click.prevent.default="copyToClipBoard('[youtube-feed feed='+feed.id+']')">
+                                <div class="sbc-fb-tltp-elem" aria-hidden="true"><span>{{(genericText.copy +' '+ genericText.shortcode).replace(/ /g,"&nbsp;")}}</span></div>
                                 <div v-html="svgIcons['copy']"></div>
-                            </div>
+                            </button>
                         </div>
                     </td>
                     <td class="sb-caption sb-lighter">
                         <div class="sb-instances-cell">
                             <span>
                                 Used in 
-                                <span data-active="false" class="sbc-fb-view-instances sbc-fb-tltp-parent"  :data-active="feed.instance_count < 1 ? 'false' : 'true'" @click.prevent.default="feed.instance_count > 0 ? viewFeedInstances(feed) : checkAllFeedsActive()">
+                                <button type="button" data-active="false" class="sbc-fb-view-instances sbc-fb-tltp-parent"  :data-active="feed.instance_count < 1 ? 'false' : 'true'" :disabled="feed.instance_count < 1" :aria-label="'View places feed ' + feed.feed_name + ' is used in'" @click.prevent.default="feed.instance_count > 0 ? viewFeedInstances(feed) : checkAllFeedsActive()">
                                     {{feed.instance_count}} places
-                                </span>
+                                </button>
                             </span>
                         </div>
                     </td>
                     <td class="sbc-fd-lst-actions">
                         <div class="sb-flex-center">
-                            <a :href="builderUrl+'&feed_id='+feed.id" class="sbc-fd-lst-btn sbc-fb-tltp-parent">
-                                <div class="sbc-fb-tltp-elem"><span>Edit</span></div>
+                            <a :href="builderUrl+'&feed_id='+feed.id" class="sbc-fd-lst-btn sbc-fb-tltp-parent" :aria-label="'Edit feed ' + feed.feed_name">
+                                <div class="sbc-fb-tltp-elem" aria-hidden="true"><span>Edit</span></div>
                                 <div>
                                     <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M0.25 9.06241V11.2499H2.4375L8.88917 4.79824L6.70167 2.61074L0.25 9.06241ZM10.9892 2.69824L8.80167 0.510742L7.32583 1.99241L9.51333 4.17991L10.9892 2.69824Z" fill="currentColor"></path>
                                     </svg>
                                 </div>
                             </a>
-                            <button class="sbc-fd-lst-btn sbc-fb-tltp-parent" @click.prevent.default="feedActionDuplicate(feed)">
-                                <div class="sbc-fb-tltp-elem"><span>{{genericText.duplicate.replace(/ /g,"&nbsp;")}}</span></div>
+                            <button class="sbc-fd-lst-btn sbc-fb-tltp-parent" :aria-label="genericText.duplicate + ' ' + feed.feed_name" @click.prevent.default="feedActionDuplicate(feed)">
+                                <div class="sbc-fb-tltp-elem" aria-hidden="true"><span>{{genericText.duplicate.replace(/ /g,"&nbsp;")}}</span></div>
                                 <div v-html="svgIcons['duplicate']"></div>
                             </button>
-                            <button class="sbc-fd-lst-btn sbc-fd-lst-btn-delete sbc-fb-tltp-parent" @click.prevent.default="openDialogBox('deleteSingleFeed', feed)">
-                                <div class="sbc-fb-tltp-elem"><span>{{genericText.delete.replace(/ /g,"&nbsp;")}}</span></div>
+                            <button class="sbc-fd-lst-btn sbc-fd-lst-btn-delete sbc-fb-tltp-parent" :aria-label="genericText.delete + ' ' + feed.feed_name" @click.prevent.default="openDialogBox('deleteSingleFeed', feed)">
+                                <div class="sbc-fb-tltp-elem" aria-hidden="true"><span>{{genericText.delete.replace(/ /g,"&nbsp;")}}</span></div>
                                 <div v-html="svgIcons['delete']"></div>
                             </button>
                         </div>
@@ -82,7 +96,14 @@
             <tfoot class="sbc-fd-lst-thtf sbc-fd-lst-tfoot">
                 <tr>
                     <td>
-                    <div class="sbc-fd-lst-chkbx" @click.prevent.default="selectAllFeedCheckBox()" :data-active="checkAllFeedsActive()"></div>
+                    <div class="sbc-fd-lst-chkbx" role="checkbox"
+                         tabindex="0"
+                         :aria-checked="checkAllFeedsActive() ? 'true' : 'false'"
+                         aria-label="<?php esc_attr_e('Select all feeds', 'feeds-for-youtube'); ?>"
+                         @click.prevent.default="selectAllFeedCheckBox()"
+                         @keydown.enter.prevent.default="selectAllFeedCheckBox()"
+                         @keydown.space.prevent.default="selectAllFeedCheckBox()"
+                         :data-active="checkAllFeedsActive()"></div>
                     </td>
                     <td><span>Name</span></td>
                     <td><span>Shortcode</span></td>

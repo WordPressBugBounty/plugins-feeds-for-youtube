@@ -40,11 +40,15 @@ class AdminAjaxService extends ServiceProvider {
 		// Check nonce for security
 		check_ajax_referer( 'sby_nonce', 'nonce' );
 
-		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sby' ) === false ) {
-			die( 'invalid feed ID');
+		// The old check was strpos( $_POST['feed_id'], 'sby' ) === false, a substring test that is
+		// never a security control — the hash_equals() gate below is the real one, so this only
+		// needs to reject an empty value before the name is derived. (SMASH-1799)
+		$feed_id = isset( $_POST['feed_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feed_id'] ) ) : '';
+
+		if ( '' === $feed_id ) {
+			wp_send_json_error( '', 400 );
 		}
 
-		$feed_id = sanitize_text_field( $_POST['feed_id'] );
 		$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
 		if ( is_array( $atts_raw ) ) {
 			$atts = array_map( 'sanitize_text_field', $atts_raw );
@@ -64,6 +68,17 @@ class AdminAjaxService extends ServiceProvider {
 		$youtube_feed_settings->set_feed_type_and_terms();
 		$youtube_feed_settings->set_transient_name();
 		$transient_name = $youtube_feed_settings->get_transient_name();
+
+		// Same defect as the live-retrieve handler: the derived name was overwritten with the
+		// caller's (SMASH-1799). Keep the derived name and require the caller to match it.
+		// The gate sits HERE, immediately after the name is derived, rather than further down
+		// where it was first added: sby_do_background_tasks() below writes a feed-locator row
+		// and can trigger delete_old_locations(), and on an endpoint registered nopriv that
+		// state change must not happen for a caller who is about to be handed a 403.
+		if ( ! hash_equals( $transient_name, (string) $feed_id ) ) {
+			wp_send_json_error( '', 403 );
+		}
+
 		$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( $_POST['location'] ) : 'unknown';
 		$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
 		$feed_details = array(
@@ -80,8 +95,6 @@ class AdminAjaxService extends ServiceProvider {
 		$settings = $youtube_feed_settings->get_settings();
 
 		$feed_type_and_terms = $youtube_feed_settings->get_feed_type_and_terms();
-
-		$transient_name = $feed_id;
 
 		$youtube_feed = sby_is_pro() ?  new SBY_Feed_Pro( $transient_name ) : new SBY_Feed( $transient_name );
 
@@ -214,40 +227,67 @@ class AdminAjaxService extends ServiceProvider {
 		// Check nonce for security
 		check_ajax_referer( 'sby_nonce', 'nonce' );
 
-		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sby' ) === false ) {
-			die( 'invalid feed ID');
+		// The substring test below was never a security control; the real gate is that the
+		// transient name must be DERIVED from the resolved settings and match what the
+		// caller named (SMASH-1799). video_id is tightened to a single real YouTube id so
+		// one request cannot stage a whole replacement post set through the comma split in
+		// SBY_Settings_Pro::set_feed_type_and_terms().
+		$feed_id  = isset( $_POST['feed_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feed_id'] ) ) : '';
+		$video_id = isset( $_POST['video_id'] ) ? sanitize_text_field( wp_unslash( $_POST['video_id'] ) ) : '';
+
+		if ( '' === $feed_id || ! preg_match( '/^[A-Za-z0-9_-]{11}$/', $video_id ) ) {
+			wp_send_json_error( '', 400 );
 		}
 
-		$feed_id = sanitize_text_field( $_POST['feed_id'] );
 		$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
-		$video_id = sanitize_text_field( $_POST['video_id'] );
 		if ( is_array( $atts_raw ) ) {
 			$atts = array_map( 'sanitize_text_field', $atts_raw );
 		} else {
 			$atts = array();
 		}
 
-		if ( isset( $atts['live'] ) ) {
-			unset( $atts['live'] );
-		}
-		$atts['type'] = 'single';
-		$atts['single'] = $video_id;
 		$offset = 0;
 
 		$database_settings = sby_get_database_settings();
-		$youtube_feed_settings = sby_is_pro() ? new SBY_Settings_Pro( $atts, $database_settings ) : new SBY_Settings( $atts, $database_settings );
 
 		if ( empty( $database_settings['connected_accounts'] ) && empty( $database_settings['api_key'] ) ) {
 			die( 'error no connected account' );
 		}
 
-		$youtube_feed_settings->set_feed_type_and_terms();
-		$youtube_feed_settings->set_transient_name( $feed_id );
-		$transient_name = $youtube_feed_settings->get_transient_name();
+		// The gate has to be derived from the atts EXACTLY as the front end had them, before
+		// the type=single override below. data-feedid is published from the live feed's own
+		// settings (templates/feed.php), so deriving after the override would compare a
+		// single-video name (sby_S!<id>#<num>) against a live name and could never match —
+		// which would 403 every legitimate request rather than only the forged ones. Derive
+		// and compare first, then apply the override on a separate settings object used only
+		// for the fetch, keeping the write target the name the caller has now proven.
+		// (SMASH-1799)
+		$check_settings = sby_is_pro() ? new SBY_Settings_Pro( $atts, $database_settings ) : new SBY_Settings( $atts, $database_settings );
+		$check_settings->set_feed_type_and_terms();
+		// Was set_transient_name( $feed_id ), which stored the caller's value verbatim and
+		// made the comparison below tautological — it compared the value against the copy of
+		// itself just stored, so it could never fail and the caller chose which feed cache to
+		// overwrite. Deriving the name from the resolved feed type and terms is what makes the
+		// check real: any atts value that redirects the fetch changes the derived name and
+		// fails here, so the write can only land on the cache the resolved settings own.
+		$check_settings->set_transient_name();
+		$transient_name = $check_settings->get_transient_name();
 
-		if ( $transient_name !== $feed_id ) {
-			die( 'id does not match' );
+		if ( ! hash_equals( $transient_name, $feed_id ) ) {
+			wp_send_json_error( '', 403 );
 		}
+
+		// Only now redirect the fetch at the single video the caller asked to reveal. The
+		// write still lands on $transient_name, i.e. the live feed's own cache.
+		if ( isset( $atts['live'] ) ) {
+			unset( $atts['live'] );
+		}
+		$atts['type'] = 'single';
+		$atts['single'] = $video_id;
+
+		$youtube_feed_settings = sby_is_pro() ? new SBY_Settings_Pro( $atts, $database_settings ) : new SBY_Settings( $atts, $database_settings );
+		$youtube_feed_settings->set_feed_type_and_terms();
+		$youtube_feed_settings->set_transient_name( $transient_name );
 
 		$settings = $youtube_feed_settings->get_settings();
 
@@ -314,15 +354,30 @@ class AdminAjaxService extends ServiceProvider {
 		// Check nonce for security
 		check_ajax_referer( 'sby_nonce', 'nonce' );
 
-		if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sby' ) === false ) {
-			die( 'invalid feed ID');
-		}
+		// The 'sby' substring test that used to sit here was never a security control — any
+		// value containing those three letters passed. The real gate is now in
+		// sby_add_or_update_wp_posts(): the transient name is derived from the resolved
+		// settings and the caller must match it, so here we only require a value to compare
+		// against later (SMASH-1799).
+		$feed_id = isset( $_POST['feed_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feed_id'] ) ) : '';
 
-		$feed_id = sanitize_text_field( $_POST['feed_id'] );
+		if ( '' === $feed_id ) {
+			wp_send_json_error( '', 400 );
+		}
 
 		$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
 		if ( is_array( $atts_raw ) ) {
 			$atts = array_map( 'sanitize_text_field', $atts_raw );
+
+			// SBY_Settings inherits a broad wp_parse_args( $atts, $db ) merge, so a caller could
+			// override behavioral settings that have nothing to do with naming a feed. Confine
+			// the payload to the keys that resolve the feed's type/terms plus the ones baked
+			// into the transient name (includewords/excludewords/num), so the derived name still
+			// matches what the rendered shortcode produced (SMASH-1799).
+			$atts = array_intersect_key(
+				$atts,
+				array_flip( array( 'feed', 'channel', 'playlist', 'search', 'customsearch', 'usecustomsearch', 'live', 'favorites', 'single', 'id', 'type', 'includewords', 'excludewords', 'num' ) )
+			);
 		} else {
 			$atts = array();
 		}
@@ -337,18 +392,42 @@ class AdminAjaxService extends ServiceProvider {
 			)
 		);
 
-		$this->sby_do_background_tasks( $feed_details );
-
 		$offset = isset( $_POST['offset'] ) ? (int)$_POST['offset'] : 0;
 		$vid_ids = isset( $_POST['posts'] ) && is_array( $_POST['posts'] ) ? $_POST['posts'] : array();
 
 		if ( ! empty( $vid_ids ) ) {
-			$vid_ids = array_map( 'sanitize_text_field', $vid_ids );
+			// The shipped JS only ever sends plain video ids here (mostRecentlyLoadedPosts is
+			// filled from data-video-id attributes) — the richer post structures that
+			// sby_process_post_set_caching() also accepts come from the server-side cache and
+			// cron paths, never from this request. Each id sent to SBY_YT_Details_Query is spent
+			// against the site's own API key / OAuth token, so require the real YouTube id shape
+			// before spending quota on it (SMASH-1799).
+			$vid_ids = array_values( array_filter( $vid_ids, 'is_string' ) );
+			$vid_ids = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $vid_ids ) );
+			$vid_ids = array_values( array_filter( $vid_ids, function ( $vid_id ) {
+				return (bool) preg_match( '/^[A-Za-z0-9_-]{11}$/', $vid_id );
+			} ) );
+
+			// Cap the fan-out: YouTube's videos.list endpoint takes at most 50 ids per call and
+			// one reveal batch in the shipped JS is never larger than a page of items, so 50 is
+			// a hard ceiling no legitimate request reaches while a forged request can no longer
+			// spend unbounded quota. A constant is used instead of the feed's `num` setting
+			// because the caller controls the atts that `num` resolves from (SMASH-1799).
+			$vid_ids = array_slice( $vid_ids, 0, 50 );
 		}
 
 		$cache_all = isset( $_POST['cache_all'] ) ? $_POST['cache_all'] === 'true' : false;
 
 		$info = $this->sby_add_or_update_wp_posts( $vid_ids, $feed_id, $atts, $offset, $cache_all );
+
+		// Feed_Locator::add_or_update_entry() writes a row, and should_clear_old_locations() can
+		// trigger delete_old_locations() — both state changes on an endpoint registered nopriv.
+		// This used to run BEFORE the transient name was validated, so an unauthenticated caller
+		// could file arbitrary feed_id/atts rows in the locator table (and trip the delete sweep)
+		// even though the caching work below then failed the hash_equals gate and returned 403.
+		// Recording the location only after that gate has passed means the row can only describe
+		// a feed the resolved settings actually own. (SMASH-1799)
+		$this->sby_do_background_tasks( $feed_details );
 
 		echo wp_json_encode( $info );
 
@@ -356,18 +435,31 @@ class AdminAjaxService extends ServiceProvider {
 	}
 
 	private function sby_add_or_update_wp_posts( $vid_ids, $feed_id, $atts, $offset, $cache_all ) {
-		if ( $cache_all ) {
-			$database_settings = sby_get_database_settings();
-			$youtube_feed_settings = sby_is_pro() ? new SBY_Settings_Pro( $atts, $database_settings ) : new SBY_Settings( $atts, $database_settings );;
-			$youtube_feed_settings->set_feed_type_and_terms();
-			$youtube_feed_settings->set_transient_name( $feed_id );
-			$transient_name = $youtube_feed_settings->get_transient_name();
+		$database_settings = sby_get_database_settings();
+		$sby_settings = sby_is_pro() ? new SBY_Settings_Pro( $atts, $database_settings ) : new SBY_Settings( $atts, $database_settings );;
+
+		// 'sby_single' is the real sentinel the Pro single video shortcode sends when a
+		// rendered video is missing view-count meta — that shortcode has no feed cache of its
+		// own, so it legitimately bypasses regular_cache_exists() below. It stays a narrow
+		// bypass: the id-shape validation and count cap in sby_process_wp_posts() still bound
+		// what it can spend, and it never names a transient. Every OTHER feed_id must equal
+		// the transient name DERIVED from the resolved settings. Previously the caller's raw
+		// value named which SBY_Feed transient was read below, and the $cache_all branch even
+		// stored it verbatim via set_transient_name( $feed_id ) — the same defect fixed in the
+		// two sibling handlers above. Deriving here closes both paths at once, which is why
+		// the $cache_all branch no longer has its own (caller-controlled) naming step; it now
+		// only decides whether the whole cache or a page slice is processed (SMASH-1799).
+		if ( 'sby_single' !== $feed_id ) {
+			$sby_settings->set_feed_type_and_terms();
+			$sby_settings->set_transient_name();
+			$transient_name = $sby_settings->get_transient_name();
+
+			if ( ! hash_equals( $transient_name, (string) $feed_id ) ) {
+				wp_send_json_error( '', 403 );
+			}
 
 			$feed_id = $transient_name;
 		}
-
-		$database_settings = sby_get_database_settings();
-		$sby_settings = sby_is_pro() ? new SBY_Settings_Pro( $atts, $database_settings ) : new SBY_Settings( $atts, $database_settings );;
 
 		$settings = $sby_settings->get_settings();
 

@@ -2560,6 +2560,16 @@ var SBYAdminNotifications = window.SBYAdminNotifications || function (document, 
           $(this).addClass('button-dismiss');
         }
       });
+
+      // a11y (SMASH-1381): the hrefless dismiss + prev/next controls carry
+      // role="button" tabindex="0"; make Enter/Space activate them like
+      // real buttons.
+      $(document).on('keydown', '#sby-notifications .dismiss[role="button"], #sby-notifications .navigation .prev, #sby-notifications .navigation .next', function (e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) {
+          e.preventDefault();
+          $(this).trigger('click');
+        }
+      });
       $(app.ready);
     },
     jqueryInit: function jqueryInit($) {

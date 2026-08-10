@@ -37,11 +37,15 @@ class SB_Checkboxlist_Control extends \Smashballoon\Customizer\Controls\SB_Contr
     public function get_control_output($controlEditingTypeModel)
     {
         ?>
-		<div class="sb-control-checkbox-ctn sbc-fb-fs" v-for="option in control.options" @click.prevent.default="changeCheckboxListValue(control.id, option.value)">
-			<div class="sb-control-checkbox" :data-active="<?php 
+		<div role="group" :aria-label="control.heading || control.label">
+			<button type="button" class="sb-control-checkbox-ctn sbc-fb-fs" v-for="option in control.options" role="checkbox" :aria-checked="<?php 
         echo $controlEditingTypeModel;
-        ?>[control.id].includes(option.value)"></div>
-			<div class="sb-control-label sb-small-p sb-dark-text" v-html="option.label"></div>
+        ?>[control.id].includes(option.value)" :aria-label="option.label" @click.prevent.default="changeCheckboxListValue(control.id, option.value)" @keydown.enter.prevent="changeCheckboxListValue(control.id, option.value)" @keydown.space.prevent="changeCheckboxListValue(control.id, option.value)">
+				<span class="sb-control-checkbox" aria-hidden="true" :data-active="<?php 
+        echo $controlEditingTypeModel;
+        ?>[control.id].includes(option.value)"></span>
+				<span class="sb-control-label sb-small-p sb-dark-text" aria-hidden="true" v-html="option.label"></span>
+			</button>
 		</div>
 		<?php 
     }

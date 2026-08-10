@@ -25,7 +25,7 @@ $player_attributes = SBY_Display_Elements::get_player_attributes( $settings );
 <div id="sby_player_<?php echo esc_attr( $post_id ); ?>" class="sby_player_outer_wrap sby_player_item" <?php echo $player_outer_wrap_style_attr; echo $player_attributes; ?>>
     <div class="sby_video_thumbnail_wrap">
         <a class="sby_video_thumbnail sby_player_video_thumbnail" href="<?php echo esc_url( $permalink ); ?>" target="_blank" rel="noopener" data-full-res="<?php echo esc_url( $media_full_res ); ?>" data-img-src-set="<?php echo esc_attr( wp_json_encode( $media_all_sizes_json ) ); ?>" data-video-id="<?php echo esc_attr( $video_id ); ?>">
-            <span class="sby-screenreader"><?php echo sprintf( __( 'YouTube Video %s', 'feeds-for-youtube' ), $post_id ); ?></span>
+            <span class="sby-screenreader"><?php $sby_sr_title = SBY_Parse::get_video_title( $placeholder_post ); echo esc_html( $sby_sr_title ? $sby_sr_title : sprintf( __( 'YouTube Video %s', 'feeds-for-youtube' ), $post_id ) ); ?></span>
             <img src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( $img_alt ); ?>">
             <span class="sby_loader sby_hidden" style="background-color: rgb(255, 255, 255);"></span>
         </a>

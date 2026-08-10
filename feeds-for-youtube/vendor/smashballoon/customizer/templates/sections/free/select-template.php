@@ -3,13 +3,13 @@
         <h4>{{selectTemplate.title}}</h4>
         <p>{{selectTemplate.description}}</p>
         <div class="sbc-feedtemplates-list">
-            <div :class="['sbc-feedtemplate-el', 'sbc-feed-template-' + feedTemplateEl.type]" v-for="(feedTemplateEl, feedTemplateIn) in feedTemplates" @click.prevent.default="chooseFeedTemplate(feedTemplateEl)" :data-active="selectedFeedTemplate == feedTemplateEl.type">
+            <button type="button" :class="['sbc-feedtemplate-el', 'sbc-feed-template-' + feedTemplateEl.type]" v-for="(feedTemplateEl, feedTemplateIn) in feedTemplates" @click.prevent.default="chooseFeedTemplate(feedTemplateEl)" :aria-pressed="selectedFeedTemplate == feedTemplateEl.type ? 'true' : 'false'" :data-active="selectedFeedTemplate == feedTemplateEl.type">
                 <div class="sbc-feedtemplate-el-img sbc-fs" v-html="svgIcons[feedTemplateEl.icon]"></div>
                 <div class="sbc-feedtemplate-el-info sbc-fs">
                     <p class="sb-small-p sb-bold sb-dark-text" v-html="feedTemplateEl.title"></p>
                     <span class="sb-caption sb-lightest">{{feedTemplateEl.description}}</span>
                 </div>
-            </div>
+            </button>
         </div>
     </div>
 </div>

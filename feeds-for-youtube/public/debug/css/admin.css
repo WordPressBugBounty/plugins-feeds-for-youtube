@@ -1,6 +1,43 @@
 /*!*******************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./css/admin.css ***!
   \*******************************************************************************************************************************************************************/
+/* SMASH-1378 / WCAG 2.4.7 — Global :focus-visible ring for YouTube Feed
+   Pro admin surfaces. Cascade-port of the IG Pro canonical pattern.
+   Scoped to the body classes WordPress generates for the YT Pro admin
+   pages so the indicator is consistent across every YT Pro admin screen
+   without touching WP core chrome.
+
+   Selector notes (SMASH-1790): the submenu body-class matches are
+   deliberately PREFIX-INDEPENDENT (`[class*="_page_<slug>"]`) because
+   WordPress derives the prefix from the sanitized top-level menu TITLE,
+   and MenuService::alert_html() appends a notice-count bubble whose
+   digit survives sanitize_title() — with a license alert the prefix
+   becomes e.g. `youtube-feed-1`, so anchoring on the prefix breaks.
+   `_page_youtube-feed-` covers the SBY_SLUG-prefixed settings-family
+   submenus (settings / about / support / setup / single-videos — the
+   React app pages); `_page_sby_single_settings` covers the legacy CPT
+   Single Video Settings page; `#sby-settings` is the React app root
+   (frontend/src/index.js) as an id-anchored belt-and-braces.
+
+   NOTE: the live builder is the VENDORED sb-customizer (Vue) — its
+   focus policy is handled on the sb-customizer master track, not here.
+   This rule covers the remaining per-plugin admin chrome (CPT screens,
+   notices, the settings/about/support React app).
+
+   box-shadow (not outline) respects border-radius; a transparent
+   outline is retained for Windows High Contrast Mode. --sb-focus-ring
+   (#007ca8) comes from assets/tokens/sby-tokens-local.css, enqueued as
+   a dependency of the admin stylesheet handle. */
+body[class*="_page_sby-feed-builder"] *:focus-visible,
+body.toplevel_page_sby-feed-builder *:focus-visible,
+body[class*="_page_youtube-feed-"] *:focus-visible,
+body[class*="_page_sby_single_settings"] *:focus-visible,
+#sby-settings *:focus-visible,
+#sbspf_admin *:focus-visible {
+    outline: 2px solid transparent !important;
+    outline-offset: 0 !important;
+    box-shadow: 0 0 0 2px var(--sb-focus-ring, #007ca8) !important;
+}
 .toplevel_page_sby-feed-builder #wpcontent {
     padding-left: 0px;
 }

@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Feeds for YouTube
+Plugin Name: Smash Balloon YouTube Feed
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.7.0
+Version: 2.8.0
 Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
@@ -54,7 +54,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.7.0' );
+    define( 'SBYVER', '2.8.0' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.3' );
@@ -273,16 +273,17 @@ if ( ! function_exists( 'sby_init' ) ) {
     function sby_cron_custom_interval( $schedules ) {
         $schedules['sby30mins'] = array(
             'interval' => 30 * 60,
-            'display'  => __( 'Every 30 minutes', 'feeds-for-youtube' )
+            'display'  => 'Every 30 minutes'
         );
         $schedules['sbyweekly'] = array(
             'interval' => 3600 * 24 * 7,
-            'display'  => __( 'Weekly', 'feeds-for-youtube' )
+            'display'  => 'Weekly'
         );
 
         return $schedules;
     }
 
+    // Register cron schedules at file level so they're available during plugin activation
     add_filter( 'cron_schedules', 'sby_cron_custom_interval' );
 
     /**

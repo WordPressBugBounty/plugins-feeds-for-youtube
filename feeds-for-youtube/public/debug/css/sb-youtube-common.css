@@ -1,8 +1,32 @@
 /*!*******************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./css/sb-youtube-common.css ***!
   \*******************************************************************************************************************************************************************************/
-/* === KEYFRAMES === */
+/* SMASH-1378/1381 / WCAG 2.4.7 — Global :focus-visible ring for the
+   frontend feed. Lives in the COMMON stylesheet (loaded by BOTH Pro and
+   Free — AssetsService enqueues sb-youtube.css for Pro but
+   sb-youtube-free.css for Lite, so a Pro-only ring never reaches the free
+   feed). Cascade-port of the IG Pro canonical pattern.
 
+   Scoped to the feed container (`.sb_youtube`, id prefix `sb_youtube_`)
+   plus the player lightbox so the indicator only appears on plugin UI,
+   never on host-theme chrome. `:focus-visible` keeps the ring
+   keyboard-only; mouse clicks stay unaffected.
+
+   box-shadow (not outline) so the ring respects border-radius; a
+   transparent outline is retained for Windows High Contrast Mode, which
+   suppresses box-shadow but honors outline.
+
+   --sb-focus-ring (#007ca8) is provided by
+   assets/tokens/sby-tokens-local.css, enqueued as a dependency of the
+   sby_common_styles handle. */
+[id^=sb_youtube_].sb_youtube *:focus-visible,
+#sby_lightbox *:focus-visible,
+#sby_lightbox:focus-visible {
+    outline: 2px solid transparent !important;
+    outline-offset: 0 !important;
+    box-shadow: 0 0 0 2px var(--sb-focus-ring, #007ca8) !important;
+}
+/* === KEYFRAMES === */
 @keyframes sby-sk-scaleout {
   0% {
     transform: scale(0);
@@ -13,7 +37,6 @@
     opacity: 0;
   }
 }
-
 @keyframes fa-spin {
   0% {
     transform: rotate(0deg);
@@ -23,7 +46,6 @@
     transform: rotate(359deg);
   }
 }
-
 body.et-db #et-boc,
 body {
 
@@ -2570,7 +2592,6 @@ body {
     margin-top: -10px;
   }
 }
-
 .et-db #et-boc #et-fb-app .et_pb_module.sb_youtube_feed,
 .elementor {
   /* Elementor / Divi / Gutenberg Widget Style */
@@ -2764,9 +2785,7 @@ body {
 
   /* End Elementor Widget Style */
 }
-
 /* Frontend license error notice */
-
 .sby-frontend-license-notice {
   position: fixed;
   right: 20px;
@@ -2777,7 +2796,6 @@ body {
   border-radius: 4px;
   z-index: 9;
 }
-
 .sby-frontend-license-notice .sby-fln-header {
   height: 26px;
   padding: 5px 8px 0px 12px;
@@ -2786,47 +2804,38 @@ body {
   justify-content: space-between;
   box-sizing: border-box;
 }
-
 .sby-frontend-license-notice .sby-fln-header span.sb-text {
   font-weight: 600;
   font-size: 11px;
   line-height: 160%;
   color: #841919;
 }
-
 .sby-frontend-license-notice .sby-fln-header span.sb-left {
   display: flex;
 }
-
 .sby-frontend-license-notice .sby-fln-header .sb-close {
   cursor: pointer;
 }
-
 .sby-frontend-license-notice .sby-fln-header .sb-close svg {
   transform: translate(1px, -8px);
 }
-
 .sby-frontend-license-notice .sby-fln-header svg {
   margin-right: 6px;
 }
-
 .sby-frontend-license-notice .sby-fln-header svg path {
   fill: #841919;
 }
-
 .sby-frontend-license-notice .sby-fln-body {
   padding: 9px 12px 15px;
   display: flex;
   height: 58px;
   box-sizing: border-box;
 }
-
 .sby-frontend-license-notice .sby-fln-body > svg {
   height: 36px;
   width: 44px;
   margin-right: 11px;
 }
-
 .sby-frontend-license-notice .sby-fln-body .sby-fln-expired-text p {
   font-weight: 600;
   font-size: 12px;
@@ -2834,64 +2843,49 @@ body {
   color: #141B38;
   margin: 0;
 }
-
 .sby-frontend-license-notice .sby-fln-body .sby-fln-expired-text p a {
   margin-left: 5px;
   text-decoration: none;
   text-underline-offset: 1px;
   color: #AF2121;
 }
-
 .sby-frontend-license-notice.sby-ce-license-inactive .sby-fln-body .sby-fln-expired-text p a {
   color: #0068A0;
 }
-
 .sby-frontend-license-notice.sby-ce-license-inactive .sby-fln-body .sby-fln-expired-text p svg path {
   fill: #0068A0;
 }
-
 .sby-frontend-license-notice .sby-fln-body .sby-fln-expired-text svg {
   display: inline-block;
   transform: translate(3px, 1px);
   width: 6px;
   transition: all .2s ease;
 }
-
 .sby-frontend-license-notice .sby-fln-body .sby-fln-expired-text svg path {
   fill: #AF2121;
 }
-
 /* Resolve link hover animation */
-
 .sby-frontend-license-notice .sby-fln-body .sby-fln-expired-text a:hover {
   text-decoration: underline;
 }
-
 .sby-frontend-license-notice .sby-fln-body .sby-fln-expired-text a:hover svg {
   transform: translate(1px, 1px);
 }
-
 /* License state inactive color */
-
 .sby-frontend-license-notice[data-license-state=inactive] .sby-fln-body .sby-fln-expired-text p a {
   color: #0068A0;
 }
-
 .sby-frontend-license-notice[data-license-state=inactive] .sby-fln-body .sby-fln-expired-text svg path {
   fill: #0068A0;
 }
-
 /* Block Editor - License Editor Block Not Embedded */
-
 .sby-license-expired-plain-block-wrapper {
   border: 1px solid #1E1E1E;
   border-radius: 2px;
 }
-
 .sby-license-expired-plain-block-wrapper p {
   margin: 0;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header {
   background: #FCEDED;
   display: flex;
@@ -2901,31 +2895,25 @@ body {
   padding: 6px 20px;
   box-sizing: border-box;
 }
-
 .sby-license-expired-plain-block-wrapper.inactive .sby-lepb-header {
   background: #F9F9FA;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-left {
   display: flex;
   align-items: center;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-left svg {
   margin-right: 8px;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-left svg path {
   fill: #841919;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-left p {
   font-weight: 600;
   font-size: 14px;
   line-height: 160%;
   color: #841919;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-right a {
   font-weight: 600;
   font-size: 14px;
@@ -2933,36 +2921,28 @@ body {
   color: #841919;
   text-decoration: none;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-right a svg {
   transform: translate(6px, 0px);
   transition: all .2s ease-in;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-right a:hover svg {
   transform: translate(3px, 0px);
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-header .sb-right a svg path {
   fill: #841919;
 }
-
 .sby-license-expired-plain-block-wrapper.inactive .sby-lepb-header .sb-left p {
   color: #2C324C;
 }
-
 .sby-license-expired-plain-block-wrapper.inactive .sby-lepb-header .sb-right a {
   color: #0068A0;
 }
-
 .sby-license-expired-plain-block-wrapper.inactive .sby-lepb-header .sb-left svg path {
   fill: #2C324C;
 }
-
 .sby-license-expired-plain-block-wrapper.inactive .sby-lepb-header .sb-right a svg path {
   fill: #0068A0;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-body {
   display: flex;
   flex-direction: column;
@@ -2973,7 +2953,6 @@ body {
   padding: 40px 8px 45px;
   background-color: #ffffff;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-body .sby-block-body-title {
   margin-top: 15px;
   font-weight: 600;
@@ -2982,7 +2961,6 @@ body {
   text-align: center;
   color: #1E1E1E;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-body a {
   padding: 8px 12px 8px 20px;
   width: 226px;
@@ -2997,55 +2975,45 @@ body {
   box-sizing: border-box;
   margin-top: 29px;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-body a svg {
   transform: translate(10px, 0px);
   transition: all .2s ease-in;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-body a:hover svg {
   transform: translate(6px, 0px);
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepb-body a svg path {
   fill: #FFFFFF;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepd-footer {
   border-top: 1px solid #E6E6EB;
   background: #F9F9FA;
   padding: 12px 20px 16px;
   text-align: center;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepd-footer .sby-lepd-footer-title {
   font-weight: 600;
   font-size: 16px;
   line-height: 160%;
   color: #141B38;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepd-footer p {
   font-weight: 400;
   font-size: 14px;
   line-height: 160%;
   color: #434960;
 }
-
 .sby-license-expired-plain-block-wrapper .sby-lepd-footer p a {
   color: #434960;
   text-underline-offset: 2px;
 }
-
 /* Block Editor - License Editor Block Embedded */
-
 .sby-block-license-expired-notice-ctn {
   background: #FFFFFF;
   border: 1px solid #E8E8EB;
   margin-bottom: 20px;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), 0px 4px 5px rgba(0, 0, 0, 0.05);
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-header {
   padding: 4px 12px;
   height: 27px;
@@ -3054,11 +3022,9 @@ body {
   align-items: center;
   box-sizing: border-box;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-header svg path {
   fill: #841919;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-header span {
   font-weight: 600;
   font-size: 12px;
@@ -3066,7 +3032,6 @@ body {
   color: #841919;
   margin-left: 8px;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-resolve {
   padding: 6px 12px;
   display: flex;
@@ -3076,15 +3041,12 @@ body {
   line-height: 160%;
   color: #591111;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-resolve span {
   margin-left: 8px;
 }
-
 .sby-block-license-expired-notice-ctn.sby-bln-license-state-inactive .sby-blen-resolve span {
   color: #141B38;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-resolve a {
   font-weight: 600;
   font-size: 14px;
@@ -3092,24 +3054,19 @@ body {
   color: #D72C2C;
   text-decoration: none;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-resolve .sby-right svg {
   margin-left: 6px;
   transition: all .2s ease-in;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-resolve .sby-right:hover svg {
   margin-left: 3px;
 }
-
 .sby-block-license-expired-notice-ctn .sby-blen-resolve .sby-right svg path{
   fill: #D72C2C;
 }
-
 .sby-block-license-expired-notice-ctn.sby-bln-license-state-inactive .sby-blen-resolve a {
   color: #0068A0;
 }
-
 .sby-block-license-expired-notice-ctn.sby-bln-license-state-inactive .sby-blen-resolve .sby-right svg path {
   fill: #0068A0;
 }

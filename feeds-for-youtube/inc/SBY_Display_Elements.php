@@ -590,9 +590,14 @@ class SBY_Display_Elements
 
 	public static function get_style_att( $context, $settings, $pos = false ) {
 		$style_settings = array();
-		$item_spacing_setting = $settings['itemspacing'];
-		if ( ! preg_match("/(px)|(%)/", $item_spacing_setting ) ) {
-			$item_spacing_setting = $item_spacing_setting . $settings['itemspacingunit'];
+		// itemspacing was used verbatim whenever it already contained px or %, and the unit was
+		// appended unvalidated — both land inside style="…", where esc_attr() prevents escaping
+		// the attribute but not appending another declaration inside it. (SMASH-1799)
+		$item_spacing_setting = sby_css_length( $settings['itemspacing'] );
+		if ( '' === $item_spacing_setting ) {
+			$item_spacing_setting = '0px';
+		} elseif ( ! preg_match( "/(px)|(%)/", $item_spacing_setting ) ) {
+			$item_spacing_setting = $item_spacing_setting . sby_css_unit( $settings, 'itemspacingunit' );
 		}
 		if ( $context === 'player' ) {
 			$style_settings['margin-bottom'] = $item_spacing_setting;
@@ -740,16 +745,16 @@ class SBY_Display_Elements
 		     || ! empty( $settings['height'] ) ) {
 			$styles = ' style="';
 			if ( ! empty( $settings['imagepadding'] ) ) {
-				$styles .= 'padding-bottom: ' . ((int)$settings['imagepadding'] * 2) . esc_attr( $settings['imagepaddingunit'] ) . ';';
+				$styles .= 'padding-bottom: ' . ((int)$settings['imagepadding'] * 2) . sby_css_unit( $settings, 'imagepaddingunit' ) . ';';
 			}
 			if ( ! empty( $bg_color ) ) {
 				$styles .= 'background-color: rgb(' . esc_attr( sby_hextorgb( $bg_color ) ). ');';
 			}
 			if ( ! empty( $settings['width'] ) ) {
-				$styles .= 'width: ' . (int)$settings['width'] . esc_attr( $settings['widthunit'] ) . ';';
+				$styles .= 'width: ' . (int)$settings['width'] . sby_css_unit( $settings, 'widthunit' ) . ';';
 			}
 			if ( ! empty( $settings['height'] ) ) {
-				$styles .= 'height: ' . (int)$settings['height'] . esc_attr( $settings['heightunit'] ) . ';';
+				$styles .= 'height: ' . (int)$settings['height'] . sby_css_unit( $settings, 'heightunit' ) . ';';
 			}
 			$styles .= '"';
 		}
@@ -767,7 +772,7 @@ class SBY_Display_Elements
 	 */
 	public static function get_items_wrap_style( $settings ) {
 		if ( ! empty ( $settings['imagepadding'] ) ) {
-			return 'style="padding: '.(int)$settings['imagepadding'] . esc_attr( $settings['imagepaddingunit'] ) . ';"';
+			return 'style="padding: '.(int)$settings['imagepadding'] . sby_css_unit( $settings, 'imagepaddingunit' ) . ';"';
 		}
 		return '';
 	}

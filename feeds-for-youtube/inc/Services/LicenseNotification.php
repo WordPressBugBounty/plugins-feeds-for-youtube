@@ -165,11 +165,12 @@ class LicenseNotification extends ServiceProvider {
 		if ( $license_state == 'inactive' ) {
 			return admin_url('admin.php?page=youtube-feed-settings');
 		}
-		$license_key = get_option( 'sby_license_key' ) ? get_option( 'sby_license_key' ) : null;
-
 		$url = sprintf(
-			'https://smashballoon.com/checkout/?edd_license_key=%s&download_id=%s&utm_campaign=youtube-pro&utm_source=expired-notice&utm_medium=renew-license',
-			$license_key,
+			// The key used to be interpolated here as edd_license_key, and this URL is rendered
+			// into the notice markup the license-recheck handler returns. Dropping the
+			// placeholder alone was not enough: the argument had to go with it, or $license_key
+			// slides up into download_id and the key is still in the URL. (SMASH-1799)
+			'https://smashballoon.com/checkout/?download_id=%s&utm_campaign=youtube-pro&utm_source=expired-notice&utm_medium=renew-license',
 			$sby_download_id
 		);
 

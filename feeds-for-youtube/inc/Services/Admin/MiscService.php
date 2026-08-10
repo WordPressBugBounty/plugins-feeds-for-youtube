@@ -61,9 +61,9 @@ class MiscService extends ServiceProvider {
 			if ( isset( $account['local_avatar'] ) && $account['local_avatar'] && isset( $options['favorlocal'] ) && $options['favorlocal' ] === 'on' ) {
 				$upload = wp_upload_dir();
 				$resized_url = trailingslashit( $upload['baseurl'] ) . trailingslashit( SBY_UPLOADS_NAME );
-				$profile_picture = '<img class="sbspf_ca_avatar" src="'.$resized_url . $account['username'].'.jpg" />'; //Could add placeholder avatar image
+				$profile_picture = '<img class="sbspf_ca_avatar" alt="'.esc_attr( $username ).' channel avatar" src="'.$resized_url . $account['username'].'.jpg" />'; //Could add placeholder avatar image
 			} else {
-				$profile_picture = $account['profile_picture'] ? '<img class="sbspf_ca_avatar" src="'.$account['profile_picture'].'" />' : ''; //Could add placeholder avatar image
+				$profile_picture = $account['profile_picture'] ? '<img class="sbspf_ca_avatar" alt="'.esc_attr( $username ).' channel avatar" src="'.$account['profile_picture'].'" />' : ''; //Could add placeholder avatar image
 			}
 
 			$text_domain = SBY_TEXT_DOMAIN;

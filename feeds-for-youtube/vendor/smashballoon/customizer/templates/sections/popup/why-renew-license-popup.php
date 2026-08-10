@@ -1,13 +1,13 @@
 <div class="sbc-license-why-renew sbc-popup-blur-background sb-fs-boss sbc-center-boss" v-if="viewsActive.whyRenewLicense != null && viewsActive.whyRenewLicense != false">
-	<div class="sbc-extensions-popup sbc-popup-inside" v-if="viewsActive.whyRenewLicense != null && viewsActive.whyRenewLicense != false">
-        <div class="sbc-popup-cls" @click.prevent.default="activateView('whyRenewLicense')">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<div class="sbc-extensions-popup sbc-popup-inside" v-if="viewsActive.whyRenewLicense != null && viewsActive.whyRenewLicense != false" role="dialog" aria-modal="true" aria-labelledby="sbc-why-renew-heading" tabindex="-1">
+        <button type="button" class="sbc-popup-cls" aria-label="<?php esc_attr_e('Close', 'feeds-for-youtube'); ?>" @click.prevent.default="activateView('whyRenewLicense')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                 <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#141B38"/>
             </svg>
-        </div>
+        </button>
         <div>
             <div class="sb-llm-header">
-                <h3>Why Renew?</h3>
+                <h3 id="sbc-why-renew-heading">Why Renew?</h3>
                 <p>See below for why it's so important to keep an active plugin license.</p>
             </div>
             <div class="sb-why-renew-list-parent">

@@ -1,3 +1,47 @@
+/* Visually-hidden utility (SMASH-1381 A11Y). Mirrors the IG Pro
+   `.sb-screenreader` pattern so control templates that need an
+   off-screen accessible name have a shared helper. Scoped class name
+   carries the customizer `sbc-` prefix. */
+.sbc-screenreader {
+	border: 0 !important;
+	clip: rect(1px, 1px, 1px, 1px) !important;
+	-webkit-clip-path: inset(50%) !important;
+	clip-path: inset(50%) !important;
+	height: 1px !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	position: absolute !important;
+	width: 1px !important;
+	word-wrap: normal !important;
+}
+
+/* Admin focus indicators (SMASH-1381 A11Y-Focus). Modern browsers only
+   apply :focus-visible when focus is keyboard-driven, leaving mouse
+   clicks unaffected. Scope covers the YouTube/SB feed-builder admin body
+   (WordPress generates `*_page_<slug>` classes on <body>) and the
+   customizer mount + per-container utility classes, so the ring is
+   consistent across every surface the customizer renders into.
+
+   Visual treatment uses `box-shadow` (not `outline`) so the ring respects
+   each element's `border-radius`. `outline: 2px solid transparent` is
+   retained for Windows High Contrast Mode (which honors outline, not
+   box-shadow). The customizer has no design-token file of its own, so the
+   ring color is inlined here matching the shared --sb-focus-ring (#007ca8). */
+body[class*="_page_"][class*="-feed-builder"] *:focus-visible,
+#sbc-builder-app *:focus-visible,
+.sbc-fb-fs *:focus-visible,
+.sbc-fb-popup-inside *:focus-visible,
+[id^="sbc-builder"] *:focus-visible,
+[id^="sbc-settings"] *:focus-visible {
+	/* !important needed because pre-existing `outline: none !important`
+	   rules in global.css/builder.css would otherwise suppress the ring
+	   for keyboard users. */
+	outline: 2px solid transparent !important;
+	outline-offset: 0 !important;
+	box-shadow: 0 0 0 2px #007ca8 !important;
+}
+
 /*
 	Global CSS styles
 	Theses styles can be used for different screens
@@ -1522,7 +1566,8 @@
 	padding-bottom: 50px;
 }
 
-.sb-customizer-sidebar-breadcrumb a, .sb-customizer-sidebar-breadcrumb span {
+.sb-customizer-sidebar-breadcrumb a, .sb-customizer-sidebar-breadcrumb span,
+.sb-customizer-sidebar-breadcrumb button.sb-customizer-sidebar-breadcrumb-link {
 	display: inline-block;
 	position: relative;
 	cursor: pointer;
@@ -1534,6 +1579,13 @@
 	padding: 0 5px 0 4px;
 	height: 20px;
 	font-weight: 700;
+}
+/* a11y: buttons vertically CENTER their content (UA) while anchors top-align
+   the line box — restore the anchor's text position after the <a>-><button>
+   conversion (SMASH-1381; see builder.css twin rule). */
+.sb-customizer-sidebar-breadcrumb button.sb-customizer-sidebar-breadcrumb-link {
+	display: inline-flex;
+	align-items: flex-start;
 }
 .sb-control-elem-ctn {
 	display: flex;

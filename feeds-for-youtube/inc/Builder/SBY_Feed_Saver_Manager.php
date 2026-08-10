@@ -352,8 +352,10 @@ class SBY_Feed_Saver_Manager
 
 			$shortcode = new ShortcodeService();
 			$feed_output = $shortcode->sby_youtube_feed($atts, $only_preview);
-			$return['feed_html'] = $feed_output['feedInitOutput'];
-			;
+			// The customizer mounts this string as a Vue component TEMPLATE, so {{ ... }} in a
+			// video title, description, channel title or bio is evaluated JavaScript that no
+			// HTML escaper touches (SMASH-1799).
+			$return['feed_html'] = sby_neutralize_vue_delimiters( $feed_output['feedInitOutput'] );
 			$return['customizerDataSettings'] = $preview_settings;
 
 			echo json_encode($return);
@@ -401,8 +403,10 @@ class SBY_Feed_Saver_Manager
 
 			$shortcode = new ShortcodeService();
 			$feed_output = $shortcode->sby_youtube_feed($atts, $preview_settings);
-			$return['feed_html'] = $feed_output['feedInitOutput'];
-			;
+			// The customizer mounts this string as a Vue component TEMPLATE, so {{ ... }} in a
+			// video title, description, channel title or bio is evaluated JavaScript that no
+			// HTML escaper touches (SMASH-1799).
+			$return['feed_html'] = sby_neutralize_vue_delimiters( $feed_output['feedInitOutput'] );
 			$return['customizerDataSettings'] = $preview_settings;
 
 			echo json_encode($return);

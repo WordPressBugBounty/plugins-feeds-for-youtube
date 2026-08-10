@@ -27,7 +27,15 @@ class SBY_Source {
 		add_action( 'wp_ajax_sbi_source_get_page', array( 'SmashBalloon\YouTubeFeed\Builder\SBY_Source', 'get_page' ) );
 		add_action( 'wp_ajax_sbi_source_get_featured_post_preview', array( 'SmashBalloon\YouTubeFeed\Builder\SBY_Source', 'get_featured_post_preview' ) );
 		add_action( 'wp_ajax_sbi_source_get_playlist_post_preview', array( 'SmashBalloon\YouTubeFeed\Builder\SBY_Source', 'get_playlist_post_preview' ) );
-		add_action( 'admin_init', array( 'SmashBalloon\YouTubeFeed\Builder\SBY_Source', 'batch_process_legacy_source_queue' ) );
+		// batch_process_legacy_source_queue() removed for SMASH-1799: it was attached to
+		// admin_init with no nonce and no capability check, and admin-ajax.php fires
+		// admin_init during bootstrap before the action dispatch, so it ran on anonymous
+		// requests, writing the sbi_statuses option and making outbound API calls. It was
+		// dead Instagram Feed copy-paste: nothing in this plugin instantiates
+		// SBY_Feed_Builder, so this hooks() method is never called; the only writer of the
+		// queue it consumed, set_legacy_source_queue(), has no callers; and the SBI_Db
+		// class it depended on does not exist here, so it would have fataled if it ever
+		// ran. Deleted rather than gated.
 	}
 
 	/**
@@ -595,38 +603,6 @@ class SBY_Source {
 		$should_do_source_updates = isset( $sbi_statuses_option['legacy_source_queue'] ) ? ! empty( $sbi_statuses_option['legacy_source_queue'] ) : false;
 
 		return apply_filters( 'should_do_source_updates', $should_do_source_updates );
-	}
-
-	/**
-	 * Processes one set of connected accounts
-	 *
-	 * @since 2.0
-	 */
-	public static function batch_process_legacy_source_queue() {
-		if ( ! self::should_do_source_updates() ) {
-			return;
-		}
-
-		$sbi_statuses_option = get_option( 'sbi_statuses', array() );
-		$batch               = array_shift( $sbi_statuses_option['legacy_source_queue'] );
-		update_option( 'sbi_statuses', $sbi_statuses_option ); // updated early just in case there is a fatal error
-
-		if ( empty( $batch ) ) {
-			return;
-		}
-		$options = get_option( 'sb_instagram_settings', array() );
-
-		$connected_accounts = isset( $options['connected_accounts'] ) ? $options['connected_accounts'] : array();
-
-		foreach ( $batch as $account_key ) {
-			$connected_account = isset( $connected_accounts[ $account_key ] ) ? $connected_accounts[ $account_key ] : false;
-
-			if ( $connected_account ) {
-				self::update_single_source( $connected_account );
-			}
-		}
-
-		return $sbi_statuses_option['legacy_source_queue'];
 	}
 
 	/**

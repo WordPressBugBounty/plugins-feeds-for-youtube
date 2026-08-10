@@ -36,7 +36,7 @@ $play_icon_attr     = SBY_Display_Elements::get_element_attribute( 'icon', $sett
 $video_title_attr   = SBY_Display_Elements::get_element_attribute( 'title', $settings );
 $hover_video_title_attr = SBY_Display_Elements::get_element_attribute( 'hover_title', $settings );
 ?>
-<div class="sby_item <?php echo esc_attr( $classes ); ?>" id="sby_<?php echo esc_html( $post_id ); ?>" data-date="<?php echo esc_html( $timestamp ); ?>" data-video-id="<?php echo esc_attr( $video_id ); ?>"<?php echo $items_style_attr; ?><?php echo $additional_atts_string; ?>>
+<div class="sby_item <?php echo esc_attr( $classes ); ?>"<?php echo ( sby_is_pro() && isset( $settings['layout'] ) && $settings['layout'] === 'carousel' ) ? '' : ' role="listitem"'; ?> id="sby_<?php echo esc_html( $post_id ); ?>" data-date="<?php echo esc_html( $timestamp ); ?>" data-video-id="<?php echo esc_attr( $video_id ); ?>"<?php echo $items_style_attr; ?><?php echo $additional_atts_string; ?>>
     <div class="sby_inner_item">
         <div class="sby_video_thumbnail_wrap sby_item_video_thumbnail_wrap">
             <a class="sby_video_thumbnail sby_item_video_thumbnail" href="<?php echo esc_url( $permalink ); ?>" target="_blank" rel="noopener" data-full-res="<?php echo esc_url( $media_full_res ); ?>" data-img-src-set="<?php echo esc_attr( wp_json_encode( $media_all_sizes_json ) ); ?>" data-video-id="<?php echo esc_attr( $video_id ); ?>" data-video-title="<?php echo sby_esc_attr_with_br( $title ); ?>">
@@ -45,7 +45,7 @@ $hover_video_title_attr = SBY_Display_Elements::get_element_attribute( 'hover_ti
                 <div class="sby_thumbnail_hover sby_item_video_thumbnail_hover">
                     <div class="sby_thumbnail_hover_inner">
                         <?php if ( SBY_Display_Elements::should_show_element( 'title', $context . '-hover', $settings ) ) : ?>
-                            <span class="sby_video_title" <?php echo $hover_video_title_attr; ?>><?php echo esc_html( $title ); ?></span>
+                            <span class="sby_video_title" role="heading" aria-level="3" <?php echo $hover_video_title_attr; ?>><?php echo esc_html( $title ); ?></span>
                         <?php endif; ?>
                     </div>
                 </div>

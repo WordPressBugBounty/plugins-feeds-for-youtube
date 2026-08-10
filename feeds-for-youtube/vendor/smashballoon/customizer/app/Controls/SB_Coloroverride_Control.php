@@ -46,7 +46,7 @@ class SB_Coloroverride_Control extends \Smashballoon\Customizer\Controls\SB_Cont
         echo $controlEditingTypeModel;
         ?>[control.id]"></div>
 			</div>
-			<div class="sb-control-colorpicker-btn" @click.prevent.default="resetColorOverride(control.id)">{{genericText.reset}}</div>
+			<button type="button" class="sb-control-colorpicker-btn" @click.prevent="resetColorOverride(control.id)">{{genericText.reset}}</button>
 		</div>
 		<?php 
     }

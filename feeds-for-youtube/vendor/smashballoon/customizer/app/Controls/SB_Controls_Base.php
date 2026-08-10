@@ -98,14 +98,19 @@ abstract class SB_Controls_Base
 
 		<div class="sb-control-elem-overlay"
 			v-show="shouldShowOverlay(control)"
+			:tabindex="(control.checkExtensionPopup != undefined && !checkExtensionActive(control.checkExtensionPopup)) ? 0 : null"
+			:role="(control.checkExtensionPopup != undefined && !checkExtensionActive(control.checkExtensionPopup)) ? 'button' : null"
+			:aria-label="(control.checkExtensionPopup != undefined && !checkExtensionActive(control.checkExtensionPopup)) ? 'Upgrade to unlock this Pro feature' : null"
 			@click.prevent.default="control.checkExtensionPopup != false && !checkExtensionActive(control.checkExtensionPopup) ? viewsActive.extensionsPopupElement = control.checkExtensionPopup : false"
+			@keydown.enter.prevent.default="control.checkExtensionPopup != false && !checkExtensionActive(control.checkExtensionPopup) ? viewsActive.extensionsPopupElement = control.checkExtensionPopup : false"
+			@keydown.space.prevent.default="control.checkExtensionPopup != false && !checkExtensionActive(control.checkExtensionPopup) ? viewsActive.extensionsPopupElement = control.checkExtensionPopup : false"
 			:class="control.checkExtensionPopup != undefined && !checkExtensionActive(control.checkExtensionPopup) ? 'sb-cursor-pointer' : ''"
 		>
 		</div>
 
 		<div class="sb-control-elem-label" v-if="(control.heading == undefined && control.description == undefined) ? false : true &&  control.type != 'customview'" :class="control.class">
 			<div class="sb-control-elem-label-title sbc-fb-fs">
-				<div v-if="control.icon != undefined" class="sb-control-elem-icon" v-html="svgIcons[control.icon]"></div>
+				<div v-if="control.icon != undefined" class="sb-control-elem-icon" aria-hidden="true" v-html="svgIcons[control.icon]"></div>
 				<div class="sb-control-elem-heading sb-small-p sb-dark-text" :data-underline="control.underline" :class="control.enableViewAction != undefined && control.enableViewAction != false ? 'sb-cursor-pointer' : ''" v-html="control.heading" @click.prevent.default="control.enableViewAction != undefined && control.enableViewAction != false ? switchNestedSection(control.enableViewAction, null ) : false"></div>
 				<div class="sb-control-elem-tltp" v-if="control.tooltip != undefined" @mouseover.prevent.default="toggleElementTooltip(control.tooltip, 'show', control.tooltipAlign ? control.tooltipAlign : 'center' )" @mouseleave.prevent.default="toggleElementTooltip('', 'hide')">
 					<div class="sb-control-elem-tltp-icon" v-html="svgIcons['info']"></div>
@@ -113,7 +118,7 @@ abstract class SB_Controls_Base
 			</div>
 			<div class="sb-control-elem-description" v-if="control.descriptionPosition != 'bottom'" v-html="control.description"></div>
 		</div>
-		<div class="sb-control-elem-output">
+		<div class="sb-control-elem-output" :inert="shouldShowOverlay(control) ? true : null">
 			<?php 
         $this->get_control_output($controlEditingTypeModel);
         ?>

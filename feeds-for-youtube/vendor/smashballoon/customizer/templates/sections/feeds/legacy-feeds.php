@@ -5,11 +5,11 @@
 	<div class="sbc-fb-lgc-ctn sbc-fb-fs" v-bind:class="{ 'sb-onboarding-highlight' : viewsActive.onboardingStep === 2 && allFeedsScreen.onboarding.type === 'multiple' }">
 		<div class="sbc-fb-lgc-inf-ctn sbc-fb-fs">
 			<h4>{{allFeedsScreen.legacyFeeds.heading}}</h4>
-			<div class="sbc-fb-onbrd-tltp-parent" @click.prevent.default="openTooltipBig(this)">
+			<div class="sbc-fb-onbrd-tltp-parent" role="button" tabindex="0" @click.prevent.default="openTooltipBig(this)" @keydown.enter.prevent.default="openTooltipBig(this)" @keydown.space.prevent.default="openTooltipBig(this)">
 				<div class="sbc-fb-onbrd-infotxt sb-caption sb-lighter">{{allFeedsScreen.legacyFeeds.toolTip}}<div v-html="svgIcons['information']"></div></div>
 				<div class="sbc-fb-onbrd-tltp-elem" :data-active="viewsActive.enabledToolTip == this">
-					<div class="sbc-fb-popup-cls" @click.prevent.default="closeTooltipBig()">
-						<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<div class="sbc-fb-popup-cls" role="button" tabindex="0" aria-label="<?php esc_attr_e('Close', 'feeds-for-youtube'); ?>" @click.prevent.default.stop="closeTooltipBig()" @keydown.enter.prevent.default.stop="closeTooltipBig()" @keydown.space.prevent.default.stop="closeTooltipBig()">
+						<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 							<path d="M11.8346 1.34175L10.6596 0.166748L6.0013 4.82508L1.34297 0.166748L0.167969 1.34175L4.8263 6.00008L0.167969 10.6584L1.34297 11.8334L6.0013 7.17508L10.6596 11.8334L11.8346 10.6584L7.1763 6.00008L11.8346 1.34175Z" fill="#141B38"/>
 						</svg>
 					</div>
@@ -36,7 +36,7 @@
 				<thead class="sbc-fd-lst-thtf sbc-fd-lst-thead">
 				<tr>
 					<th>
-						<div class="sbc-fd-lst-chkbx"></div>
+						<div class="sbc-fd-lst-chkbx" aria-hidden="true"></div>
 					</th>
 					<th>
 						<span class="sb-caption sb-lighter">{{allFeedsScreen.columns.nameText}}</span>
@@ -55,7 +55,7 @@
 				<tbody  class="sbc-fd-lst-tbody">
 				<tr v-for="(legacyFeed, legacyFeedIndex) in legacyFeedsList">
 					<td>
-						<div class="sbc-fd-lst-chkbx"></div>
+						<div class="sbc-fd-lst-chkbx" aria-hidden="true"></div>
 					</td>
 					<td>
 						<span class="sb-small-p sb-bold sb-lighter">{{legacyFeed.feed_name}}</span>
@@ -65,20 +65,20 @@
 						<div class="sb-flex-center">
 
 							<span class="sbc-fd-lst-shortcode sb-caption sb-lighter">{{legacyFeed.shortcode}}</span>
-							<div class="sbc-fd-lst-shortcode-cp sbc-fd-lst-btn sbc-fb-tltp-parent">
-								<div class="sbc-fb-tltp-elem"><span>{{(genericText.copy +' '+ genericText.shortcode).replace(/ /g,"&nbsp;")}}</span></div>
-								<div v-html="svgIcons['copy']" @click.prevent.default="copyToClipBoard(legacyFeed.shortcode)"></div>
-							</div>
+							<button type="button" class="sbc-fd-lst-shortcode-cp sbc-fd-lst-btn sbc-fb-tltp-parent" :aria-label="genericText.copy +' '+ genericText.shortcode" @click.prevent.default="copyToClipBoard(legacyFeed.shortcode)">
+								<div class="sbc-fb-tltp-elem" aria-hidden="true"><span>{{(genericText.copy +' '+ genericText.shortcode).replace(/ /g,"&nbsp;")}}</span></div>
+								<div v-html="svgIcons['copy']"></div>
+							</button>
 						</div>
 					</td>
 					<td class="sb-caption sb-lighter">
 						<div class="sb-instances-cell" v-if="typeof legacyFeed.instance_count !== 'undefined' && legacyFeed.instance_count !== false">
-							<span>{{genericText.usedIn}} <span class="sbc-fb-view-instances sbc-fb-tltp-parent" :data-active="legacyFeed.instance_count < 1 ? 'false' : 'true'" @click.prevent.default="viewFeedInstances(legacyFeed)">{{legacyFeed.instance_count + ' ' + (legacyFeed.instance_count !== 1 ? genericText.places : genericText.place)}} <div class="sbc-fb-tltp-elem"><span>{{genericText.clickViewInstances.replace(/ /g,"&nbsp;")}}</span></div></span></span>
+							<span>{{genericText.usedIn}} <button type="button" class="sbc-fb-view-instances sbc-fb-tltp-parent" :data-active="legacyFeed.instance_count < 1 ? 'false' : 'true'" :disabled="legacyFeed.instance_count < 1" :aria-label="'View places feed ' + legacyFeed.feed_name + ' is used in'" @click.prevent.default="viewFeedInstances(legacyFeed)">{{legacyFeed.instance_count + ' ' + (legacyFeed.instance_count !== 1 ? genericText.places : genericText.place)}} <div class="sbc-fb-tltp-elem" aria-hidden="true"><span>{{genericText.clickViewInstances.replace(/ /g,"&nbsp;")}}</span></div></button></span>
 						</div>
 					</td>
 					<td class="sbc-fd-lst-actions sbc-fd-lst-dimmed sbc-fb-onbrd-tltp-parent" data-tltp-pos="right" @click.prevent.default="openTooltipBig()">
 						<div class="sbc-fb-onbrd-tltp-elem sbc-fb-onbrd-tltp-elem-2" data-active="false">
-							<div class="sbc-fb-popup-cls" @click.prevent.default="closeTooltipBig()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<div class="sbc-fb-popup-cls" role="button" tabindex="0" aria-label="<?php esc_attr_e('Close', 'feeds-for-youtube'); ?>" @click.prevent.default.stop="closeTooltipBig()" @keydown.enter.prevent.default.stop="closeTooltipBig()" @keydown.space.prevent.default.stop="closeTooltipBig()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#141B38"/>
 								</svg>
 							</div>
@@ -89,13 +89,13 @@
 								</svg>
 							</div>
 						</div>
-						<div class="sbc-fd-lst-btn sbc-fb-tltp-parent">
+						<div class="sbc-fd-lst-btn sbc-fb-tltp-parent" aria-hidden="true">
 							<div v-html="svgIcons['edit']"></div>
 						</div>
-						<div class="sbc-fd-lst-btn sbc-fb-tltp-parent">
+						<div class="sbc-fd-lst-btn sbc-fb-tltp-parent" aria-hidden="true">
 							<div v-html="svgIcons['duplicate']"></div>
 						</div>
-						<div class="sbc-fd-lst-btn sbc-fd-lst-btn-delete sbc-fb-tltp-parent">
+						<div class="sbc-fd-lst-btn sbc-fd-lst-btn-delete sbc-fb-tltp-parent" aria-hidden="true">
 							<div v-html="svgIcons['delete']"></div>
 						</div>
 					</td>
@@ -105,12 +105,12 @@
 			</table>
 		</div>
 
-		<div v-if="feedsList !== null && feedsList.length > 0" class="sbc-fd-legacy-feed-toggle sbc-fb-fs" :data-active="viewsActive.legacyFeedsShown" @click.prevent.default="activateView('legacyFeedsShown')">
+		<div v-if="feedsList !== null && feedsList.length > 0" class="sbc-fd-legacy-feed-toggle sbc-fb-fs" role="button" tabindex="0" :aria-expanded="viewsActive.legacyFeedsShown ? 'true' : 'false'" :data-active="viewsActive.legacyFeedsShown" @click.prevent.default="activateView('legacyFeedsShown')" @keydown.enter.prevent.default="activateView('legacyFeedsShown')" @keydown.space.prevent.default="activateView('legacyFeedsShown')">
 			<span>{{viewsActive.legacyFeedsShown ? allFeedsScreen.legacyFeeds.hide : allFeedsScreen.legacyFeeds.show}}</span>
-			<svg v-if="! viewsActive.legacyFeedsShown" width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg v-if="! viewsActive.legacyFeedsShown" width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 				<path d="M1.675 0.158447L5.5 3.97511L9.325 0.158447L10.5 1.33345L5.5 6.33345L0.5 1.33345L1.675 0.158447Z" fill="#004D77"/>
 			</svg>
-			<svg v-else width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg v-else width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 				<path d="M9.325 6.84167L5.5 3.02501L1.675 6.84168L0.5 5.66668L5.5 0.666676L10.5 5.66668L9.325 6.84167Z" fill="#0068A0"/>
 			</svg>
 

@@ -258,7 +258,12 @@ class Feed_Saver
             $return = json_decode($settings_db_data[0]['settings'], \true);
             $return['feed_name'] = $settings_db_data[0]['feed_name'];
         }
-        $return = wp_parse_args($return, $this->proxy_provider->get_db_settings());
+        $db_settings = $this->proxy_provider->get_db_settings();
+        $return = wp_parse_args($return, $db_settings);
+        $api_key = !empty($db_settings['api_key']) ? $db_settings['api_key'] : '';
+        if (!empty($api_key)) {
+            $return['api_key'] = $api_key;
+        }
         if (empty($return['id'])) {
             return $return;
         }

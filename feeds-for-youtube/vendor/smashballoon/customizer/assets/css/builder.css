@@ -1051,6 +1051,41 @@ Social Links
     grid-column-gap: 10px;
     margin-top: 20px;
 }
+/* a11y: native <button> resets for creation-flow controls converted from divs/anchors (SMASH-1381).
+   Each class already sets display/background/border; these only neutralize UA button chrome. */
+button.sbc-feedtype-el,
+button.sbc-feedtemplate-el {
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
+}
+button.sbc-btn,
+button.sbc-slctf-back,
+button.sbc-yt-btn {
+    font: inherit;
+    border: 0;
+    appearance: none;
+    -webkit-appearance: none;
+}
+button.sbc-feedflow-manual-connect {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+/* a11y: the step heading receives programmatic focus on step change; it is not
+   interactive, so suppress the focus ring there (checklist class D). */
+.sbc-feedtype-heading h1.sbc-creation-step-heading:focus,
+.sbc-feedtype-heading h1.sbc-creation-step-heading:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
 .sbc-feedtype-el {
     display: flex;
     flex-direction: row;
@@ -1559,6 +1594,18 @@ tbody .sbc-fd-lst-chkbx {
 .sbc-fb-tltp-parent{
     position: relative;
 }
+/* a11y: native <button> reset so the converted view-instances control matches the prior span (SMASH-1381) */
+button.sbc-fb-view-instances {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
+}
 .sbc-fb-view-instances[data-active="true"]{
     font-weight: 600;
     text-decoration: underline;
@@ -1884,6 +1931,71 @@ body.folded .sb-customizer-sidebar{
     align-items: center;
     margin-bottom: 24px;
 }
+/* a11y: native <button> resets for the wave-1 Builder Control conversions
+   (SMASH-1381 wave 4 — the wave-1 PR added the buttons without resetting UA
+   chrome). Each control class keeps its own display/size styling. */
+button.sb-control-switcher-ctn,
+button.sb-control-checkbox-ctn,
+button.sb-control-checkbox,
+button.sb-control-checkboxsection-open,
+button.sb-control-colorpicker-swatch,
+button.sb-control-colorpicker-btn,
+button.sb-control-imagechooser-clear-icon,
+button.sb-control-imagechooser-btn,
+button.sb-control-input-info {
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
+}
+button.sb-control-switcher-ctn,
+button.sb-control-colorpicker-swatch,
+button.sb-control-imagechooser-clear-icon {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+/* the checkbox square draws ITSELF via the class border (2px #D0D1D7) and
+   keeps its 10px label gap via the class margin-right — only neutralize the
+   UA background/padding, never border/margin (QA: unchecked boxes vanished) */
+button.sb-control-checkbox {
+    background: transparent;
+    padding: 0;
+}
+button.sb-control-checkbox-ctn {
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+/* wave-1 moved the chevron svg INSIDE this button (it used to be a flex
+   SIBLING in the row container), so the button must lay out [label][chevron]
+   as a flex row itself or the chevron wraps under the block-level label
+   (QA: 'Edit Individual Elements' rows broken) */
+button.sb-control-checkboxsection-open {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+/* a11y: native <button> reset so role="tab" elements match prior divs (SMASH-1381) */
+button.sb-customizer-sidebar-tab {
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+}
 .sb-customizer-sidebar-tab{
     width: 50%;
     height: 56px;
@@ -1900,6 +2012,18 @@ body.folded .sb-customizer-sidebar{
 .sb-customizer-sidebar-tab:hover {
     background: #fff!important;
     color: #141B38!important;
+}
+/* a11y: native <button> reset so section-row buttons match prior divs (SMASH-1381) */
+button.sb-customizer-sidebar-sec-el {
+    width: 100%;
+    background: transparent;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
 }
 .sb-customizer-sidebar-sec-el{
     height: 52px;
@@ -1960,7 +2084,20 @@ body.folded .sb-customizer-sidebar{
 .sb-customizer-sidebar-breadcrumb{
     margin-bottom: 3px;
 }
-.sb-customizer-sidebar-breadcrumb a, .sb-customizer-sidebar-breadcrumb span{
+/* a11y: native <button> reset for breadcrumb back-links. Anchors default to
+   text-align:start / vertical-align:baseline; restore those so the button
+   aligns with sibling breadcrumbs (SMASH-1381). */
+.sb-customizer-sidebar-breadcrumb button.sb-customizer-sidebar-breadcrumb-link {
+    background: transparent;
+    border: 0;
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: left;
+    vertical-align: baseline;
+}
+.sb-customizer-sidebar-breadcrumb a, .sb-customizer-sidebar-breadcrumb span,
+.sb-customizer-sidebar-breadcrumb button.sb-customizer-sidebar-breadcrumb-link{
     display: inline-block;
     position: relative;
     cursor: pointer;
@@ -1973,6 +2110,16 @@ body.folded .sb-customizer-sidebar{
     height: 20px;
     font-weight: 600;
 }
+/* a11y: buttons vertically CENTER their content (UA behavior) while anchors
+   top-align the line box, which dropped the breadcrumb text 2px below the
+   chevron after the <a>-><button> conversion. inline-flex + flex-start
+   restores the anchor's exact text position (verified: text y matches the
+   pre-conversion anchor pixel-for-pixel). Placed after the shared group rule
+   so it wins the display declaration (SMASH-1381). */
+.sb-customizer-sidebar-breadcrumb button.sb-customizer-sidebar-breadcrumb-link {
+    display: inline-flex;
+    align-items: flex-start;
+}
 .sb-customizer-sidebar-breadcrumb span{
     cursor: text;
 }
@@ -1980,6 +2127,17 @@ body.folded .sb-customizer-sidebar{
     position: absolute;
     left: 0px;
     top: 4px;
+}
+/* a11y: native <button> reset for the "Tweak video styles" section link (SMASH-1381) */
+button.sbc-sidebar-video-sections-link {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
 }
 .sb-customizer-sidebar-intro{
     display: block;
@@ -2586,7 +2744,8 @@ Controls Style
     margin-right: 10px;
     flex: none;
 }
-.sb-control-checkbox-ctn > div{
+.sb-control-checkbox-ctn > div,
+.sb-control-checkbox-ctn > button{
 	z-index: 3;
 }
 .sb-control-checkbox-ctn:hover .sb-control-checkbox-hover{
@@ -3226,6 +3385,52 @@ Welcome Screen Empty State
     right: 17px;
     top: 17px;
     z-index: 3;
+}
+/* a11y: native <button> reset for popup close/back/breadcrumb controls
+   converted from divs/anchors in SMASH-1381 wave 3. Each host class keeps
+   its own positioning/size; this only neutralizes UA button chrome. */
+button.sbc-popup-cls,
+button.sbc-pp-popup-cls,
+button.sbc-fb-popup-cls,
+button.sbc-hide-api-form,
+button.sb-embed-breadcrumb-link {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+button.sbc-embed-btn,
+button.sbc-onboarding-previous,
+button.sbc-onboarding-next,
+button.sbc-onboarding-finish {
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+}
+button.sbc-onboarding-previous[disabled] {
+    pointer-events: none;
+}
+/* breadcrumb-link inherits the old `.sb-embed-breadcrumb a` styling */
+.sb-embed-breadcrumb button.sb-embed-breadcrumb-link {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 160%;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #434960;
+}
+/* a11y: embed-popup step headings receive programmatic focus on view swap;
+   they are not interactive, so suppress the ring (checklist class D). */
+.sbc-embed-popup h3.sbc-embed-step-heading:focus,
+.sbc-embed-popup h3.sbc-embed-step-heading:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
 }
 .sbc-srcs-popup-btns {
     display: grid;
@@ -4690,11 +4895,6 @@ Feed Instance Popup
         padding-left: 20px;
         padding-right: 20px;
     }
-
-    .sbc-click-social-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title,
-    .sbc-click-social-upsell-banner .sbc-row .sbc-col-right p {
-        max-width: 100%;
-    }
 }
 
 /* === AAB Upsell Banner === */
@@ -4706,16 +4906,6 @@ Feed Instance Popup
     max-width: 450px;
 }
 
-
-/* === Click Social Upsell Banner === */
-
-.sbc-click-social-upsell-banner .sbc-row .sbc-col-right .sbc-upsell-banner-title{ 
-    max-width: 466px;
-}
-
-.sbc-click-social-upsell-banner .sbc-row .sbc-col-right p{ 
-    max-width: 375px;
-}
 
 /* === Feed Plugin Upsell Banner === */
 

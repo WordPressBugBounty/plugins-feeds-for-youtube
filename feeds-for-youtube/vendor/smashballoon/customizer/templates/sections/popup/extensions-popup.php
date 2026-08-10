@@ -1,15 +1,16 @@
 <div class="sbc-extensions-pp-ctn sb-fs-boss sbc-center-boss" v-if="viewsActive.extensionsPopupElement != null && viewsActive.extensionsPopupElement != false">
-	<div 
-        class="sbc-extensions-popup sbc-popup-inside" 
-        v-if="viewsActive.extensionsPopupElement != null && viewsActive.extensionsPopupElement != false" 
+	<div
+        class="sbc-extensions-popup sbc-popup-inside"
+        v-if="viewsActive.extensionsPopupElement != null && viewsActive.extensionsPopupElement != false"
         :data-getext-view="viewsActive.extensionsPopupElement"
         :class="{'sbc-extpp-license-expired-border': sbyLicenseNoticeActive}"
+        role="dialog" aria-modal="true" aria-labelledby="sbc-extensions-popup-heading" tabindex="-1"
     >
-        <div class="sbc-popup-cls" @click.prevent.default="activateView('extensionsPopupElement')">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <button type="button" class="sbc-popup-cls" aria-label="<?php esc_attr_e('Close', 'feeds-for-youtube'); ?>" @click.prevent.default="activateView('extensionsPopupElement')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                 <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#141B38"/>
             </svg>
-        </div>
+        </button>
         <div>
             <div class="sbc-extpp-top sbc-fs">
                 <div class="sbc-extpp-info">
@@ -17,7 +18,7 @@
                         <span v-html="genericText.licenseInactive" v-if="sbyLicenseInactiveState"></span>
                         <span v-html="genericText.licenseExpired"  v-if="!sbyLicenseInactiveState"></span>
                     </div>
-                    <div class="sbc-extpp-head sbc-fs"><h2 v-html="extensionsPopup[viewsActive.extensionsPopupElement].heading"></h2></div>
+                    <div class="sbc-extpp-head sbc-fs"><h2 id="sbc-extensions-popup-heading" v-html="extensionsPopup[viewsActive.extensionsPopupElement].heading"></h2></div>
                     <div class="sbc-extpp-desc sbc-fs sb-caption" v-html="extensionsPopup[viewsActive.extensionsPopupElement].description"></div>
                     <div v-if="extensionsPopup[viewsActive.extensionsPopupElement].popupContentBtn && !sbyIsPro" v-html="extensionsPopup[viewsActive.extensionsPopupElement].popupContentBtn"></div>
                 </div>

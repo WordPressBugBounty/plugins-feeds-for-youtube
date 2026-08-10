@@ -425,7 +425,9 @@ class LicenseService extends ServiceProvider {
 
 			_e("<div class='".$sby_expired_box_classes."'>");
 			if( $sby_notice_dismissible ){
-				_e("<a style='float:right; color: #dd3d36; text-decoration: none;' href='" .esc_url( add_query_arg( 'sby_nag_ignore', '0' ) ). "'>Dismiss</a>");
+				// GUIService::sby_nag_ignore() now requires a nonce, so this link has to carry one
+			// or the Dismiss action silently no-ops. (SMASH-1799)
+			_e("<a style='float:right; color: #dd3d36; text-decoration: none;' href='" .esc_url( wp_nonce_url( add_query_arg( 'sby_nag_ignore', '0' ), 'sby-nag-ignore' ) ). "'>Dismiss</a>");
 			}
 			_e("<p>".$sby_expired_box_msg."
         </div>
@@ -724,6 +726,18 @@ class LicenseService extends ServiceProvider {
 	 * @since 2.0
 	 */
 	public function check_license() {
+		// Had neither a nonce nor a capability check, so any Subscriber could read the site's
+		// paid license key out of the response, overwrite the site-wide sby_license_data
+		// option, and force a 60-second-timeout outbound request per call (SMASH-1799).
+		// The parameter name must stay sby_nonce to keep the existing "Recheck license"
+		// button working, and the capability must be the plugin's own filterable helper
+		// rather than a bare manage_options, which would 403 a delegated feed manager.
+		check_ajax_referer( 'sby-admin', 'sby_nonce' );
+
+		if ( ! sby_current_user_can( 'manage_youtube_feed_options' ) ) {
+			wp_send_json_error( '', 403 );
+		}
+
 		$sby_license = trim( get_option( 'sby_license_key' ) );
 
 		// Check the API
@@ -763,6 +777,12 @@ class LicenseService extends ServiceProvider {
 	 * @since 2.0
 	 */
 	public function dismiss_license_notice() {
+		check_ajax_referer( 'sby-admin', 'sby_nonce' );
+
+		if ( ! sby_current_user_can( 'manage_youtube_feed_options' ) ) {
+			wp_send_json_error( '', 403 );
+		}
+
 		global $current_user;
 		$user_id = $current_user->ID;
 		update_user_meta( $user_id, 'sby_ignore_dashboard_license_notice', true );

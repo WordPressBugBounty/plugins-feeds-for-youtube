@@ -37,12 +37,14 @@ class SB_Switcher_Control extends \Smashballoon\Customizer\Controls\SB_Controls_
     public function get_control_output($controlEditingTypeModel)
     {
         ?>
-		<div class="sb-control-switcher-ctn" :data-active="<?php 
+		<button type="button" class="sb-control-switcher-ctn" role="switch" :aria-checked="(<?php 
         echo $controlEditingTypeModel;
-        ?>[control.id] == control.options.enabled" @click.prevent.default="changeSwitcherSettingValue(control.id, control.options.enabled, control.options.disabled, control.ajaxAction ? control.ajaxAction : false)">
+        ?>[control.id] == control.options.enabled) ? 'true' : 'false'" :aria-label="control.heading || control.label" :data-active="<?php 
+        echo $controlEditingTypeModel;
+        ?>[control.id] == control.options.enabled" @click.prevent.default="changeSwitcherSettingValue(control.id, control.options.enabled, control.options.disabled, control.ajaxAction ? control.ajaxAction : false)" @keydown.enter.prevent="changeSwitcherSettingValue(control.id, control.options.enabled, control.options.disabled, control.ajaxAction ? control.ajaxAction : false)" @keydown.space.prevent="changeSwitcherSettingValue(control.id, control.options.enabled, control.options.disabled, control.ajaxAction ? control.ajaxAction : false)">
 			<div class="sb-control-switcher sb-tr-2"></div>
-			<div class="sb-control-label" v-if="control.label" :data-title="control.labelStrong ? 'true' : false">{{control.label}}</div>
-		</div>
+			<div class="sb-control-label" v-if="control.label" :data-title="control.labelStrong ? 'true' : false" aria-hidden="true">{{control.label}}</div>
+		</button>
 		<?php 
     }
 }

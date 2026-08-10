@@ -100,12 +100,19 @@ class AssetsService extends ServiceProvider {
 		$css_common_file = Util::getPluginAssets('css', 'sb-youtube-common');
 		$css_file = sby_is_pro() ? Util::getPluginAssets('css', 'sb-youtube') : Util::getPluginAssets('css', 'sb-youtube-free');
 
+		// SMASH-1378: design-token mirror providing --sb-focus-ring (+ the
+		// reduced-motion duration override). Enqueued as a dependency of the
+		// feed stylesheets so the :focus-visible ring in css/sb-youtube.css
+		// always has the token defined ahead of it.
+		wp_register_style( 'sby_tokens_local', trailingslashit( SBY_PLUGIN_URL ) . 'assets/tokens/sby-tokens-local.css', array(), SBYVER );
+
 		if ( !empty( $sby_settings['enqueue_css_in_shortcode'] ) ) {
-			wp_register_style( 'sby_common_styles', $css_common_file, array(), SBYVER );
-			wp_register_style( 'sby_styles', $css_file, array(), SBYVER );
+			wp_register_style( 'sby_common_styles', $css_common_file, array( 'sby_tokens_local' ), SBYVER );
+			wp_register_style( 'sby_styles', $css_file, array( 'sby_tokens_local' ), SBYVER );
 		} else {
-			wp_enqueue_style( 'sby_common_styles', $css_common_file, array(), SBYVER );
-			wp_enqueue_style( 'sby_styles', $css_file, array(), SBYVER );
+			wp_enqueue_style( 'sby_tokens_local' );
+			wp_enqueue_style( 'sby_common_styles', $css_common_file, array( 'sby_tokens_local' ), SBYVER );
+			wp_enqueue_style( 'sby_styles', $css_file, array( 'sby_tokens_local' ), SBYVER );
 		}
 
 		$data = array(
@@ -120,7 +127,21 @@ class AssetsService extends ServiceProvider {
 			'eagerload' => false,
 			'nonce'	=> wp_create_nonce( 'sby_nonce' ),
 			'isPro'	=> sby_is_pro(),
-			'isCustomizer' => \sby_doing_customizer( $sby_settings )
+			'isCustomizer' => \sby_doing_customizer( $sby_settings ),
+			// a11y (SMASH-1381): translated strings for the frontend feed's
+			// carousel controls and load-more live-region announcements.
+			'a11y' => array(
+				'prevSlide'      => __( 'Previous slide', 'feeds-for-youtube' ),
+				'nextSlide'      => __( 'Next slide', 'feeds-for-youtube' ),
+				'goToSlide'      => __( 'Go to slide', 'feeds-for-youtube' ),
+				/* translators: Announced to screen readers after one new video loads. */
+				'oneVideoLoaded' => __( '1 new video loaded', 'feeds-for-youtube' ),
+				/* translators: %s: number of newly loaded videos */
+				'videosLoaded'   => __( '%s new videos loaded', 'feeds-for-youtube' ),
+				'livePlayerTitle' => __( 'YouTube live video player', 'feeds-for-youtube' ),
+				'showMoreDescription' => __( 'Show more description', 'feeds-for-youtube' ),
+				'showLessDescription' => __( 'Show less description', 'feeds-for-youtube' ),
+			)
 		);
 		//Pass option to JS file
 		wp_localize_script('sby_scripts', 'sbyOptions', $data );

@@ -9982,6 +9982,32 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 
 
 
+/**
+ * Escape a value about to be interpolated into an HTML string (SMASH-1799).
+ *
+ * The CTA url/text arrive from a data-options attribute read back with jQuery .attr(),
+ * which returns what the HTML parser already decoded — so the esc_attr() applied when the
+ * attribute was written does not survive into this markup-building path. Only setUpCTA()
+ * passed its value through the js-xss wrapper; getDefaultCTA() returned the
+ * settings-derived values unfiltered, so escaping happens here at the sink, which covers
+ * both sources.
+ */
+function sbyEscHtml(v) {
+  return String(typeof v === 'undefined' || v === null ? '' : v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+/**
+ * Only http(s), root-relative or fragment targets may become an href/src.
+ *
+ * Protocol-relative //attacker.tld is deliberately NOT allowed: it is never needed for a
+ * CTA link and it lets a hostile value point off-site while looking relative.
+ */
+function sbySafeUrl(v) {
+  var u = String(typeof v === 'undefined' || v === null ? '' : v).trim();
+  if (/^\/\//.test(u)) {
+    return '';
+  }
+  return /^(https?:\/\/|\/|#)/i.test(u) ? sbyEscHtml(u) : '';
+}
 var xss = __webpack_require__(/*! xss */ "./node_modules/xss/lib/index.js");
 var sby_js_exists = typeof sby_js_exists !== 'undefined' ? true : false;
 if (!sby_js_exists) {
@@ -11466,6 +11492,9 @@ if (!sby_js_exists) {
                 var c = this;
                 this.disableKeyboardNav();
                 var d = this.$lightbox.find(".sby_lb-image");
+                // a11y (F6): name the lightbox image with the video
+                // title at swap time instead of the static placeholder.
+                d.attr("alt", this.album[b] && this.album[b].videoTitle || "");
                 this.$overlay.fadeIn(this.options.fadeDuration), a(".sby_lb-loader").fadeIn("slow"), this.$lightbox.find(".sby_lb-image, .sby_lb-nav, .sby_lb-prev, .sby_lb-next, .sby_lb-dataContainer, .sby_lb-numbers, .sby_lb-caption").hide(), this.$outerContainer.addClass("animating");
                 var e = new Image();
                 e.onload = function () {
@@ -11560,6 +11589,8 @@ if (!sby_js_exists) {
                   } else {
                     var fullImage = $('.sby_item[data-video-id=' + this.album[this.currentImageIndex].video + ']').find('.sby_video_thumbnail').attr('data-full-res');
                     $('.sby_lb-image').attr('src', fullImage);
+                    // a11y (F6): keep the image named after the current video.
+                    $('.sby_lb-image').attr('alt', this.album[this.currentImageIndex].videoTitle || '');
                     this.$outerContainer.removeClass("animating");
                     this.$lightbox.find(".sby_lb-dataContainer").fadeIn(this.options.resizeDuration, function () {
                       return b.sizeOverlay();
@@ -11593,7 +11624,7 @@ if (!sby_js_exists) {
                 var keycode = event.keyCode;
                 var key = String.fromCharCode(keycode).toLowerCase();
                 if (keycode === KEYCODE_ESC || key.match(/x|o|c/)) {
-                  if (sby_supports_video()) $('#sby_lightbox video.sby_video')[0].pause();
+                  if (sby_supports_video() && $('#sby_lightbox video.sby_video').length) $('#sby_lightbox video.sby_video')[0].pause();
                   $('#sby_lightbox iframe').attr('src', '');
                   this.end();
                 } else if (key === 'p' || keycode === KEYCODE_LEFTARROW) {
@@ -11602,7 +11633,7 @@ if (!sby_js_exists) {
                   } else if (this.options.wrapAround && this.album.length > 1) {
                     this.changeImage(this.album.length - 1);
                   }
-                  if (sby_supports_video()) $('#sby_lightbox video.sby_video')[0].pause();
+                  if (sby_supports_video() && $('#sby_lightbox video.sby_video').length) $('#sby_lightbox video.sby_video')[0].pause();
                   $('#sby_lightbox iframe').attr('src', '');
                 } else if (key === 'n' || keycode === KEYCODE_RIGHTARROW) {
                   if (this.currentImageIndex !== this.album.length - 1) {
@@ -12052,6 +12083,7 @@ if (!sby_js_exists) {
           //If lightbox is disabled
           var videoID = $self.attr('data-video-id');
           if (window.sbyEagerLoading && feed.canCreatePlayer() && $('#sby_player_' + videoID).length) {
+            sbySetPlayerIframeTitle('sby_player_' + videoID, $self.attr('data-video-title'));
             player = new YT.Player('sby_player_' + videoID, {
               height: '100',
               width: '100',
@@ -12249,7 +12281,27 @@ if (!sby_js_exists) {
             }
             if (!response.feedStatus.shouldPaginate) {
               feed.outOfPages = true;
-              $self.find('.sby_load_btn').hide();
+              // a11y (H3 / 2.4.3): hiding the focused Load More
+              // button would drop focus to <body>; move it to the
+              // first newly loaded item instead.
+              var $loadBtn = $self.find('.sby_load_btn');
+              var loadBtnHadFocus = $loadBtn.length && $loadBtn.is(document.activeElement);
+              $loadBtn.hide();
+              if (loadBtnHadFocus) {
+                if (feed.$firstNewItem && feed.$firstNewItem.length) {
+                  feed.$firstNewItem.attr('tabindex', '-1').focus();
+                } else {
+                  // Zero new items on the last page: no item to
+                  // move to, so redirect focus to the feed status
+                  // live region (or the feed container) instead of
+                  // losing it to the now-hidden button.
+                  var $focusFallback = $self.find('[data-sby-feed-status]');
+                  if (!$focusFallback.length) {
+                    $focusFallback = $self;
+                  }
+                  $focusFallback.attr('tabindex', '-1').focus();
+                }
+              }
             } else {
               feed.outOfPages = false;
             }
@@ -12267,6 +12319,41 @@ if (!sby_js_exists) {
         } else {
           $self.find('.sby_items_wrap').append(newPostsHtml);
         }
+        // a11y (H3 / 2.4.3): remember the first newly appended item so
+        // the last-page handler can redirect focus to it when the Load
+        // More button disappears while focused.
+        // Reset per-load so the last-page handler never focuses a
+        // stale item from a previous page when zero new items arrive.
+        feed.$firstNewItem = $();
+        var appendedCount = $('<div></div>').append(newPostsHtml).find('.sby_item').length;
+        if (appendedCount > 0) {
+          feed.$firstNewItem = $self.find('.sby_items_wrap .sby_item').slice(-appendedCount).first();
+        }
+        // SMASH-1378 / WCAG 4.1.3: announce the newly loaded videos to
+        // assistive tech via the polite status region in footer.php.
+        feed.announceFeedStatus(newPostsHtml);
+      },
+      // Counts the videos in the appended markup and writes a polite
+      // message into the [data-sby-feed-status] region so screen reader
+      // users are told that paginated content arrived.
+      announceFeedStatus: function announceFeedStatus(newPostsHtml) {
+        var $self = $(this.el);
+        var $status = $self.find('[data-sby-feed-status]');
+        if (!$status.length) {
+          return;
+        }
+        var newCount = $('<div></div>').append(newPostsHtml).find('.sby_item').length;
+        if (newCount < 1) {
+          return;
+        }
+        var sbyA11y = window.sbyOptions && sbyOptions.a11y || {};
+        var message = newCount === 1 ? sbyA11y.oneVideoLoaded || '1 new video loaded' : (sbyA11y.videosLoaded || '%s new videos loaded').replace('%s', newCount);
+        // Clear then set on the next frame so AT reliably re-announces
+        // even when the same count loads twice in a row.
+        $status.text('');
+        window.setTimeout(function () {
+          $status.text(message);
+        }, 100);
       },
       addResizedImages: function addResizedImages(resizedImagesToAdd) {
         for (var imageID in resizedImagesToAdd) {
@@ -12909,6 +12996,53 @@ if (!sby_js_exists) {
                 $navElementsWrapper.addClass('hide').hide();
               }
             }, 1);
+
+            // a11y (H1/H7): Owl renders prev/next/dots as mouse-only
+            // <div>s (navElement defaults). Make them keyboard-operable
+            // (role=button + tabindex + Enter/Space -> native click) and
+            // named, and hide cloned (looped) slides from AT. Keeps the
+            // <div> tag so existing `.sby-owl-nav` CSS is unaffected.
+
+            // a11y (H7/F2): cloned (looped) slides must be hidden from AT
+            // AND removed from the tab order (aria-hidden on an ancestor
+            // does not make descendant links unfocusable). Owl removes and
+            // re-creates .cloned slides on refresh/resize, dropping these
+            // attributes, so this is re-applied on refreshed.owl.carousel.
+            var hideClonedSlides = function hideClonedSlides() {
+              var $clones = $self.find('.sby-owl-item.cloned');
+              $clones.attr('aria-hidden', 'true');
+              $clones.find('a[href], button, input, select, textarea, [tabindex]').attr('tabindex', '-1');
+            };
+            $self.off('refreshed.owl.carousel').on('refreshed.owl.carousel', function () {
+              hideClonedSlides();
+            });
+            setTimeout(function () {
+              var sbyA11y = window.sbyOptions && sbyOptions.a11y || {};
+              $self.find('.sby-owl-prev').attr({
+                'tabindex': '0',
+                'role': 'button',
+                'aria-label': sbyA11y.prevSlide || 'Previous slide'
+              });
+              $self.find('.sby-owl-next').attr({
+                'tabindex': '0',
+                'role': 'button',
+                'aria-label': sbyA11y.nextSlide || 'Next slide'
+              });
+              $self.find('.sby-owl-dot').each(function (i) {
+                jQuery(this).attr({
+                  'tabindex': '0',
+                  'role': 'button',
+                  'aria-label': (sbyA11y.goToSlide || 'Go to slide') + ' ' + (i + 1)
+                });
+              });
+              $self.find('.sby-owl-prev, .sby-owl-next, .sby-owl-dot').off('keydown.sbyA11y').on('keydown.sbyA11y', function (e) {
+                if (e.which === 13 || e.which === 32) {
+                  e.preventDefault();
+                  this.click();
+                }
+              });
+              hideClonedSlides();
+            }, 100);
           };
 
         //Disable mobile layout
@@ -12999,7 +13133,11 @@ if (!sby_js_exists) {
           if ($hoverCaption.length) {
             var hoverCaptionText = short_text;
             if (short_text !== captionText) {
-              hoverCaptionText += '<span class="sby_more">...</span>';
+              // a11y (F1): give the hover-caption see-more an
+              // accessible name + expanded state (mirrors the
+              // info.php item-caption toggle).
+              var sbyHoverA11y = window.sbyOptions && sbyOptions.a11y || {};
+              hoverCaptionText += '<span class="sby_expand"> <a href="#" aria-expanded="false" aria-label="' + (sbyHoverA11y.showMoreDescription || 'Show more description') + '"><span class="sby_more">...</span></a></span>';
             }
             $hoverCaption.html(hoverCaptionText);
           }
@@ -13012,14 +13150,26 @@ if (!sby_js_exists) {
           $item.find('.sby_expand a').off('click').on('click', function (e) {
             e.preventDefault();
             var $expand = jQuery(this);
+            // a11y (F1): keep the toggle's accessible name and
+            // expanded state in sync (template ships aria-expanded
+            // ="false" + "Show more description").
+            var sbyA11y = window.sbyOptions && sbyOptions.a11y || {};
             $caption = typeof $caption !== 'undefined' ? $caption : $item.find('.sby_info .sby_caption');
             captionText = typeof captiontext !== 'undefined' ? captionText : sbyEncodeInput($item.find('.sby_item_video_thumbnail').attr('data-title'));
             if ($item.hasClass('sby_caption_full') && typeof short_text !== 'undefined') {
               $caption.html(short_text);
               $item.removeClass('sby_caption_full');
+              $expand.attr({
+                'aria-expanded': 'false',
+                'aria-label': sbyA11y.showMoreDescription || 'Show more description'
+              });
             } else {
               $caption.html(sbyLinkify(captionText));
               $item.addClass('sby_caption_full');
+              $expand.attr({
+                'aria-expanded': 'true',
+                'aria-label': sbyA11y.showLessDescription || 'Show less description'
+              });
             }
             feed.afterResize();
           });
@@ -13207,7 +13357,7 @@ if (!sby_js_exists) {
         };
       },
       template: function template() {
-        return "<div id='sby_lightboxOverlay' class='sby_lightboxOverlay'></div>" + "<div id='sby_lightbox' class='sby_lightbox'>" + "<div class='sby_lb-outerContainer'>" + "<div class='sby_lb-container'>" + "<img class='sby_lb-image' alt='Lightbox image placeholder' src='' />" + "<div class='sby_lb-player sby_lb-player-placeholder' id='sby_lb-player'></div>" + "<div class='sby_lb-nav'><a class='sby_lb-prev' href='#' ><p class='sby-screenreader'>Previous Slide</p><span></span></a><a class='sby_lb-next' href='#' ><p class='sby-screenreader'>Next Slide</p><span></span></a></div>" + "<div class='sby_lb-loader'><div class='sby_lb-cancel'></div></div>" + "</div>" + "</div>" + "<div class='sby_lb-dataContainer'>" + "<div class='sby_lb-data'>" + "<div class='sby_lb-details'>" + "<div class='sby_lb-caption'></div>" + "<div class='sby_lb-info'>" + "<div class='sby_lb-number'></div>" + "</div>" + "</div>" + "<div class='sby_lb-closeContainer'><button class='sby_lb-close' type='button' aria-label='Close dialog'></button></div>" + "</div>" + "</div>" + "</div>";
+        return "<div id='sby_lightboxOverlay' class='sby_lightboxOverlay'></div>" + "<div id='sby_lightbox' class='sby_lightbox' role='dialog' aria-modal='true' aria-label='Video player' tabindex='-1'>" + "<div class='sby_lb-outerContainer'>" + "<div class='sby_lb-container'>" + "<img class='sby_lb-image' alt='Lightbox image placeholder' src='' />" + "<div class='sby_lb-player sby_lb-player-placeholder' id='sby_lb-player'></div>" + "<div class='sby_lb-nav'><a class='sby_lb-prev' href='#' ><p class='sby-screenreader'>Previous Slide</p><span></span></a><a class='sby_lb-next' href='#' ><p class='sby-screenreader'>Next Slide</p><span></span></a></div>" + "<div class='sby_lb-loader'><div class='sby_lb-cancel'></div></div>" + "</div>" + "</div>" + "<div class='sby_lb-dataContainer'>" + "<div class='sby_lb-data'>" + "<div class='sby_lb-details'>" + "<div class='sby_lb-caption'></div>" + "<div class='sby_lb-info'>" + "<div class='sby_lb-number'></div>" + "</div>" + "</div>" + "<div class='sby_lb-closeContainer'><button class='sby_lb-close' type='button' aria-label='Close dialog'></button></div>" + "</div>" + "</div>" + "</div>";
       },
       beforePlayerSetup: function beforePlayerSetup($lightbox, data, index, album, feed) {},
       afterPlayerSetup: function afterPlayerSetup($lightbox, data, index, album) {},
@@ -13266,7 +13416,7 @@ if (!sby_js_exists) {
         };
       };
       this.template = function () {
-        return "\n                <div id='sby_lightboxOverlay' class='sby_lightboxOverlay'></div>\n                <div id='sby_lightbox' class='sby_lightbox'>\n                 <div class='sby_lb-header'></div>\n                  <div class='sby_lb-outerContainer'>\n                    <button class='sby_lb-close' type='button' aria-label='Close dialog'></button>\n                    <div class='sby_lb-container'>\n                      <div class='sby_lb_video_thumbnail_wrap'>\n                        <span class='sby_lb_video_thumbnail'>\n                          <img class='sby_lb-image' alt='Lightbox image placeholder' src='' />\n                          <div class='sby_lb-player' id='sby_lb-player'></div>\n                        </span>\n                      </div>\n                      <div class='sby_lb-nav'>\n                        <a class='sby_lb-prev' href='#'>\n                          <p class='sby-screenreader'>Previous Slide</p>\n                          <span></span>\n                        </a>\n                        <a class='sby_lb-next' href='#'>\n                          <p class='sby-screenreader'>Next Slide</p>\n                          <span></span>\n                        </a>\n                      </div>\n                      <div class='sby_lb-loader'>\n                        <div class='sby_lb-cancel'></div>\n                      </div>\n                    </div>\n                  </div>\n                  <div class='sby_lb-dataContainer'>\n                    <div class='sby_lb-data'>\n                      <div class='sby_lb-details'>\n                        <div class='sby_lb-caption'>\n                        </div>\n                        <div class='sby_lb-info'>\n                          <div class='sby_lb-number'></div>\n                        </div>\n                      </div>\n                    </div>\n                  </div>\n                </div>";
+        return "\n                <div id='sby_lightboxOverlay' class='sby_lightboxOverlay'></div>\n                <div id='sby_lightbox' class='sby_lightbox' role='dialog' aria-modal='true' aria-label='Video player' tabindex='-1'>\n                 <div class='sby_lb-header'></div>\n                  <div class='sby_lb-outerContainer'>\n                    <button class='sby_lb-close' type='button' aria-label='Close dialog'></button>\n                    <div class='sby_lb-container'>\n                      <div class='sby_lb_video_thumbnail_wrap'>\n                        <span class='sby_lb_video_thumbnail'>\n                          <img class='sby_lb-image' alt='Lightbox image placeholder' src='' />\n                          <div class='sby_lb-player' id='sby_lb-player'></div>\n                        </span>\n                      </div>\n                      <div class='sby_lb-nav'>\n                        <a class='sby_lb-prev' href='#'>\n                          <p class='sby-screenreader'>Previous Slide</p>\n                          <span></span>\n                        </a>\n                        <a class='sby_lb-next' href='#'>\n                          <p class='sby-screenreader'>Next Slide</p>\n                          <span></span>\n                        </a>\n                      </div>\n                      <div class='sby_lb-loader'>\n                        <div class='sby_lb-cancel'></div>\n                      </div>\n                    </div>\n                  </div>\n                  <div class='sby_lb-dataContainer'>\n                    <div class='sby_lb-data'>\n                      <div class='sby_lb-details'>\n                        <div class='sby_lb-caption'>\n                        </div>\n                        <div class='sby_lb-info'>\n                          <div class='sby_lb-number'></div>\n                        </div>\n                      </div>\n                    </div>\n                  </div>\n                </div>";
       };
       this.beforePlayerSetup = function ($lightbox, data, index, album, feed) {
         $('body').css('overflow', 'hidden');
@@ -13301,7 +13451,7 @@ if (!sby_js_exists) {
           });
         }
         var channelSubscribers = (_data$channelSubscrib = data === null || data === void 0 ? void 0 : data.channelSubscribers) !== null && _data$channelSubscrib !== void 0 ? _data$channelSubscrib : '';
-        var avatarImageHtml = avatarImage ? '<img src="' + avatarImage + '" referrerPolicy="no-referrer"/>' : getStaticSVG('profile-picture');
+        var avatarImageHtml = avatarImage ? '<img src="' + avatarImage + '" alt="' + sbyEncodeInput((data.user || '') + ' channel avatar') + '" referrerPolicy="no-referrer"/>' : getStaticSVG('profile-picture');
         var userHtml = subscribeSection && avatarImage ? '<div class="sby-lb-channel-header"><a class="sby_lightbox_username" href="' + data.channelURL + '" target="_blank" rel="noopener">' + avatarImageHtml + '<p class="sby-lb-channel-name-with-subs"><span>@' + data.user + '</span><span>' + channelSubscribers + '</span></p></a> ' + subscribeBtn + '</div>' : '';
         var subscribeClass = subscribeSection && avatarImage ? 'sby_lb-channel-info' : 'sby_lb-no-channel-info';
         if (window.sbyOptions.isPro) {
@@ -13392,7 +13542,7 @@ if (!sby_js_exists) {
         var numItems = this.numItems;
         $.each(related, function (index, value) {
           if (value.videoID !== currentVideoId && added < numItems) {
-            $player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').append('<div class="sby_cta_item"><div class="sby_video_thumbnail_wrap">' + '<a class="sby_video_thumbnail" href="javascript:void(0);" target="_blank" rel="noopener" data-video-id="' + value.videoID + '">' + '<div class="sby_thumbnail_hover">' + '<div class="sby_thumbnail_hover_inner">' + '<span class="sby_video_title">' + value.title + '</span>' + '</div>' + '</div>' + '<span class="sby-screenreader">Play</span>' + '<img src="' + value.thumbnail + '" alt="' + value.title + '">' + '<span class="sby_loader sby_hidden" style="background-color: rgb(255, 255, 255);"></span>' + '</a>' + '</div>' + '</div>');
+            $player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').append('<div class="sby_cta_item"><div class="sby_video_thumbnail_wrap">' + '<a class="sby_video_thumbnail" href="#" data-video-id="' + value.videoID + '" aria-label="' + sbyEncodeInput(value.title) + '">' + '<div class="sby_thumbnail_hover">' + '<div class="sby_thumbnail_hover_inner">' + '<span class="sby_video_title">' + sbyEscHtml(value.title) + '</span>' + '</div>' + '</div>' + '<span class="sby-screenreader">Play</span>' + '<img src="' + sbySafeUrl(value.thumbnail) + '" alt="' + sbyEscHtml(value.title) + '">' + '<span class="sby_loader sby_hidden" style="background-color: rgb(255, 255, 255);"></span>' + '</a>' + '</div>' + '</div>');
             added++;
           }
         });
@@ -13446,7 +13596,7 @@ if (!sby_js_exists) {
         if (feedObjInContext.settings.general.cta.openType === 'newwindow') {
           openAtts = ' target="_blank" rel="noopener"';
         }
-        $player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').append('<div class="sby_cta_item">' + '<div class="sby_btn_wrap">' + '<div class="sby_btn' + styleClass + '">' + '<a class="sby_cta_button" href="' + this.callbackArgs.url + '"' + openAtts + ' data-video-id="' + this.videoID + '"' + style + '>' + this.callbackArgs.text + '</a>' + '</div>' + '</div>' + '</div>');
+        $player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').append('<div class="sby_cta_item">' + '<div class="sby_btn_wrap">' + '<div class="sby_btn' + styleClass + '">' + '<a class="sby_cta_button" href="' + sbySafeUrl(this.callbackArgs.url) + '"' + openAtts + ' data-video-id="' + sbyEscHtml(this.videoID) + '"' + style + '>' + sbyEscHtml(this.callbackArgs.text) + '</a>' + '</div>' + '</div>' + '</div>');
       },
       setCTAStyles: function setCTAStyles() {
         var playerTopHeight = 60,
@@ -13678,6 +13828,7 @@ window.onYouTubeIframeAPIReady = function () {
             $self.find('.sby_item').each(function () {
               videoID = jQuery(this).attr('data-video-id');
               //this.createPlayer(,videoID,0);
+              sbySetPlayerIframeTitle('sby_player_' + videoID, jQuery(this).attr('data-video-title'));
               player = new YT.Player('sby_player_' + videoID, {
                 height: '100',
                 width: '100',
@@ -13703,6 +13854,7 @@ window.onYouTubeIframeAPIReady = function () {
             });
           } else if ($self.hasClass('sby_layout_gallery')) {
             jQuery(this).addClass('sby_player_loaded');
+            sbySetPlayerIframeTitle('sby_player' + index, jQuery(this).find('.sby_item').first().attr('data-video-title'));
             player = new YT.Player('sby_player' + index, {
               height: '100',
               width: '100',
@@ -13740,6 +13892,8 @@ window.onYouTubeIframeAPIReady = function () {
     jQuery('.sb_youtube').each(function (index) {
       var $self = jQuery(this);
       if ($self.find('.sby_live_player').length) {
+        var sbyA11y = window.sbyOptions && sbyOptions.a11y || {};
+        sbySetPlayerIframeTitle($self.find('.sby_live_player').attr('id'), sbyA11y.livePlayerTitle || 'YouTube live video player');
         player = new YT.Player($self.find('.sby_live_player').attr('id'), {
           events: {
             'onReady': function onReady() {
@@ -13868,17 +14022,17 @@ function getSingleApiData(rootPath, attrName) {
 function getStaticSVG(name) {
   switch (name) {
     case 'profile-picture':
-      return '<svg fill="currentColor" width="800px" height="800px" viewBox="0 0 512 512" id="_x30_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M256,90  c37.02,0,67.031,35.468,67.031,79.219S293.02,248.438,256,248.438s-67.031-35.468-67.031-79.219S218.98,90,256,90z M369.46,402  H142.54c-11.378,0-20.602-9.224-20.602-20.602C121.938,328.159,181.959,285,256,285s134.062,43.159,134.062,96.398  C390.062,392.776,380.839,402,369.46,402z"/></svg>';
+      return '<svg aria-hidden="true" focusable="false" fill="currentColor" width="800px" height="800px" viewBox="0 0 512 512" id="_x30_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M256,90  c37.02,0,67.031,35.468,67.031,79.219S293.02,248.438,256,248.438s-67.031-35.468-67.031-79.219S218.98,90,256,90z M369.46,402  H142.54c-11.378,0-20.602-9.224-20.602-20.602C121.938,328.159,181.959,285,256,285s134.062,43.159,134.062,96.398  C390.062,392.776,380.839,402,369.46,402z"/></svg>';
     case 'thumbs-up':
-      return '<svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.4159 4.18027C13.761 4.18027 14.0778 4.32177 14.3664 4.60477C14.6549 4.88777 14.7992 5.20738 14.7992 5.5636V6.2706C14.7992 6.36471 14.7902 6.45188 14.7722 6.5321C14.7542 6.61232 14.7272 6.69266 14.6912 6.7731L12.684 11.4908C12.5845 11.7449 12.4181 11.9486 12.1849 12.1019C11.9517 12.2552 11.69 12.3318 11.3999 12.3318H5.15938C4.77282 12.3318 4.44566 12.2006 4.17788 11.9383C3.90999 11.6759 3.77604 11.346 3.77604 10.9484V4.7561C3.77604 4.56277 3.81332 4.38049 3.88788 4.20927C3.96254 4.03804 4.06477 3.88754 4.19454 3.75777L7.28938 0.662932C7.5186 0.431043 7.79427 0.281321 8.11638 0.213765C8.43849 0.146321 8.71416 0.178988 8.94338 0.311765C9.22549 0.46421 9.40932 0.695932 9.49488 1.00693C9.58032 1.31793 9.58999 1.62804 9.52388 1.93727L9.09554 4.18027H13.4159ZM1.34404 12.3318C1.01393 12.3318 0.726767 12.2097 0.482544 11.9654C0.238322 11.7212 0.116211 11.434 0.116211 11.1039V5.40827C0.116211 5.07804 0.236989 4.79082 0.478544 4.5466C0.7201 4.30238 1.00466 4.18027 1.33221 4.18027H1.34804C1.67827 4.18027 1.96549 4.30238 2.20971 4.5466C2.45393 4.79082 2.57604 5.07804 2.57604 5.40827V11.1039C2.57604 11.434 2.45393 11.7212 2.20971 11.9654C1.96549 12.2097 1.67827 12.3318 1.34804 12.3318H1.34404Z" fill="currentColor"/></svg>';
+      return '<svg aria-hidden="true" focusable="false" width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.4159 4.18027C13.761 4.18027 14.0778 4.32177 14.3664 4.60477C14.6549 4.88777 14.7992 5.20738 14.7992 5.5636V6.2706C14.7992 6.36471 14.7902 6.45188 14.7722 6.5321C14.7542 6.61232 14.7272 6.69266 14.6912 6.7731L12.684 11.4908C12.5845 11.7449 12.4181 11.9486 12.1849 12.1019C11.9517 12.2552 11.69 12.3318 11.3999 12.3318H5.15938C4.77282 12.3318 4.44566 12.2006 4.17788 11.9383C3.90999 11.6759 3.77604 11.346 3.77604 10.9484V4.7561C3.77604 4.56277 3.81332 4.38049 3.88788 4.20927C3.96254 4.03804 4.06477 3.88754 4.19454 3.75777L7.28938 0.662932C7.5186 0.431043 7.79427 0.281321 8.11638 0.213765C8.43849 0.146321 8.71416 0.178988 8.94338 0.311765C9.22549 0.46421 9.40932 0.695932 9.49488 1.00693C9.58032 1.31793 9.58999 1.62804 9.52388 1.93727L9.09554 4.18027H13.4159ZM1.34404 12.3318C1.01393 12.3318 0.726767 12.2097 0.482544 11.9654C0.238322 11.7212 0.116211 11.434 0.116211 11.1039V5.40827C0.116211 5.07804 0.236989 4.79082 0.478544 4.5466C0.7201 4.30238 1.00466 4.18027 1.33221 4.18027H1.34804C1.67827 4.18027 1.96549 4.30238 2.20971 4.5466C2.45393 4.79082 2.57604 5.07804 2.57604 5.40827V11.1039C2.57604 11.434 2.45393 11.7212 2.20971 11.9654C1.96549 12.2097 1.67827 12.3318 1.34804 12.3318H1.34404Z" fill="currentColor"/></svg>';
     case 'angle-down':
-      return '<svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.94 0.726654L4 3.77999L7.06 0.726654L8 1.66665L4 5.66665L0 1.66665L0.94 0.726654Z" fill="currentColor"/></svg>';
+      return '<svg aria-hidden="true" focusable="false" width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.94 0.726654L4 3.77999L7.06 0.726654L8 1.66665L4 5.66665L0 1.66665L0.94 0.726654Z" fill="currentColor"/></svg>';
     case 'youtube':
-      return '<svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.66671 7.5L9.12671 5.5L5.66671 3.5V7.5ZM13.3734 2.28C13.46 2.59334 13.52 3.01334 13.56 3.54667C13.6067 4.08 13.6267 4.54 13.6267 4.94L13.6667 5.5C13.6667 6.96 13.56 8.03334 13.3734 8.72C13.2067 9.32 12.82 9.70667 12.22 9.87334C11.9067 9.96 11.3334 10.02 10.4534 10.06C9.58671 10.1067 8.79337 10.1267 8.06004 10.1267L7.00004 10.1667C4.20671 10.1667 2.46671 10.06 1.78004 9.87334C1.18004 9.70667 0.793374 9.32 0.626707 8.72C0.540041 8.40667 0.480041 7.98667 0.440041 7.45334C0.393374 6.92 0.373374 6.46 0.373374 6.06L0.333374 5.5C0.333374 4.04 0.440041 2.96667 0.626707 2.28C0.793374 1.68 1.18004 1.29334 1.78004 1.12667C2.09337 1.04 2.66671 0.980002 3.54671 0.940002C4.41337 0.893336 5.20671 0.873336 5.94004 0.873336L7.00004 0.833336C9.79337 0.833336 11.5334 0.940003 12.22 1.12667C12.82 1.29334 13.2067 1.68 13.3734 2.28Z" fill="currentColor"/></svg>';
+      return '<svg aria-hidden="true" focusable="false" width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.66671 7.5L9.12671 5.5L5.66671 3.5V7.5ZM13.3734 2.28C13.46 2.59334 13.52 3.01334 13.56 3.54667C13.6067 4.08 13.6267 4.54 13.6267 4.94L13.6667 5.5C13.6667 6.96 13.56 8.03334 13.3734 8.72C13.2067 9.32 12.82 9.70667 12.22 9.87334C11.9067 9.96 11.3334 10.02 10.4534 10.06C9.58671 10.1067 8.79337 10.1267 8.06004 10.1267L7.00004 10.1667C4.20671 10.1667 2.46671 10.06 1.78004 9.87334C1.18004 9.70667 0.793374 9.32 0.626707 8.72C0.540041 8.40667 0.480041 7.98667 0.440041 7.45334C0.393374 6.92 0.373374 6.46 0.373374 6.06L0.333374 5.5C0.333374 4.04 0.440041 2.96667 0.626707 2.28C0.793374 1.68 1.18004 1.29334 1.78004 1.12667C2.09337 1.04 2.66671 0.980002 3.54671 0.940002C4.41337 0.893336 5.20671 0.873336 5.94004 0.873336L7.00004 0.833336C9.79337 0.833336 11.5334 0.940003 12.22 1.12667C12.82 1.29334 13.2067 1.68 13.3734 2.28Z" fill="currentColor"/></svg>';
     case 'cross':
-      return '<svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.25 1.41L12.84 0L7.25 5.59L1.66 0L0.25 1.41L5.84 7L0.25 12.59L1.66 14L7.25 8.41L12.84 14L14.25 12.59L8.66 7L14.25 1.41Z" fill="currentColor"/></svg>';
+      return '<svg aria-hidden="true" focusable="false" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.25 1.41L12.84 0L7.25 5.59L1.66 0L0.25 1.41L5.84 7L0.25 12.59L1.66 14L7.25 8.41L12.84 14L14.25 12.59L8.66 7L14.25 1.41Z" fill="currentColor"/></svg>';
     case 'message':
-      return '<svg width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.33341 22C2.60008 22 1.9723 21.7389 1.45008 21.2167C0.927859 20.6944 0.666748 20.0667 0.666748 19.3333V3.33334C0.666748 2.6 0.927859 1.97223 1.45008 1.45001C1.9723 0.927783 2.60008 0.666672 3.33341 0.666672H24.6667C25.4001 0.666672 26.0279 0.927783 26.5501 1.45001C27.0723 1.97223 27.3334 2.6 27.3334 3.33334V24.1C27.3334 24.7 27.0612 25.1167 26.5167 25.35C25.9723 25.5833 25.489 25.4889 25.0667 25.0667L22.0001 22H3.33341ZM23.1334 19.3333L24.6667 20.8333V3.33334H3.33341V19.3333H23.1334Z" fill="currentColor"/></svg>';
+      return '<svg aria-hidden="true" focusable="false" width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.33341 22C2.60008 22 1.9723 21.7389 1.45008 21.2167C0.927859 20.6944 0.666748 20.0667 0.666748 19.3333V3.33334C0.666748 2.6 0.927859 1.97223 1.45008 1.45001C1.9723 0.927783 2.60008 0.666672 3.33341 0.666672H24.6667C25.4001 0.666672 26.0279 0.927783 26.5501 1.45001C27.0723 1.97223 27.3334 2.6 27.3334 3.33334V24.1C27.3334 24.7 27.0612 25.1167 26.5167 25.35C25.9723 25.5833 25.489 25.4889 25.0667 25.0667L22.0001 22H3.33341ZM23.1334 19.3333L24.6667 20.8333V3.33334H3.33341V19.3333H23.1334Z" fill="currentColor"/></svg>';
     default:
       return false;
   }
@@ -13898,9 +14052,12 @@ function getStaticSVG(name) {
  * @returns {string}
  */
 function commentSingleTemplate(authorProfileImageUrl, authorDisplayName, authorChannelUrl, textDisplay, likeCount, publishedAt, totalReplyCount) {
-  var dummyProfilePic = authorProfileImageUrl ? "<img src=".concat(authorProfileImageUrl, " loading=\"lazy\" referrerPolicy=\"no-referrer\"/>") : getStaticSVG('profile-picture');
+  // Every field here is attacker-controlled: any YouTube commenter on a displayed video
+  // reaches this HTML string, which is handed to .html(). The src was also unquoted, so a
+  // value with whitespace could add attributes. (SMASH-1799)
+  var dummyProfilePic = authorProfileImageUrl ? "<img src=\"".concat(sbySafeUrl(authorProfileImageUrl), "\" alt=\"").concat(sbyEscHtml(authorDisplayName), "\" loading=\"lazy\" referrerPolicy=\"no-referrer\"/>") : getStaticSVG('profile-picture');
   var replies = totalReplyCount ? "<button class=\"sby-replies\">".concat(totalReplyCount ? totalReplyCount : 0, " Replies ").concat(getStaticSVG('angle-down'), "</button>") : '';
-  return "\n            <div class=\"sby-comment-profile-pic\">\n                ".concat(dummyProfilePic, "\n            </div>\n            <div class=\"sby-comment-heading\">\n                <a href=\"").concat(authorChannelUrl, "\" target=\"_blank\" class=\"sby-comment-user-name\">").concat(authorDisplayName, "</a>\n                <span>").concat(timeAgo(publishedAt), "</span>\n            </div>\n                <div class=\"sby-comment-text\">\n                <p class=\"sby-read-more-target\">").concat(textDisplay, "</p>\n                <div class=\"sby-read-more-trigger\">\n                    <button class=\"sby-read-more-text\">Read More</button>\n                    <button class=\"sby-read-less-text\">Read Less</button>\n                </div>\n             </div>\n            <div class=\"sby-comment-bottom\">\n                <span class=\"sby-comment-likes\">\n                    ").concat(getStaticSVG('thumbs-up'), " ").concat(likeCount ? formatLargeNumber(likeCount) : 0, "\n                </span>\n                ").concat(replies, "\n            </div>\n    ");
+  return "\n            <div class=\"sby-comment-profile-pic\">\n                ".concat(dummyProfilePic, "\n            </div>\n            <div class=\"sby-comment-heading\">\n                <a href=\"").concat(sbySafeUrl(authorChannelUrl), "\" target=\"_blank\" class=\"sby-comment-user-name\">").concat(sbyEscHtml(authorDisplayName), "</a>\n                <span>").concat(timeAgo(publishedAt), "</span>\n            </div>\n                <div class=\"sby-comment-text\">\n                <p class=\"sby-read-more-target\">").concat(textDisplay, "</p>\n                <div class=\"sby-read-more-trigger\">\n                    <button class=\"sby-read-more-text\">Read More</button>\n                    <button class=\"sby-read-less-text\">Read Less</button>\n                </div>\n             </div>\n            <div class=\"sby-comment-bottom\">\n                <span class=\"sby-comment-likes\">\n                    ").concat(getStaticSVG('thumbs-up'), " ").concat(likeCount ? formatLargeNumber(likeCount) : 0, "<span class=\"sby-screenreader\"> ").concat(likeCount === 1 ? 'like' : 'likes', "</span>\n                </span>\n                ").concat(replies, "\n            </div>\n    ");
 }
 
 /**
@@ -14168,6 +14325,24 @@ function checkValue(element) {
  * 
  * @returns {void} 
  */
+/**
+ * a11y (SMASH-1381 / H6): name an inline YT.Player iframe. The API replaces
+ * the placeholder div with an <iframe> carrying the same id; poll briefly
+ * until that swap happens, then set a meaningful title.
+ */
+function sbySetPlayerIframeTitle(playerId, title) {
+  var attempts = 0;
+  var timer = window.setInterval(function () {
+    attempts++;
+    var el = document.getElementById(playerId);
+    if (el && el.tagName === 'IFRAME') {
+      el.setAttribute('title', title || 'YouTube video player');
+      window.clearInterval(timer);
+    } else if (attempts > 20) {
+      window.clearInterval(timer);
+    }
+  }, 250);
+}
 function sbyAjax(submitData, onSuccess) {
   // Add nonce to all AJAX requests for security
   if (typeof sbyOptions.nonce !== 'undefined') {
@@ -14351,6 +14526,159 @@ function setColorsToChannelHeader(colorArray) {
     parent.find('.sby-lb-subscribe-btn').css('color', buttonText);
   }
 }
+
+/**
+ * SMASH-1378 / SMASH-1381 (acceptance #3) — Player lightbox focus trap.
+ *
+ * WCAG 2.1.2 (No Keyboard Trap, inverse), 2.4.3 (Focus Order), 4.1.2.
+ * The `#sby_lightbox` markup now carries role="dialog" aria-modal="true";
+ * this module supplies the behaviour expected of a modal dialog:
+ *   - saves the element that had focus before the lightbox opened
+ *   - moves focus into the dialog on open
+ *   - traps Tab / Shift+Tab inside the dialog
+ *   - restores focus to the trigger on close
+ *
+ * Both lightbox variants render a single `#sby_lightbox` node that jQuery
+ * fades in/out (toggling inline `display`), so a MutationObserver on the
+ * node's `style` attribute is the most reliable open/close signal that is
+ * agnostic to which builder rendered it. Escape-to-close and arrow-key
+ * navigation are already handled by the existing keyboardAction handler;
+ * this module deliberately does not duplicate them.
+ *
+ * Pure vanilla JS — mirrors the canonical popup-focus-trap.js shipped for
+ * IG/FB/TW Pro, adapted from a [role="dialog"] mutation watcher to the
+ * display-toggle model the YT lightbox uses.
+ */
+(function () {
+  'use strict';
+
+  var FOCUSABLE_SELECTOR = ['button:not([disabled]):not([tabindex="-1"])', 'a[href]:not([tabindex="-1"])', 'input:not([disabled]):not([type="hidden"]):not([tabindex="-1"])', 'select:not([disabled]):not([tabindex="-1"])', 'textarea:not([disabled]):not([tabindex="-1"])', 'iframe', '[tabindex]:not([tabindex="-1"])'].join(', ');
+  var LIGHTBOX_ID = 'sby_lightbox';
+  var triggerEl = null;
+  var isOpen = false;
+  function getDialog() {
+    return document.getElementById(LIGHTBOX_ID);
+  }
+  function isVisible(el) {
+    if (!el || !el.isConnected) return false;
+    if (el.offsetParent === null) {
+      return el.getClientRects().length > 0;
+    }
+    return true;
+  }
+  function getVisibleFocusables(container) {
+    var nodes = container.querySelectorAll(FOCUSABLE_SELECTOR);
+    var visible = [];
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (el.offsetParent === null && el !== document.activeElement) {
+        if (el.getClientRects().length === 0) continue;
+      }
+      visible.push(el);
+    }
+    return visible;
+  }
+  function onOpen(dialog) {
+    if (isOpen) return;
+    isOpen = true;
+    var t = document.activeElement;
+    if (t && t !== document.body) {
+      triggerEl = t;
+    }
+    // Defer a frame so the lightbox contents have rendered.
+    window.requestAnimationFrame(function () {
+      var focusables = getVisibleFocusables(dialog);
+      try {
+        (focusables.length ? focusables[0] : dialog).focus();
+      } catch (e) {/* element gone */}
+    });
+  }
+  function onClose() {
+    if (!isOpen) return;
+    isOpen = false;
+    if (triggerEl && document.body.contains(triggerEl)) {
+      try {
+        triggerEl.focus();
+      } catch (e) {/* trigger gone */}
+    }
+    triggerEl = null;
+  }
+  function trapKeydown(e) {
+    if (!isOpen) return;
+    var isTab = e.key === 'Tab' || e.keyCode === 9;
+    if (!isTab) return;
+    var dialog = getDialog();
+    if (!dialog || !isVisible(dialog)) return;
+    var focusables = getVisibleFocusables(dialog);
+    if (!focusables.length) return;
+    var first = focusables[0];
+    var last = focusables[focusables.length - 1];
+    var active = document.activeElement;
+    var inside = dialog.contains(active);
+    if (e.shiftKey) {
+      if (!inside || active === first) {
+        e.preventDefault();
+        try {
+          last.focus();
+        } catch (err) {}
+      }
+    } else {
+      if (!inside || active === last) {
+        e.preventDefault();
+        try {
+          first.focus();
+        } catch (err) {}
+      }
+    }
+  }
+  function startObserving() {
+    var dialog = getDialog();
+    // The lightbox node is appended to <body> lazily on first open, so
+    // watch the body for it, then attach a style-attribute observer once
+    // it exists.
+    function attach(node) {
+      var styleObserver = new MutationObserver(function () {
+        if (isVisible(node)) {
+          onOpen(node);
+        } else {
+          onClose();
+        }
+      });
+      styleObserver.observe(node, {
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+      if (isVisible(node)) onOpen(node);
+    }
+    if (dialog) {
+      attach(dialog);
+      return;
+    }
+    var bodyObserver = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var added = mutations[i].addedNodes;
+        for (var a = 0; a < added.length; a++) {
+          var n = added[a];
+          if (n.nodeType === 1 && n.id === LIGHTBOX_ID) {
+            attach(n);
+            bodyObserver.disconnect();
+            return;
+          }
+        }
+      }
+    });
+    bodyObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+  document.addEventListener('keydown', trapKeydown, true);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startObserving);
+  } else {
+    startObserving();
+  }
+})();
 })();
 
 /******/ })()

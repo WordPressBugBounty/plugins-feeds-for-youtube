@@ -42,9 +42,9 @@
             <span>{{genericText.backAllFeeds}}</span>
 		</button>
 		<div class="sbc-csz-hd-name" :data-edit="viewsActive.editName">
-			<input id="sbc-csz-hd-input" v-model="customizerFeedData.feed_info.feed_name" type="text" :style="'width:' + customizerScreens.inputNameWidth + ';'" :onfocus="updateInputWidth()" :onkeypress="updateInputWidth()" @keyup.enter="activateView('editName')">
+			<input id="sbc-csz-hd-input" :aria-label="genericText.feedName" v-model="customizerFeedData.feed_info.feed_name" type="text" :style="'width:' + customizerScreens.inputNameWidth + ';'" :onfocus="updateInputWidth()" :onkeypress="updateInputWidth()" @keyup.enter="activateView('editName')">
 			<span class="sb-bold sb-standard-p" v-if="!viewsActive['editName']">{{customizerFeedData.feed_info.feed_name}}</span>
-			<button v-if="customizerFeedData.feed_info.id !== 'legacy'" class="sbc-csz-name-ed-btn" v-html="viewsActive.editName ? svgIcons['checkmarklarge'] : svgIcons['edit']" @click.prevent.default="activateView('editName')"></button>
+			<button v-if="customizerFeedData.feed_info.id !== 'legacy'" class="sbc-csz-name-ed-btn" :aria-label="(viewsActive.editName ? genericText.saveSettings : genericText.edit) + ' — ' + (genericText.feedName || 'Feed Name')" v-html="viewsActive.editName ? svgIcons['checkmarklarge'] : svgIcons['edit']" @click.prevent.default="activateView('editName')"></button>
 		</div>
 
 		<div class="sbc-csz-hd-actions">

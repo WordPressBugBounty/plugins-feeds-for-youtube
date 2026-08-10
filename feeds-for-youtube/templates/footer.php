@@ -20,8 +20,16 @@ $load_button_text = __( $settings['buttontext'], 'feeds-for-youtube' );
 ?>
 <div class="sby_footer">
 
+<?php
+// SMASH-1378 / WCAG 4.1.3 — polite status region. The Load More handler in
+// js/sb-youtube.js announces how many new videos were appended so screen
+// reader users get feedback that paginated content loaded. Visually hidden
+// via the shared .sby-screenreader utility (css/sb-youtube-common.css).
+?>
+<div class="sby-screenreader" role="status" aria-live="polite" aria-atomic="true" data-sby-feed-status></div>
+
 <?php if ( $use_pagination || sby_doing_customizer( $settings ) ) : ?>
-    <button type="button" aria-label="Load more content" class="sby_load_btn" <?php echo $load_btn_style; ?> <?php echo SBY_Display_Elements::get_button_data_attributes( $settings ); ?>>
+    <button type="button" aria-label="<?php esc_attr_e( 'Load more content', 'feeds-for-youtube' ); ?>" class="sby_load_btn" <?php echo $load_btn_style; ?> <?php echo SBY_Display_Elements::get_button_data_attributes( $settings ); ?>>
         <span class="sby_btn_text" <?php echo SBY_Display_Elements::get_load_button_attribute( $settings ); ?>><?php echo esc_html( $load_button_text ); ?></span>
         <span class="sby_loader sby_hidden" style="background-color: rgb(255, 255, 255);"></span>
     </button>

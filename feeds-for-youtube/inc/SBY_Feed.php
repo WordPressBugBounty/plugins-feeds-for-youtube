@@ -1374,8 +1374,10 @@ class SBY_Feed
 			$error_description = __( 'Make sure this is a valid channel ID and that the channel has videos available on youtube.com.', 'feeds-for-youtube' );
 
 			if ( ! $this->feed_exists( $settings['feed'] ) ) {
+				// This message is echoed unescaped by ErrorReportingService, and $settings['feed']
+				// is a caller-supplied shortcode attribute (SMASH-1799).
 				$error_title = sprintf( __( 'Error: No feed found with the ID %s.', 'feeds-for-youtube' ),
-					$settings['feed'] );
+					esc_html( $settings['feed'] ) );
 				$error_description = __( 'Go to the All Feeds page and select an ID from an existing feed.', 'feeds-for-youtube' );
 			}
 

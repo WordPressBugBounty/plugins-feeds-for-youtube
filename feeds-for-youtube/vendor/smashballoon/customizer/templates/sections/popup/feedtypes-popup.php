@@ -1,24 +1,24 @@
 <div class="sbc-feedtemplates-pp-ctn sbc-feedtemplates-ctn sbc-feedtypes-ctn sb-fs-boss sbc-center-boss" v-if="viewsActive.feedtypesPopup">
-	<div class="sbc-feedtemplates-popup sbc-popup-inside">
-		<div class="sbc-popup-cls" @click.prevent.default="activateView('feedtypesPopup')"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<div class="sbc-feedtemplates-popup sbc-popup-inside" role="dialog" aria-modal="true" aria-labelledby="sbc-feedtypes-popup-heading" tabindex="-1">
+		<button type="button" class="sbc-popup-cls" aria-label="<?php esc_attr_e('Close', 'feeds-for-youtube'); ?>" @click.prevent.default="activateView('feedtypesPopup')"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                 <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#141B38"/>
             </svg>
-        </div>
+        </button>
         <div class="sbc-source-top sbc-fs">
-            <h2>{{selectFeedTypeScreen.updateSourceHeading}}</h2>
+            <h2 id="sbc-feedtypes-popup-heading">{{selectFeedTypeScreen.updateSourceHeading}}</h2>
             <p class="sbc-feedtemplate-alert sbc-fs">
                 <span v-html="svgIcons['info']"></span>
                 {{selectFeedTypeScreen.updateHeadingWarning}}
             </p>
             <div class="sbc-feedtemplates sbc-fs" :class="{'sby-free-style' : !sbyIsPro}">
                 <div class="sbc-feedtypes-list">
-                    <div :class="['sbc-feedtemplate-el', 'sbc-feed-template-' + feedTypeEl.type]" v-for="(feedTypeEl, feedTypeIn) in feedTypes" :data-active="selectedFeedTypeCustomizer(feedTypeEl.type, true)" :data-feed-type="feedTypeEl.type" @click.prevent.default="chooseCustomizerFeedType(feedTypeEl)">
+                    <button type="button" :class="['sbc-feedtemplate-el', 'sbc-feed-template-' + feedTypeEl.type]" v-for="(feedTypeEl, feedTypeIn) in feedTypes" :aria-pressed="selectedFeedTypeCustomizer(feedTypeEl.type, true) ? 'true' : 'false'" :data-active="selectedFeedTypeCustomizer(feedTypeEl.type, true)" :data-feed-type="feedTypeEl.type" @click.prevent.default="chooseCustomizerFeedType(feedTypeEl)">
                         <div class="sbc-feedtemplate-el-img sbc-fs" v-html="svgIcons[feedTypeEl.icon]"></div>
                         <div class="sbc-feedtemplate-el-info sbc-fs">
                             <p class="sb-small-p sb-bold sb-dark-text" v-html="feedTypeEl.title"></p>
                             <span class="sb-caption sb-lightest">{{feedTypeEl.description}}</span>
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
             

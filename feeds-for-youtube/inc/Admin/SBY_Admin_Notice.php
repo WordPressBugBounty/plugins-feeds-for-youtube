@@ -45,9 +45,9 @@ class SBY_Admin_Notice {
         );
 
         $output .= sprintf(
-            '<button type="button" class="sbc-dismiss" id="sbc-dismiss-header-notice" title="%s" data-page="overview">%s</button>',
+            '<button type="button" class="sbc-dismiss" id="sbc-dismiss-header-notice" title="%1$s" aria-label="%1$s" data-page="overview">%2$s</button>',
             __('Dismiss this message', 'feeds-for-youtube'),
-            '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8327 5.34175L14.6577 4.16675L9.99935 8.82508L5.34102 4.16675L4.16602 5.34175L8.82435 10.0001L4.16602 14.6584L5.34102 15.8334L9.99935 11.1751L14.6577 15.8334L15.8327 14.6584L11.1744 10.0001L15.8327 5.34175Z" fill="white"/></svg>'
+            '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M15.8327 5.34175L14.6577 4.16675L9.99935 8.82508L5.34102 4.16675L4.16602 5.34175L8.82435 10.0001L4.16602 14.6584L5.34102 15.8334L9.99935 11.1751L14.6577 15.8334L15.8327 14.6584L11.1744 10.0001L15.8327 5.34175Z" fill="white"/></svg>'
         );
 
         $output .= '</div>';

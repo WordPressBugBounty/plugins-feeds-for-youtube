@@ -40,7 +40,7 @@ class SB_Textarea_Control extends \Smashballoon\Customizer\Controls\SB_Controls_
 		<div class="sb-control-textarea-ctn sbc-fb-fs">
 			<textarea class="sb-control-input-textrea sbc-fb-fs" v-model="<?php 
         echo $controlEditingTypeModel;
-        ?>[control.id]" :placeholder="control.placeholder ? control.placeholder : ''" @focusout.prevent.default="changeSettingValue(false,false,false, control.ajaxAction ? control.ajaxAction : false)"></textarea>
+        ?>[control.id]" :aria-label="control.heading || control.label || control.placeholder" :placeholder="control.placeholder ? control.placeholder : ''" @focusout.prevent.default="changeSettingValue(false,false,false, control.ajaxAction ? control.ajaxAction : false)"></textarea>
 		</div>
 		<?php 
     }

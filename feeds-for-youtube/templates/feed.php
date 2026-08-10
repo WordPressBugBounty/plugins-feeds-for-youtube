@@ -23,11 +23,15 @@ $gallery_player_attr              = SBY_Display_Elements::get_element_attribute(
 $num_setting = $settings['num'];
 $nummobile_setting = $settings['nummobile'];
 
+// These four are handed to jQuery .css( 'color', v ) / .css( 'background', v ) in
+// js/sb-youtube.js. Property assignment prevents a declaration breakout, but a url() value
+// still applies and would beacon every visitor's IP and referrer, so validate them by type
+// exactly as the <style> block does rather than relying on esc_attr() alone. (SMASH-1799)
 $data_channel_header_colors = array(
-    'channelName' => !empty($settings['subscribebtnprimarycolor']) ? $settings['subscribebtnprimarycolor'] : '',
-    'subscribeCount' => !empty($settings['subscribebtnsecondarycolor']) ? $settings['subscribebtnsecondarycolor'] : '',
-    'buttonBackground' => !empty($settings['subscribelinkcolorbg']) ? $settings['subscribelinkcolorbg'] : '',
-    'buttonText' => !empty($settings['subscribebtntextcolor']) ? $settings['subscribebtntextcolor'] : '',
+    'channelName' => sby_css_color( $settings, 'subscribebtnprimarycolor' ),
+    'subscribeCount' => sby_css_color( $settings, 'subscribebtnsecondarycolor' ),
+    'buttonBackground' => sby_css_color( $settings, 'subscribelinkcolorbg' ),
+    'buttonText' => sby_css_color( $settings, 'subscribebtntextcolor' ),
 );
 
 if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] ) {
@@ -36,9 +40,11 @@ if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] 
 ?>
 
 
-<div id="sb_youtube_<?php echo esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) ); ?>" 
-	<?php echo $feed_classes; ?> 
-	data-feedid="<?php echo esc_attr( $feed_id ); ?>" 
+<div id="sb_youtube_<?php echo esc_attr( preg_replace( "/[^A-Za-z0-9 ]/", '', $feed_id ) ); ?>"
+	role="region"
+	aria-label="<?php esc_attr_e( 'YouTube videos', 'feeds-for-youtube' ); ?>"
+	<?php echo $feed_classes; ?>
+	data-feedid="<?php echo esc_attr( $feed_id ); ?>"
 	data-shortcode-atts="<?php echo esc_attr( $shortcode_atts ); ?>" 
 	data-cols="<?php echo esc_attr( $cols_setting ); ?>" 
 	data-colsmobile="<?php echo esc_attr( $mobile_cols_setting ); ?>" 
@@ -61,7 +67,7 @@ if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] 
 	    $misc_data = $this->get_misc_data( $this->regular_feed_transient_name, $posts );
 	    include sby_get_feed_template_part( 'player', $settings );
     } ?>
-    <div class="sby_items_wrap<?php echo esc_attr($items_wrap_classes);?>"<?php echo $items_wrap_style_attr; ?>>
+    <div class="sby_items_wrap<?php echo esc_attr($items_wrap_classes);?>"<?php echo ( sby_is_pro() && isset( $settings['layout'] ) && $settings['layout'] === 'carousel' ) ? '' : ' role="list"'; ?><?php echo $items_wrap_style_attr; ?>>
 		<?php
 		if ( ! in_array( 'ajaxPostLoad', $flags, true ) ) {
 		    $settings['feed_id'] = $feed_id;

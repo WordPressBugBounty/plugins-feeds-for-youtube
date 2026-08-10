@@ -41,7 +41,7 @@ class SB_Text_Control extends \Smashballoon\Customizer\Controls\SB_Controls_Base
 			<div class="sb-control-input-info" v-if="control.fieldPrefix">{{control.fieldPrefix.replace(/ /g,"&nbsp;")}}</div>
 			<input type="text" class="sb-control-input sbc-fb-fs" v-model="<?php 
         echo $controlEditingTypeModel;
-        ?>[control.id]" @change.prevent.default="changeSettingValue(control.id, false,false, control.ajaxAction ? control.ajaxAction : false)"  :placeholder="control.placeholder ? control.placeholder : ''">
+        ?>[control.id]" :aria-label="control.heading || control.label || control.placeholder" @change.prevent.default="changeSettingValue(control.id, false,false, control.ajaxAction ? control.ajaxAction : false)"  :placeholder="control.placeholder ? control.placeholder : ''">
 			<div class="sb-control-input-info" v-if="control.fieldSuffix">{{control.fieldSuffix.replace(/ /g,"&nbsp;")}}</div>
 		</div>
 		<?php 
