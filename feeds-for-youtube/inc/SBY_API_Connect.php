@@ -103,7 +103,7 @@ class SBY_API_Connect
 	public static function handle_youtube_error( $response, $error_connected_account, $request_type = '' ) {
 		//
 		if ( isset( $response['error'] ) ) {
-			if ( isset( $response['error']['errors'][0]['reason'] ) && $response['error']['errors'][0]['message'] === 'Invalid Credentials' ) {
+			if ( isset( $response['error']['errors'][0]['reason'], $response['error']['errors'][0]['message'] ) && $response['error']['errors'][0]['message'] === 'Invalid Credentials' ) {
 				$error_message = '<p><b>' . __( 'Reconnect to YouTube to show this feed.', 'feeds-for-youtube' ) . '</b></p>';
 				$error_message .= '<p>' . __( 'To create a new feed, first connect to YouTube using the "Connect to YouTube to Create a Feed" button on the settings page and connect any account.', 'feeds-for-youtube' ) . '</p>';
 
@@ -114,6 +114,14 @@ class SBY_API_Connect
 
 				$sby_posts_manager->add_frontend_error( 'accesstoken', $error_message );
 				$sby_posts_manager->add_error( 'accesstoken', array( 'Trying to connect a new account', $error_message ) );
+
+				do_action( 'sby_api_error', 'authError', 401, $error_message );
+
+				// Same back-off the reason branch applies: without it every
+				// uncached page view of a broken feed re-hits the API and
+				// re-fires the counter, so errors.by_type.auth scales with
+				// traffic instead of with failures.
+				$sby_posts_manager->add_api_request_delay( 300 );
 
 				return false;
 			} elseif ( isset( $response['error']['errors'][0]['reason'] ) ) {
@@ -138,7 +146,26 @@ class SBY_API_Connect
 				$sby_posts_manager->add_frontend_error( 'api', $error_message );
 				$sby_posts_manager->add_error( 'api', array( 'Error connecting', $error_message ) );
 
+				$sby_api_error_reason = isset( $response['error']['errors'][0]['reason'] ) && is_scalar( $response['error']['errors'][0]['reason'] ) ? (string) $response['error']['errors'][0]['reason'] : '';
+				$sby_api_error_code   = isset( $response['error']['code'] ) && is_scalar( $response['error']['code'] ) ? (int) $response['error']['code'] : 0;
+
+				do_action( 'sby_api_error', $sby_api_error_reason, $sby_api_error_code, $error_message );
+
 				$sby_posts_manager->add_api_request_delay( 300 );
+			} else {
+				// An error response without errors[0].reason would otherwise be
+				// invisible to both the error counters and the latest sample.
+				$sby_api_error_code = isset( $response['error']['code'] ) && is_scalar( $response['error']['code'] ) ? (int) $response['error']['code'] : 0;
+				$sby_api_error_msg  = isset( $response['error']['message'] ) && is_scalar( $response['error']['message'] ) ? (string) $response['error']['message'] : '';
+
+				do_action( 'sby_api_error', 'other', $sby_api_error_code, $sby_api_error_msg );
+
+				// Back off like the reason branch, so the counter measures
+				// failures rather than page views.
+				global $sby_posts_manager;
+				if ( $sby_posts_manager ) {
+					$sby_posts_manager->add_api_request_delay( 300 );
+				}
 			}
 		}
 	}
@@ -154,7 +181,15 @@ class SBY_API_Connect
 			$response_array = $response;
 		}
 
-		$message = sprintf( __( 'Error connecting to %s.', 'feeds-for-youtube' ), $response_array['url'] ). ' ';
+		// Strip the query string before the URL enters the message: it carries
+		// the credential (key=<api_key> on Free, access_token=… on Pro), and
+		// this message is shown in the admin and persisted to sby_errors.
+		$safe_url = '';
+		if ( ! empty( $response_array['url'] ) ) {
+			$parts    = wp_parse_url( $response_array['url'] );
+			$safe_url = ( $parts['scheme'] ?? 'https' ) . '://' . ( $parts['host'] ?? '' ) . ( $parts['path'] ?? '' );
+		}
+		$message = sprintf( __( 'Error connecting to %s.', 'feeds-for-youtube' ), $safe_url ). ' ';
 		if ( isset( $response_array['response'] ) && isset( $response_array['response']->errors ) ) {
 			foreach ( $response_array['response']->errors as $key => $item ) {
 				$message .= ' '.$key . ' - ' . $item[0] . ' |';
@@ -166,6 +201,8 @@ class SBY_API_Connect
 		$sby_posts_manager->add_api_request_delay( 300 );
 
 		$sby_posts_manager->add_error( 'connection', array( 'Error connecting', $message ) );
+
+		do_action( 'sby_api_error', 'network', 0, $message );
 	}
 
 	protected function formatted_param_string( $params ) {

@@ -3,7 +3,7 @@
 Plugin Name: Smash Balloon YouTube Feed
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.8.0
+Version: 2.8.1
 Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
@@ -29,7 +29,6 @@ use Smashballoon\Customizer\Container;
 use Smashballoon\Customizer\PreviewProvider;
 use SmashBalloon\YouTubeFeed\Admin\SBY_Notifications;
 use SmashBalloon\YouTubeFeed\Admin\SBY_New_User;
-use SmashBalloon\YouTubeFeed\Admin\SBY_Tracking;
 use SmashBalloon\YouTubeFeed\Blocks\SBY_Blocks;
 use SmashBalloon\YouTubeFeed\Customizer\ShortcodePreviewProvider;
 use SmashBalloon\YouTubeFeed\Feed_Locator;
@@ -54,7 +53,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.8.0' );
+    define( 'SBYVER', '2.8.1' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.3' );
@@ -68,6 +67,9 @@ if ( ! defined( 'SBY_BUILDER_URL' ) ) {
 }
 if ( ! defined( 'SBY_API_URL' ) ) {
 	define( 'SBY_API_URL', 'https://reviews.smashballoon.com/api/v1.0/' );
+}
+if ( ! defined( 'SBY_SMASH_USAGE_TRACKING_API_URL' ) ) {
+	define( 'SBY_SMASH_USAGE_TRACKING_API_URL', 'https://usage.smashballoon.com/api' );
 }
 
 // Setup customizer
@@ -214,7 +216,6 @@ if ( ! function_exists( 'sby_init' ) ) {
             }
         }
 
-        \SmashBalloon\YouTubeFeed\Container::getInstance()->get( SBY_Tracking::class );
         \Smashballoon\Customizer\Feed_Builder::instance();
         sby_builder_pro();
 
@@ -421,6 +422,7 @@ if ( ! function_exists( 'sby_init' ) ) {
         wp_clear_scheduled_hook( 'sby_notification_update' );
         wp_clear_scheduled_hook( 'sby_feed_update' );
         wp_clear_scheduled_hook( 'sby_usage_tracking_cron' );
+        wp_clear_scheduled_hook( 'sby_smash_usage_tracking_cron' );
     }
 
     register_deactivation_hook( __FILE__, 'sby_deactivate' );

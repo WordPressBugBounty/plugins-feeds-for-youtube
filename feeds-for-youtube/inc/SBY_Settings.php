@@ -771,7 +771,19 @@ class SBY_Settings {
 			return $this->convert_value($value);
 		}, $update_array));
 
-		return update_option('sby_settings', $updated);
+		$result = update_option( 'sby_settings', $updated );
+
+		// Schedule/unschedule the usage tracking cron based on consent.
+		if ( array_key_exists( 'usagetracking', $updated ) ) {
+			$scheduler = new \SmashBalloon\YouTubeFeed\UsageTracking\Core\Scheduler();
+			if ( ! empty( $updated['usagetracking'] ) ) {
+				$scheduler->schedule();
+			} else {
+				$scheduler->unschedule();
+			}
+		}
+
+		return $result;
 	}
 
 	private function convert_value($value) {

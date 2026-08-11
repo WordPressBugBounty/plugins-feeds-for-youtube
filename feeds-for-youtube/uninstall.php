@@ -13,6 +13,7 @@ if ( ! $sby_preserve_settings ) {
 	// clear cron jobs
 	wp_clear_scheduled_hook( 'sby_cron_job' );
 	wp_clear_scheduled_hook( 'sby_feed_update' );
+	wp_clear_scheduled_hook( 'sby_smash_usage_tracking_cron' );
 
 	// clean up options from the database
 	delete_option( 'sby_license_key' );
@@ -32,6 +33,16 @@ if ( ! $sby_preserve_settings ) {
 	delete_option( 'sby_notifications' );
 	delete_option( 'sby_newuser_notifications' );
 	delete_option( 'sby_usage_tracking_config' );
+	delete_option( 'sby_usage_tracking' );
+
+	// Smash Usage Tracking options.
+	delete_option( 'sby_smash_usage_tracking' );
+	delete_option( 'sby_smash_usage_tracking_site_token' );
+	delete_option( 'sby_smash_usage_tracking_schedule' );
+	delete_option( 'sby_smash_usage_active_dates' );
+	delete_option( 'sby_smash_usage_session_durations' );
+	delete_option( 'sby_smash_usage_error_counters' );
+	delete_option( 'sby_smash_usage_events' );
 	// delete role
 	global $wp_roles;
 	$wp_roles->remove_cap( 'administrator', 'manage_youtube_feed_options' );

@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 2.8.0
+Stable tag: 2.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,9 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.8.1 =
+* Fix: Plugin hardening.
 
 = 2.8.0 =
 * Tweak: Improved accessibility of the YouTube feed to meet WCAG 2.x requirements, including screen reader landmarks and list semantics, headings for video titles, a visible keyboard focus indicator on the feed, and correct focus handling on Load More.

@@ -128,14 +128,6 @@ class HelpPage extends BaseSettingPage {
 		$sby_license_status = get_option( 'sby_license_status' );
 		$sby_settings       = get_option( 'settings', array() );
 
-		$usage_tracking = get_option(
-			'sby_usage_tracking',
-			array(
-				'last_send' => 0,
-				'enabled'   => \sby_is_pro_version(),
-			)
-		);
-
 		$output .= 'License key: ';
 		if ( $sby_license_key ) {
 			$output .= esc_html( $sby_license_key );
@@ -189,7 +181,7 @@ class HelpPage extends BaseSettingPage {
 		$output .= isset( $sby_settings['custom_js'] ) && ! empty( $sby_settings['custom_js'] ) ? $sby_settings['custom_js'] : 'Empty';
 		$output .= '<br />';
 		$output .= 'Usage Tracking: ';
-		$output .= isset( $usage_tracking['enabled'] ) && $usage_tracking['enabled'] === true ? 'Enabled' : 'Disabled';
+		$output .= \SmashBalloon\YouTubeFeed\UsageTracking\Config::is_enabled() ? 'Enabled' : 'Disabled';
 		$output .= '<br />';
 		$output .= 'AJAX theme loading fix: ';
 		$output .= isset( $sby_settings['ajax_theme'] ) && $sby_settings['ajax_theme'] ? 'Enabled' : 'Disabled';
