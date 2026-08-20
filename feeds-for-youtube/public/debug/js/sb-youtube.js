@@ -14596,7 +14596,7 @@ function setColorsToChannelHeader(colorArray) {
   function onClose() {
     if (!isOpen) return;
     isOpen = false;
-    if (triggerEl && document.body.contains(triggerEl)) {
+    if (triggerEl && document.body && document.body.contains(triggerEl)) {
       try {
         triggerEl.focus();
       } catch (e) {/* trigger gone */}
@@ -14631,7 +14631,34 @@ function setColorsToChannelHeader(colorArray) {
       }
     }
   }
+
+  // MutationObserver.observe() throws a TypeError when handed anything that
+  // isn't a node, so document.body is checked immediately before observe()
+  // rather than assumed to exist by the time this runs.
+  //
+  // Why that assumption broke: in the block editor this file runs against the
+  // editor-canvas iframe's document, which can already be past readyState
+  // 'loading' while its <body> has not been created yet. Two things put it
+  // there — WP's own `enqueue_block_assets` hook (see
+  // SBY_Blocks::enqueue_block_content_assets) and our own injection into the
+  // canvas iframe's <head> (see js/sby-blocks.js ensureIframeFeedAssets).
+  //
+  // With the target resolved below as body || documentElement, a document
+  // that is past 'loading' attaches synchronously on the first call — it
+  // never reaches either wait. The waits exist only for the narrow window
+  // where the document has NEITHER node yet; there the timer is the load-
+  // bearing one and the DOMContentLoaded listener is a cheap backstop. The
+  // `observing` latch keeps whichever fires first from being doubled by the
+  // other.
+  //
+  // The retry is only that floor, so it matches the sibling TikTok fix's
+  // budget rather than the longer one the poll-primary version needed.
+  var BODY_RETRY_INTERVAL_MS = 50;
+  var BODY_RETRY_LIMIT = 40; // ~2s, then give up rather than poll forever.
+  var bodyRetries = 0;
+  var observing = false;
   function startObserving() {
+    if (observing) return;
     var dialog = getDialog();
     // The lightbox node is appended to <body> lazily on first open, so
     // watch the body for it, then attach a style-attribute observer once
@@ -14651,9 +14678,30 @@ function setColorsToChannelHeader(colorArray) {
       if (isVisible(node)) onOpen(node);
     }
     if (dialog) {
+      observing = true;
       attach(dialog);
       return;
     }
+
+    // documentElement is present even before body is parsed. body is
+    // preferred when it already exists, so the default front-end footer
+    // enqueue observes the same target as before. (With the Advanced
+    // setting `enqueue_js_in_head` on, the script runs in <head> with no
+    // body, so documentElement is used there too and the observer is live
+    // during the HTML parse until the lightbox lands — a real but small
+    // delta on that path.) In the editor canvas iframe
+    // body does not exist yet, so documentElement becomes the root: that is
+    // a strict superset of body's subtree (it catches body's own insertion
+    // and everything under it), not a different target. Same shape as the
+    // sibling fix in TikTok Feeds for SMASH-1927, deliberately.
+    var root = document.body || document.documentElement;
+    if (!root) {
+      // Neither node exists yet — nothing valid to hand observe(), so
+      // wait rather than throw.
+      scheduleObserving();
+      return;
+    }
+    observing = true;
     var bodyObserver = new MutationObserver(function (mutations) {
       for (var i = 0; i < mutations.length; i++) {
         var added = mutations[i].addedNodes;
@@ -14662,22 +14710,40 @@ function setColorsToChannelHeader(colorArray) {
           if (n.nodeType === 1 && n.id === LIGHTBOX_ID) {
             attach(n);
             bodyObserver.disconnect();
+            // Release the latch with the observer it guards, so a
+            // later re-attach stays possible rather than being
+            // foreclosed by a flag whose observer is already gone.
+            observing = false;
             return;
           }
         }
       }
     });
-    bodyObserver.observe(document.body, {
+    bodyObserver.observe(root, {
       childList: true,
       subtree: true
     });
   }
-  document.addEventListener('keydown', trapKeydown, true);
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startObserving);
-  } else {
-    startObserving();
+  function scheduleObserving() {
+    if (document.body || document.documentElement) {
+      startObserving();
+      return;
+    }
+    if (document.readyState === 'loading') {
+      // Same listener reference, so repeat calls can't stack duplicates.
+      document.addEventListener('DOMContentLoaded', startObserving);
+      // Deliberately falls through to the timer as well: a document
+      // parked at 'loading' that never fires DOMContentLoaded would
+      // otherwise wait forever with no cap and no signal. The latch in
+      // startObserving() keeps the two from both attaching.
+    }
+    if (bodyRetries < BODY_RETRY_LIMIT) {
+      bodyRetries++;
+      window.setTimeout(startObserving, BODY_RETRY_INTERVAL_MS);
+    }
   }
+  document.addEventListener('keydown', trapKeydown, true);
+  scheduleObserving();
 })();
 })();
 

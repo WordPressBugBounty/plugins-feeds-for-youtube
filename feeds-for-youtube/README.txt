@@ -5,8 +5,8 @@ Support Website: http://smashballoon/youtube-feed/
 Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
-Tested up to: 7.0
-Stable tag: 2.8.1
+Tested up to: 7.1
+Stable tag: 2.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,10 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.8.2 =
+* New: Official support for WordPress 7.1.
+* Fix: On WordPress 7.1, the block editor no longer logs a JavaScript error.
 
 = 2.8.1 =
 * Fix: Plugin hardening.
