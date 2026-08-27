@@ -225,12 +225,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:awesomemotive\/sb-customizer.git",
-                "reference": "6531d86fc20779ce78d073d35154945bd9ea181a"
+                "reference": "94bed774d7058c3a1cc1ccccaa447ff78058caff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-customizer\/zipball\/6531d86fc20779ce78d073d35154945bd9ea181a",
-                "reference": "6531d86fc20779ce78d073d35154945bd9ea181a",
+                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-customizer\/zipball\/94bed774d7058c3a1cc1ccccaa447ff78058caff",
+                "reference": "94bed774d7058c3a1cc1ccccaa447ff78058caff",
                 "shasum": ""
             },
             "require": {
@@ -241,7 +241,7 @@
             "require-dev": {
                 "vlucas\/phpdotenv": "^4.0"
             },
-            "time": "2026-08-05T09:55:42+00:00",
+            "time": "2026-08-20T10:03:06+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

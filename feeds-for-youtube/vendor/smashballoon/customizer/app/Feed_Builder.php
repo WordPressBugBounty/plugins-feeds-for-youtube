@@ -1101,18 +1101,30 @@ class Feed_Builder
         return array('title' => __('API Key Required', 'feeds-for-youtube'), 'description' => __('In order to make sure your channel, search and other feeds are up to date, the plugin requires a personal API key. It is free to create and only takes a few minutes.', 'feeds-for-youtube'), 'enterAPIKey' => __('Enter or Paste API Key', 'feeds-for-youtube'), 'enterAccessToken' => __('Enter or Paste Access Token', 'feeds-for-youtube'), 'btnOne' => __('Add API Key (Recommended)', 'feeds-for-youtube'), 'learnMoreLink' => 'https://smashballoon.com/doc/youtube-api-key/?youtube', 'btnTwo' => __('Connect a YouTube account instead', 'feeds-for-youtube'), 'btnThree' => __('Cannot connect a YouTube account? Connect Manually', 'feeds-for-youtube'), 'connectYouTubeAccount' => __('Connect YouTube Account', 'feeds-for-youtube'), 'back' => __('Back', 'feeds-for-youtube'), 'note' => __('Note: Connecting a YouTube account instead of API key might not allow you access to a few features like viewing likes and comments for videos.', 'feeds-for-youtube'), 'errorMsg' => __('Entered API Key is invalid. You can double check the API Key or learn more about generating them here', 'feeds-for-youtube'), 'errorMsgAccessToken' => __('Entered Access Token is invalid. You can double check the Access Token or learn more about generating them <a href="https://smashballoon.com/youtube-feed/token" target="_blank">here</a>', 'feeds-for-youtube'), 'add' => __('Add', 'feeds-for-youtube'), 'learnMore' => __('Learn more about how to create and add an API Key here', 'feeds-for-youtube'), 'manualConnectionTitle' => __('Connect with an Access Token', 'feeds-for-youtube'), 'manualConnectionDescription' => __('Cannot connect a YouTube account from the plugin? Try connecting from our website <a href="https://smashballoon.com/youtube-feed/token" target="_blank">here</a>, and paste the generated access token below.', 'feeds-for-youtube'), 'secondModalTitle' => __('Are you sure you want to connect a YouTube account?', 'feeds-for-youtube'), 'secondModalDescription' => __('Due to limitations of YouTube API, connecting via YouTube account will also display private, unpublished and draft videos. To avoid showing those videos, we recommend you use an API key.', 'feeds-for-youtube'));
     }
     /**
-     * Neutralise Vue mustache delimiters in a builder-preview string.
+     * Split any literal Vue mustache in a builder-preview string with an empty HTML comment.
      *
-     * The preview is mounted with <component :is="{template}">, which compiles the string
-     * rather than parsing it, so `{{ ... }}` is an evaluated JavaScript expression. Braces
-     * are not HTML metacharacters, so htmlspecialchars() (applied at both call sites) and
-     * every escaper on the consuming plugin's render path leave them untouched — which is
-     * how a third-party-authored feed value reaches code execution in the administrator's
-     * session. Encoding them means the compiler never tokenises a mustache, while the
-     * browser still renders the original characters as text. SMASH-1798.
+     * The preview is mounted with <component :is="...">, which compiles the string rather
+     * than parsing it, so `{{ ... }}` is an evaluated JavaScript expression. Braces are not
+     * HTML metacharacters, so htmlspecialchars() (applied at both call sites) and every
+     * escaper on the consuming plugin's render path leave them untouched — which is how a
+     * third-party-authored feed value could reach code execution in the administrator's
+     * session.
      *
-     * Mirrored client-side by sbcNeutralizeVueDelimiters() in assets/js/builder.js, which
-     * covers the AJAX refresh path; this one covers the initial localized render.
+     * HTML-entity encoding does NOT close that. Vue's compiler runs decodeHTMLCached()
+     * before parseText(), so `&#123;&#123;` is `{{` again one step before the mustache
+     * check; and wp_localize_script() html_entity_decode()s localized scalars, stripping a
+     * layer earlier still. That was the SMASH-1798 approach and it was a no-op.
+     *
+     * The load-bearing control now lives on the component: sbcBuilderPreviewDelimiters() in
+     * assets/js/builder.js mints a random delimiter pair per page load, so stored feed
+     * content cannot match the delimiters at all. This function is defence in depth, and the
+     * split is structural rather than textual for the same reason entities failed: Vue's
+     * parseHTML() drops the comment and emits the surrounding characters as separate
+     * chars() chunks, each run through parseText() independently, so `{<!---->{` never
+     * tokenises as a mustache. The comment renders as nothing, so a reader still sees the
+     * original braces.
+     *
+     * Mirrored client-side by sbcNeutralizeVueDelimiters() in assets/js/builder.js.
      *
      * @since 2.0
      *
@@ -1121,6 +1133,6 @@ class Feed_Builder
      */
     public static function neutralize_vue_delimiters($html)
     {
-        return str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $html);
+        return str_replace(array('{{', '}}'), array('{<!---->{', '}<!---->}'), (string) $html);
     }
 }

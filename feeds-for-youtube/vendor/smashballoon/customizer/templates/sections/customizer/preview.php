@@ -20,7 +20,8 @@
 
         <div class="sby-preview-ctn sby-yt-fs" :data-color-scheme="customizerFeedData.settings.colorpalette" :data-preview-screen="customizerScreens.previewScreen">
             <div>
-                <component :is="{template}"></component>
+                <?php // sbcPreviewComponent(), not {template}: it carries the per-load random delimiters. SMASH-1907. ?>
+                <component :is="sbcPreviewComponent()"></component>
             </div>
 			<?php
 				include_once CUSTOMIZER_ABSPATH . 'templates/preview/lightbox.php';

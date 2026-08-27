@@ -1,25 +1,67 @@
 /**
- * Neutralise Vue mustache delimiters in a builder-preview string (SMASH-1798).
+ * Mint the interpolation delimiters used by the customizer preview component.
  *
- * The preview is mounted with <component :is="{template}">, which hands the string to
- * Vue's runtime template COMPILER — so `{{ ... }}` inside it is an evaluated JavaScript
- * expression rather than markup. Braces are not HTML metacharacters, so nothing on the
- * server's render path (esc_html, esc_attr, wp_kses_post, htmlspecialchars) touches them:
- * a feed value authored by a third party (a YouTube video title, a channel bio) reaches
- * code execution in the administrator's session with no angle bracket, quote or on*
- * attribute. Encoding the delimiters here means the compiler never tokenises a mustache,
- * while the browser still renders the original characters as text.
+ * The preview is mounted with <component :is="...">, which hands the feed HTML to Vue's
+ * runtime template COMPILER — so a mustache inside it is an evaluated JavaScript
+ * expression, not markup. Braces are not HTML metacharacters, so nothing on the server's
+ * render path (esc_html, esc_attr, wp_kses_post, htmlspecialchars) touches them: a feed
+ * value authored by a third party (a YouTube video title, a channel bio) would otherwise
+ * reach code execution in the administrator's session with no angle bracket, quote or on*
+ * attribute.
  *
- * This is the package-level guarantee: it holds for every consumer, whether or not the
- * consuming plugin also neutralises delimiters before handing the HTML over.
+ * Encoding the braces does NOT fix this. Vue's compiler runs decodeHTMLCached() before
+ * parseText(), so `&#123;&#123;` is back to `{{` one step before the mustache check — and
+ * wp_localize_script() html_entity_decode()s localized scalars, stripping a layer earlier
+ * still. That was the SMASH-1798 approach and it was a no-op.
+ *
+ * The durable control is to move the delimiters instead of the content: the preview
+ * component compiles with a random pair minted fresh on every page load, so stored feed
+ * content cannot match them and `{{ ... }}` in it is inert text. Because this is a
+ * property of the component rather than a transform on the string, it covers every
+ * producer path at once — the initial localized render, every AJAX refresh, and the legacy
+ * feed path. Only the preview component is affected; the package's own templates keep
+ * Vue's default delimiters, which they rely on. SMASH-1907.
+ *
+ * @return {Array} [openDelimiter, closeDelimiter]
+ */
+function sbcBuilderPreviewDelimiters() {
+	var random = new Uint32Array( 4 ),
+		token = '';
+
+	if ( window.crypto && window.crypto.getRandomValues ) {
+		window.crypto.getRandomValues( random );
+		for ( var i = 0; i < random.length; i++ ) {
+			token += random[ i ].toString( 36 );
+		}
+	} else {
+		token = String( new Date().getTime() ) + String( Math.random() ).slice( 2 );
+	}
+
+	return [ '[[sbc' + token, token + 'sbc]]' ];
+}
+
+/**
+ * Split any literal mustache in a builder-preview string with an empty HTML comment.
+ *
+ * Defence in depth only — sbcBuilderPreviewDelimiters() above is the load-bearing control.
+ * This exists so the two producer paths still degrade safely if a consumer ever mounts the
+ * string with Vue's default delimiters.
+ *
+ * The split has to be structural, not textual: Vue's parseHTML() drops comments and emits
+ * the surrounding characters as separate chars() chunks, each run through parseText()
+ * independently, so `{<!---->{` never tokenises as a mustache — whereas an HTML entity is
+ * decoded back to `{` before that check ever happens. The comment renders as nothing, so
+ * the reader still sees the original braces.
+ *
+ * Mirrored server-side by Feed_Builder::neutralize_vue_delimiters().
  *
  * @param {string} html Rendered feed HTML destined for the preview.
  * @return {string}
  */
 function sbcNeutralizeVueDelimiters(html) {
 	return String(html === null || typeof html === 'undefined' ? '' : html)
-		.split('{{').join('&#123;&#123;')
-		.split('}}').join('&#125;&#125;');
+		.split('{{').join('{<!---->{')
+		.split('}}').join('}<!---->}');
 }
 
 import {addAction, applyFilters, createHooks, doAction, hasFilter} from "@wordpress/hooks";
@@ -31,6 +73,19 @@ let Builder,
 SB_Customizer.initPromise.then((customizer) => {
 	const extraMethods =  {
 		...customizer.extraMethods,
+
+		/**
+		 * Options object for the customizer preview <component :is="...">.
+		 *
+		 * A method, not a computed: the old inline `{template}` rebuilt this object on
+		 * every parent render and the preview relies on being recreated that way.
+		 */
+		sbcPreviewComponent : function(){
+			return {
+				template : this.template,
+				delimiters : this.previewDelimiters
+			};
+		},
 		updateColorValue : function(id){
 			var self = this;
 			self.customizerFeedData.settings[id] = (self.customizerFeedData.settings[id].a == 1) ? self.customizerFeedData.settings[id].hex : self.customizerFeedData.settings[id].hex8;
@@ -1657,6 +1712,9 @@ SB_Customizer.initPromise.then((customizer) => {
 		$parent : this,
 		nonce : sbc_builder.nonce,
 		template :  sbcNeutralizeVueDelimiters(sbc_builder.feedInitOutput),
+		// Preview is feed HTML compiled as a template: mustaches in it must never
+		// interpolate. Encoding the braces fails — Vue decodes first. SMASH-1907.
+		previewDelimiters : sbcBuilderPreviewDelimiters(),
 		freeCtaShowFeatures : false,
 		upgradeUrl : sbc_builder.upgradeUrl,
 		supportPageUrl: sbc_builder.supportPageUrl,
