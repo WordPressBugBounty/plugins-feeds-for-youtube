@@ -13420,10 +13420,15 @@ if (!sby_js_exists) {
       };
       this.beforePlayerSetup = function ($lightbox, data, index, album, feed) {
         $('body').css('overflow', 'hidden');
+        // SMASH-1400: the clone carries no event handlers, so any Replay
+        // pill copied from the feed player would be inert - and it must not
+        // appear at all if this video resolves to a Custom Link CTA.
+        var $ctaClone = $(feed.el).find('.sby_cta_items_wraps').clone();
+        $ctaClone.find('.sby_cta_replay').remove();
         if (!$lightbox.find('.sby_cta_items_wraps').length) {
-          $lightbox.find('.sby_lb_video_thumbnail_wrap').append($(feed.el).find('.sby_cta_items_wraps').clone());
+          $lightbox.find('.sby_lb_video_thumbnail_wrap').append($ctaClone);
         } else {
-          $lightbox.find('.sby_cta_items_wraps').replaceWith($(feed.el).find('.sby_cta_items_wraps').clone());
+          $lightbox.find('.sby_cta_items_wraps').replaceWith($ctaClone);
         }
       };
       this.afterPlayerSetup = function ($lightbox, data, index, album) {
@@ -13510,15 +13515,22 @@ if (!sby_js_exists) {
         } else {
           return;
         }
-        if (dataNum === 2 || dataNum === 0) {
-          this.$player.find('.sby_cta_items_wraps').addClass('sby_cta_is_open');
-          if (dataNum === 2) {
-            this.$player.find('.sby_cta_items_wraps').addClass('sby_cta_state_paused');
-          } else {
-            this.$player.find('.sby_cta_items_wraps').addClass('sby_cta_state_ended');
-          }
-          this.$player.find('.sby_cta_items_wraps').show();
+        if (dataNum === 0) {
+          // SMASH-1400: .show() would pin an inline display:block that
+          // beats the stylesheet's flex layout - clear the inline value
+          // and let .sby_cta_state_ended{display:flex} take over.
+          // (Small-player sizing is pure CSS - the @container query in
+          // sb-youtube-common.css keys on the actual player width.)
+          this.$player.find('.sby_cta_items_wraps').addClass('sby_cta_is_open').addClass('sby_cta_state_ended').css('display', '');
           this.callback();
+
+          // SMASH-1400: Replay only belongs on the related-videos end
+          // screen - a Custom Link CTA has its own single button. Added
+          // BEFORE setCTAStyles so the sizing pass can measure the pill
+          // and keep the grid clear of it on short players.
+          if (this.callback === this.related) {
+            this.addReplayButton();
+          }
           this.setCTAStyles();
         } else {
           this.$player.find('.sby_cta_items_wraps').removeClass('sby_cta_is_open');
@@ -13542,15 +13554,37 @@ if (!sby_js_exists) {
         var numItems = this.numItems;
         $.each(related, function (index, value) {
           if (value.videoID !== currentVideoId && added < numItems) {
-            $player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').append('<div class="sby_cta_item"><div class="sby_video_thumbnail_wrap">' + '<a class="sby_video_thumbnail" href="#" data-video-id="' + value.videoID + '" aria-label="' + sbyEncodeInput(value.title) + '">' + '<div class="sby_thumbnail_hover">' + '<div class="sby_thumbnail_hover_inner">' + '<span class="sby_video_title">' + sbyEscHtml(value.title) + '</span>' + '</div>' + '</div>' + '<span class="sby-screenreader">Play</span>' + '<img src="' + sbySafeUrl(value.thumbnail) + '" alt="' + sbyEscHtml(value.title) + '">' + '<span class="sby_loader sby_hidden" style="background-color: rgb(255, 255, 255);"></span>' + '</a>' + '</div>' + '</div>');
+            // SMASH-1400: skip entries with no usable thumbnail. The scraped
+            // branch of getRelated() guards on data-full-res, but the
+            // settings.general.cta.defaultPosts branch does not, and calling
+            // .replace() on undefined would throw inside this $.each callback -
+            // aborting the loop and leaving the end screen completely empty.
+            var rawThumbnail = value.thumbnail ? String(value.thumbnail) : '';
+            if (rawThumbnail === '') {
+              return;
+            }
+
+            // Use the 16:9 medium-quality thumbnail for the related grid,
+            // restricted to safe URL schemes (SMASH-1799).
+            var relatedThumbnail = sbySafeUrl(rawThumbnail.replace(/\/(?:maxresdefault|sddefault|hqdefault|default)\.jpg/, '/mqdefault.jpg'));
+
+            // Build with jQuery .attr()/.text() so titles and URLs are escaped
+            // (no raw HTML string concatenation of API-sourced data).
+            // href="#" (not javascript:) so the link survives a strict CSP; the
+            // click handler below calls preventDefault().
+            var $link = $('<a class="sby_video_thumbnail" href="#"></a>').attr('data-video-id', value.videoID).append('<div class="sby_thumbnail_hover"><div class="sby_thumbnail_hover_inner"></div></div>').append('<span class="sby-screenreader">Play</span>').append($('<img>').attr('src', relatedThumbnail).attr('alt', value.title)).append('<span class="sby_loader sby_hidden" style="background-color: rgb(255, 255, 255);"></span>');
+            var $title = $('<div class="sby_cta_title"></div>').attr('data-video-id', value.videoID).text(value.title);
+            var $item = $('<div class="sby_cta_item"></div>').append($('<div class="sby_video_thumbnail_wrap"></div>').append($link)).append($title);
+            $player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').append($item);
             added++;
           }
         });
-        $player.find('.sby_cta_items_wraps .sby_video_thumbnail').each(function () {
+        $player.find('.sby_cta_items_wraps .sby_video_thumbnail, .sby_cta_items_wraps .sby_cta_title').each(function () {
           $(this).off().on('click', function (event) {
             event.preventDefault();
             var newVideoID = $(this).attr('data-video-id');
-            feedObjInContext.onThumbnailClick($(this), true, newVideoID);
+            var $thumbnail = $(this).closest('.sby_cta_item').find('.sby_video_thumbnail');
+            feedObjInContext.onThumbnailClick($thumbnail, true, newVideoID);
             ctaObj.videoID = newVideoID;
           });
         });
@@ -13598,24 +13632,132 @@ if (!sby_js_exists) {
         }
         $player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').append('<div class="sby_cta_item">' + '<div class="sby_btn_wrap">' + '<div class="sby_btn' + styleClass + '">' + '<a class="sby_cta_button" href="' + sbySafeUrl(this.callbackArgs.url) + '"' + openAtts + ' data-video-id="' + sbyEscHtml(this.videoID) + '"' + style + '>' + sbyEscHtml(this.callbackArgs.text) + '</a>' + '</div>' + '</div>' + '</div>');
       },
+      /**
+       * Space to reserve under each thumbnail for its title caption.
+       *
+       * Read from the caption's own computed style (max-height is the
+       * two-line clamp, plus its top margin) rather than a hand-synced
+       * magic number, so changing the caption CSS - which differs per
+       * breakpoint - can't silently start clipping titles again.
+       */
+      getCaptionHeight: function getCaptionHeight($inner) {
+        var $title = $inner.find('.sby_cta_title').first(),
+          fallback = 46;
+        if (!$title.length) {
+          return fallback;
+        }
+        var clamp = parseFloat($title.css('max-height')),
+          marginTop = parseFloat($title.css('margin-top'));
+        if (isNaN(clamp) || clamp <= 0) {
+          return fallback;
+        }
+        if (isNaN(marginTop)) {
+          marginTop = 0;
+        }
+        return Math.ceil(clamp + marginTop);
+      },
       setCTAStyles: function setCTAStyles() {
-        var playerTopHeight = 60,
-          playerBottomHeight = 49,
-          minimumHeight = 90,
-          ctaOverlayHeight = Math.max(minimumHeight, this.$player.height() - playerTopHeight - playerBottomHeight);
-        this.$player.find('.sby_cta_items_wraps').css('height', ctaOverlayHeight + 'px').css('width', this.$player.find('iframe').width() - 20 + 'px').addClass('sby_cta_cols_' + this.numItemColumns);
-        var numRows = Math.max(1, this.numItems / this.numItemColumns),
-          totalVerticalPadding = parseInt(this.$player.find('.sby_cta_items_wraps').css('padding-top').replace('px', '')) * 2,
-          maxCTAItemHeight = Math.max(minimumHeight, (ctaOverlayHeight - totalVerticalPadding) / numRows);
-        this.$player.find('.sby_cta_item').css('max-height', maxCTAItemHeight + 'px').find('img').css({
-          'max-height': maxCTAItemHeight + 'px',
-          'width': 'auto',
-          'margin': 'auto'
-        });
-        this.$player.find('.sby_btn_wrap').css('height', maxCTAItemHeight + 'px');
+        var $wrap = this.$player.find('.sby_cta_items_wraps');
+        if (!$wrap.length) {
+          return;
+        }
+        $wrap.addClass('sby_cta_cols_' + this.numItemColumns);
+        var $inner = $wrap.find('.sby_cta_inner_wrap'),
+          $titles = $inner.find('.sby_cta_title'),
+          cols = this.numItemColumns || 2,
+          rows = Math.max(1, Math.ceil(this.numItems / cols)),
+          rowGap = parseInt($inner.css('row-gap'), 10),
+          colGap = parseInt($inner.css('column-gap'), 10);
+        if (isNaN(rowGap)) {
+          rowGap = 16;
+        }
+        if (isNaN(colGap)) {
+          colGap = 16;
+        }
+
+        // Fit the thumbnails to the available height so the captions never get clipped.
+        // jQuery .height()/.width() already exclude padding (the grid area).
+        var availableHeight = Math.max(60, $inner.height()),
+          availableWidth = Math.max(60, $inner.width()),
+          rowHeight = (availableHeight - rowGap * (rows - 1)) / rows;
+
+        // SMASH-1400: reset to the 2-line caption baseline before measuring.
+        // setCTAStyles() also runs on afterResize with no rebuild, so a
+        // 1-line class left on the DOM by a prior small-player render would
+        // otherwise skew captionHeight on a small->large resize.
+        $titles.removeClass('sby_cta_title_1line');
+        var captionHeight = this.getCaptionHeight($inner);
+
+        // SMASH-1400: the caption's 2-line clamp is a fixed pixel cost per
+        // row - fine on a big desktop player where it's a small slice of a
+        // tall row, but on a smaller player (tablet, mobile) it can eat
+        // close to half the row's height and leave the thumbnail itself
+        // looking small even though the fit math is "correct". If the
+        // 2-line reservation would leave less than MIN_THUMB_HEIGHT for
+        // the image, drop to a 1-line caption for this render and give
+        // that reclaimed height back to the thumbnail instead. Desktop's
+        // tall rows never hit this floor, so its 2-line captions are
+        // untouched.
+        var MIN_THUMB_HEIGHT = 110;
+        if (rowHeight - captionHeight < MIN_THUMB_HEIGHT) {
+          $titles.addClass('sby_cta_title_1line');
+          captionHeight = this.getCaptionHeight($inner);
+        }
+        var thumbHeight = Math.max(40, rowHeight - captionHeight),
+          thumbWidth = thumbHeight * 16 / 9,
+          gridWidth = Math.min(availableWidth, thumbWidth * cols + colGap * (cols - 1));
+        $inner.css('max-width', Math.round(gridWidth) + 'px');
       },
       resetCTA: function resetCTA() {
-        this.$player.find('.sby_cta_items_wraps .sby_cta_inner_wrap').empty();
+        var $wrap = this.$player.find('.sby_cta_items_wraps');
+
+        // SMASH-1400: drop any Replay button left over from the previous
+        // video - the CTA type is resolved per video, so the next one may
+        // be a Custom Link CTA, which must not inherit a Replay pill.
+        $wrap.find('.sby_cta_replay').remove();
+        $wrap.find('.sby_cta_inner_wrap').empty();
+      },
+      addReplayButton: function addReplayButton() {
+        var ctaObj = this,
+          $wrap = this.$player.find('.sby_cta_items_wraps');
+        if (!$wrap.length || $wrap.find('.sby_cta_replay').length) {
+          return;
+        }
+
+        // SMASH-1400: translated via wp_localize_script('sby_scripts', 'sbyOptions')
+        // like the other user-facing frontend strings.
+        var sbyA11y = window.sbyOptions && sbyOptions.a11y || {};
+        var $btn = $('<button type="button" class="sby_cta_replay"></button>').attr('aria-label', sbyA11y.replayVideo || 'Replay video').append('<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>').append($('<span></span>').text(sbyA11y.replay || 'Replay'));
+        $btn.on('click', function (event) {
+          event.preventDefault();
+          ctaObj.replayVideo();
+        });
+
+        // SMASH-1400: appended (not prepended) - the pill is an in-flow
+        // flex child now and must come after the related-video grid so it
+        // renders at the bottom of the end screen.
+        $wrap.append($btn);
+      },
+      replayVideo: function replayVideo() {
+        var feed = this.feedObjInContext,
+          player = null;
+        if (feed.player && typeof feed.player.seekTo === 'function') {
+          player = feed.player;
+        } else if (typeof window.sbyLightboxPlayer !== 'undefined' && window.sbyLightboxPlayer && typeof window.sbyLightboxPlayer.seekTo === 'function') {
+          player = window.sbyLightboxPlayer;
+        } else if (feed.players) {
+          for (var key in feed.players) {
+            if (feed.players.hasOwnProperty(key) && feed.players[key] && typeof feed.players[key].seekTo === 'function') {
+              player = feed.players[key];
+              break;
+            }
+          }
+        }
+        if (player) {
+          player.seekTo(0);
+          player.playVideo();
+        }
+        this.$player.find('.sby_cta_items_wraps').hide().removeClass('sby_cta_is_open sby_cta_state_paused sby_cta_state_ended');
       }
     };
     window.sby_init = function () {

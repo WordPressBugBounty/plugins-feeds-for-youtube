@@ -7295,6 +7295,33 @@ SB_Customizer.initPromise = new Promise(function (resolve) {
       }
       self.regenerateLayout(settingID);
     },
+    /**
+     * Change handler for <select> controls that gate individual options
+     * behind a license tier (control.optionExtension = { value: extension }).
+     * If the chosen option is gated and the extension isn't active, show the
+     * upgrade popup and revert to the control default instead of applying it.
+     *
+     * @since 2.8.2
+     */
+    changeSelectGated: function changeSelectGated(control, model) {
+      var self = this;
+      var value = model[control.id];
+      var cfg = control.optionExtension ? control.optionExtension[value] : false;
+      if (cfg) {
+        // Entitlement uses hasFeature() (the same source shouldShowOverlay
+        // uses), not activeExtensions, which is not tier-aware for license
+        // features and is always false here.
+        var entitled = self.sbyIsPro && !self.sbyLicenseNoticeActive && self.hasFeature(cfg.feature);
+        if (!entitled) {
+          // Show the upgrade popup and revert through the normal change
+          // path so the preview and saved setting stay in sync.
+          self.viewsActive.extensionsPopupElement = cfg.popup;
+          self.changeSettingValue(control.id, control["default"], true, control.ajaxAction ? control.ajaxAction : false);
+          return;
+        }
+      }
+      self.changeSettingValue(control.id, false, false, control.ajaxAction ? control.ajaxAction : false);
+    },
     checkExtensionActive: function checkExtensionActive(extension) {
       var self = this;
       return self.activeExtensions[extension];

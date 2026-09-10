@@ -42,7 +42,7 @@
                         <div class="sbc-cta-icon" v-if="!sbyIsPro" v-html="svgIcons['whiteBalloon']"></div>
                         {{ sbyIsPro ? (sbyLicenseInactiveState ? genericText.activateLicense : sbyLicenseNoticeActive ? genericText.renew : genericText.upgrade) : genericText.upgrade }}
                     </a>
-                    <a class="sbc-btn-grey sbc-btn" href="https://smashballoon.com/youtube-feed/?utm_campaign=youtube-free&utm_source=feed-type&utm_medium=playlist&utm_content=LearnMore" target="_blank">
+                    <a class="sbc-btn-grey sbc-btn" :href="extensionsPopup[viewsActive.extensionsPopupElement].learnMoreUrl" target="_blank">
                         {{ genericText.learnMore }}
                     </a>
                 </div>

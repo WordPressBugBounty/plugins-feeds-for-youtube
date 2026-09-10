@@ -55,7 +55,7 @@
                 <div class="sb-llm-lk-footer">
                     <p>
                         <span>Need a New License? </span>
-                        <a href="<?php echo "https://smashballoon.com/pricing/youtube-feed/"; ?>" target="_blank">
+                        <a href="<?php echo "https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?utm_campaign=youtube-free&utm_source=license-popup&utm_medium=buy-license&utm_content=BuyALicense"; ?>" target="_blank">
                             Buy a License
                             <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.8332 0L0.658203 1.175L4.47487 5L0.658203 8.825L1.8332 10L6.8332 5L1.8332 0Z" fill="#0068A0"/></svg>
                         </a>

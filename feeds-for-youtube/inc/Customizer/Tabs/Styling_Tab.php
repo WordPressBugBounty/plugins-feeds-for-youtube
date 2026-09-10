@@ -325,13 +325,23 @@ class Styling_Tab{
 				'type'    => 'select',
 				'id'      => 'cta',
 				'heading'   => __( 'Type', 'feeds-for-youtube' ),
-				'description'   => __( 'What the user sees when a video pauses or ends', 'feeds-for-youtube' ),
+				'description'   => __( 'What the user sees when the video ends', 'feeds-for-youtube' ),
 				'strongHeading' => 'true',
 				'stacked'       => 'true',
 				'options'       => array(
 					'related' => 'Related Videos',
 					'link' => 'Custom Link',
 					'default' => 'YouTube Default',
+				),
+				// "Custom Link" stays gated to tiers with the call_to_actions
+				// feature; selecting it without access shows the upgrade popup.
+				// feature = license feature slug (hasFeature); popup = extension
+				// popup key (extensionsPopupElement).
+				'optionExtension' => array(
+					'link' => array(
+						'feature' => 'call_to_actions',
+						'popup'   => 'call_to_action',
+					),
 				),
 				'default' => 'related'
 			),

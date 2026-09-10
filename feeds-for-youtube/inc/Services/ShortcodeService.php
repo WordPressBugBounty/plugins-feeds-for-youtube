@@ -155,7 +155,7 @@ class ShortcodeService extends ServiceProvider {
 
 		// get the Settings page values
 		$sby_settings = get_option('sby_settings', array());
-		$custom_template = $sby_settings['customtemplates'];
+		$custom_template = isset( $sby_settings['customtemplates'] ) ? $sby_settings['customtemplates'] : '';
 		// update custom templates value from Settings page value
 		if ( $custom_template ) {
 			$settings['customtemplates'] = $custom_template;

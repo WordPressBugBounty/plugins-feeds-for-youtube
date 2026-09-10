@@ -1950,9 +1950,17 @@ button.sb-control-input-info {
     -webkit-appearance: none;
 }
 button.sb-control-switcher-ctn,
-button.sb-control-colorpicker-swatch,
 button.sb-control-imagechooser-clear-icon {
     background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+/* the colorpicker swatch draws its own #f7f7f7 empty-state fill via the class
+   rule further down, and the inline :style binding wins when a colour IS set -
+   never reset its background here or empty-valued settings render as invisible
+   blank boxes (same trap as button.sb-control-checkbox below) */
+button.sb-control-colorpicker-swatch {
     border: 0;
     padding: 0;
     margin: 0;

@@ -141,6 +141,10 @@ class AssetsService extends ServiceProvider {
 				'livePlayerTitle' => __( 'YouTube live video player', 'feeds-for-youtube' ),
 				'showMoreDescription' => __( 'Show more description', 'feeds-for-youtube' ),
 				'showLessDescription' => __( 'Show less description', 'feeds-for-youtube' ),
+				// SMASH-1400: related-videos end-screen Replay button.
+				/* translators: Visible label on the button that restarts the video that just ended. */
+				'replay'              => __( 'Replay', 'feeds-for-youtube' ),
+				'replayVideo'         => __( 'Replay video', 'feeds-for-youtube' ),
 			)
 		);
 		//Pass option to JS file

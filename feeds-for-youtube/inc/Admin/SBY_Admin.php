@@ -862,14 +862,14 @@ class SBY_Admin extends SBY_Admin_Abstract {
 			'callback' => 'sub_option',
 			'sub_options' => $cta_options,
 			'title' => __( 'Call to Action', 'feeds-for-youtube' ),
-			'before' => '<p style="margin-bottom: 10px">' . __( 'What the user sees when a video pauses or ends.', 'feeds-for-youtube' ) . '</p>',
+			'before' => '<p style="margin-bottom: 10px">' . __( 'What the user sees when the video ends.', 'feeds-for-youtube' ) . '</p>',
 			'shortcode' => array(
 				'key' => 'cta',
 				'example' => 'link',
-				'description' => __( 'What the user sees when a video pauses or ends. eg.', 'feeds-for-youtube' ) . ' related, link',
+				'description' => __( 'What the user sees when the video ends. eg.', 'feeds-for-youtube' ) . ' related, link',
 				'display_section' => 'experience'
 			),
-			'tooltip_info' => __( 'Choose what will happen after a video is paused or completes.', 'feeds-for-youtube' )
+			'tooltip_info' => __( 'Choose what will happen after the video ends.', 'feeds-for-youtube' )
 		);
 		$this->add_settings_field( $args );
 

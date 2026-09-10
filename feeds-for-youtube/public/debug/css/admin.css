@@ -1199,13 +1199,12 @@ body[class*="_page_sby_single_settings"] *:focus-visible,
     position: relative;
     top: 1px;
 }
-#adminmenu .wp-submenu .sby_get_pro_highlight {
-    color: #FE544F;
-    font-weight: 600;
-}
+#adminmenu .wp-submenu .sby_get_pro_highlight,
 #adminmenu .wp-submenu .sby_get_pro_highlight:hover,
-#adminmenu .wp-submenu .sby_get_pro_highlight:active{
-  color: #FE544F;
+#adminmenu .wp-submenu .sby_get_pro_highlight:active {
+    color: #fff;
+    font-weight: 600;
+    background-color: #15804d;
 }
 /* Install Plugin Modal on Select Source Flow */
 #wpbody-content .sb-fs-boss {

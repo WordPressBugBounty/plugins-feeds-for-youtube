@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 2.8.3
+Stable tag: 2.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,11 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.9.0 =
+* Tweak: The upgrade link in the plugin's admin menu now reads "Upgrade to Pro" and opens the YouTube Feed upgrade page.
+* Fix: Improved the colour contrast of the "Upgrade to Pro" button in the admin menu so it meets accessibility requirements.
+* Fix: Colour settings left empty in the feed customizer no longer appear as blank boxes; the swatch again shows its empty-state fill.
 
 = 2.8.3 =
 * Fix: Plugin security hardening.

@@ -1886,57 +1886,327 @@ body {
 
   /* CTA */
   .sby_cta_wrap {
+    /* SMASH-1400: one knob for the strip left to YouTube's control bar.
+       4.5rem ~ the 72px large-player bar; small players (keyed on PLAYER width
+       via the @container query below, NOT a viewport media query - the lightbox
+       player can be small in a big window) drop to 2.75rem. Everything
+       (backdrop inset, opaque cover, flex padding) derives from this var. */
+    --sby-cta-bar: 4.5rem;
     box-sizing: border-box;
     display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto !important;
+    height: auto !important;
+    background: transparent;
+    margin: auto;
+    z-index: 50;
+    /* SMASH-1400: top-only inset, no bottom reservation - the flex column
+       (grid + Replay) uses the full player height down to the bottom edge, so
+       the Replay pill lands within the reserved control-strip area. That is
+       fine in the ended state: the ::after scrim covers that strip opaquely and
+       playback has already finished, so there is nothing live underneath to
+       fight with. The top value is a small fixed nudge rather than a % of width
+       - a percentage scaled oddly with player width and, because setCTAStyles()
+       sizes the cards off $inner.height(), stole height from the thumbnails. */
+    padding: 24px 0 0;
+    border-radius: 0;
+    /* SMASH-1400: the overlay box spans the whole player, but it must not
+       swallow clicks meant for YouTube's control bar. The wrap itself is
+       transparent to pointer events; only the painted backdrop (::before) and
+       the interactive children below opt back in, so the overlay intercepts
+       events exactly where it paints and nowhere else. */
+    pointer-events: none;
+  }
+
+  /* SMASH-1400: the ::before backdrop paints the main end-screen area and opts
+     back into pointer events, so clicks on the end screen are absorbed here
+     instead of passing through to the iframe. It stops short of the reserved
+     control-bar strip, which the ::after below paints separately; the split is
+     what lets that strip stay pointer-events:none (click-through) even though
+     the ended-state end screen now paints over it opaquely. */
+  .sby_cta_wrap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--sby-cta-bar);
+    background: #0f0f0f;
+    pointer-events: auto;
+  }
+
+  /* SMASH-1400: scrim over the reserved control-bar strip. The CTA only ever
+     opens on the ENDED state (see .sby_cta_state_ended below), where the plugin
+     renders its own Replay + related-video controls on top and YouTube's native
+     ended chrome underneath (seek filmstrip / "More videos" grid) is pure noise
+     with no live playback control left to keep visible. So the strip is filled
+     solid in the same colour as the ::before backdrop — a seamless black end
+     screen with no video bleed-through. pointer-events:none keeps this paint
+     only; the ::before hit-testing contract is unchanged. */
+  .sby_cta_wrap::after {
+    content: "";
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 57px;
+    bottom: 0;
+    height: var(--sby-cta-bar);
+    background: #0f0f0f;
+    pointer-events: none;
+  }
+
+  /* SMASH-1400: the CTA sizes against the PLAYER, not the viewport - a
+     viewport media query gets it wrong for a small player in a big window
+     (the lightbox). The player wrappers are inline-size containers and the
+     small-player rules live in one @container block below. Browsers without
+     container-query support simply keep the large sizing - graceful.
+
+     The container must be the element the CTA is absolutely positioned
+     against, i.e. its own parent - NOT the feed element. A 3-column inline
+     feed at 900px has ~300px players, and querying the 900px feed would never
+     match the small-player block, reintroducing exactly the clipping the
+     viewport media query used to cause. :has() scopes this to the one
+     .sby_video_thumbnail_wrap per player that actually holds a CTA, so the
+     identically-classed wrappers inside .sby_cta_item (the recommendation
+     cards) are not turned into nested containers. Every browser that supports
+     @container also supports :has(). */
+  #sby_lightbox .sby_lb_video_thumbnail_wrap,
+  .sby_video_thumbnail_wrap:has(> .sby_cta_wrap) {
+    container-type: inline-size;
+  }
+
+
+  .sby_cta_inner_wrap {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 720px;
+    margin: 0 auto;
+    grid-gap: 20px 16px;
+    gap: 20px 16px;
     width: 100%;
-    height: 160px;
-    background: #000;
-    margin: auto;
-    z-index: 50;
-    padding: 0;
-    border-radius: 10px;
+    /* SMASH-1400: the grid is the flex column's growing middle - it takes all
+       the space between the top edge and the Replay pill, and centers its
+       content in it, so the recommendations sit dead-centre of the dark area
+       at any player size. min-height:0 lets it shrink instead of overflowing.
+       order pins the grid above the pill even if the DOM order differs (the
+       lightbox clones this markup). */
+    flex: 1 1 auto;
+    min-height: 0;
+    order: 1;
+    justify-content: center;
+    align-content: center;
+    overflow: hidden;
+  }
+
+  .sby_cta_cols_1 .sby_cta_inner_wrap {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+    grid-gap: 8px;
+    gap: 8px;
+  }
+
+
+  /* SMASH-1400: interactive children of the pointer-events:none overlay. */
+  .sby_cta_wrap .sby_cta_item,
+  .sby_cta_wrap .sby_cta_replay {
+    pointer-events: auto;
   }
 
   .sby_cta_inner_wrap img {
     display: block;
   }
 
-  .sby_cta_state_paused,
+  /* SMASH-1400: the related-videos CTA is only opened on the ended state now;
+     the paused state no longer exists, so it is not matched here. Flex (not
+     block) so the grid centers and the Replay pill flows to the bottom. */
   .sby_cta_state_ended {
-    display: block;
+    display: flex;
   }
 
   [id^="sb_youtube_"].sb_youtube .sby_cta_item,
   #sby_lightbox .sby_cta_item {
-    width: 50%;
-    float: right;
+    width: auto !important;
+    max-height: none !important;
+    float: none;
+    margin: 0;
+    display: block;
+    position: relative;
     font-size: 13px;
   }
 
-  [id^="sb_youtube_"].sb_youtube .sby_cta_cols_1 .sby_cta_item,
-  #sby_lightbox .sby_cta_cols_1 .sby_cta_item {
+  [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_video_thumbnail_wrap,
+  #sby_lightbox .sby_cta_item .sby_video_thumbnail_wrap {
+    display: block;
     width: 100%;
+  }
+
+  /* 16:9 thumbnail via the classic padding-ratio technique (widely supported) */
+  [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_video_thumbnail,
+  #sby_lightbox .sby_cta_item .sby_video_thumbnail {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    line-height: 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  [id^="sb_youtube_"].sb_youtube .sby_cta_item img,
+  #sby_lightbox .sby_cta_item img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    display: block;
+  }
+
+  /* Subtle hover tint on the thumbnail */
+  [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_thumbnail_hover,
+  #sby_lightbox .sby_cta_item .sby_thumbnail_hover {
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  /* Related-video title, shown as a caption below the thumbnail */
+  [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_cta_title,
+  #sby_lightbox .sby_cta_item .sby_cta_title {
+    color: #fff;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    cursor: pointer;
+    max-height: 2.6em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* SMASH-1400: the 2-line clamp above is a fixed pixel cost per row that
+     does not shrink with the player. On a big desktop player it's a small
+     slice of a tall row; on a smaller player it can eat close to half the
+     row's height and starve the thumbnail. setCTAStyles() (js/sb-youtube.js)
+     adds this class at measurement time when the 2-line reservation would
+     leave the thumbnail cramped, trading a second caption line for a
+     noticeably bigger image - and removes it again when there's room. */
+  [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_cta_title.sby_cta_title_1line,
+  #sby_lightbox .sby_cta_item .sby_cta_title.sby_cta_title_1line {
+    max-height: 1.35em;
+    -webkit-line-clamp: 1;
+  }
+
+  /* Replay button */
+  .sby_cta_replay {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+         appearance: none;
+    box-sizing: border-box;
+    display: block;
+    /* SMASH-1400: in-flow flex child, bottom-centre. The grid above is flex:1,
+       so the pill sits at the bottom of the end screen; with no bottom padding
+       it lands within the reserved control-strip area, over the opaque
+       (playback-ended) scrim - acceptable because nothing under it is in use at
+       that point. It participates in layout, so it can never overlap the grid
+       on short players (the sizing JS measures around it). */
+    position: static;
+    align-self: center;
+    flex: 0 0 auto;
+    order: 2;
+    /* SMASH-1400: trimmed from 1rem - every pixel of fixed chrome around the
+       pill is height the grid above doesn't get (setCTAStyles() measures the
+       grid's available space net of this margin). */
+    margin: 0.75rem auto;
+    padding: 0.625em 1.5em;
+    border: 0;
+    border-radius: 999px;
+    /* SMASH-1400: the pill sits on the near-black (#0f0f0f) end-screen backdrop,
+       so a black fill disappears into it - a very dark grey keeps it legible as
+       a control without competing with the thumbnails above. */
+    background: #2a2a2a;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.2s ease;
+  }
+
+  .sby_cta_replay:hover,
+  .sby_cta_replay:focus {
+    background: #3f3f3f;
+  }
+
+  .sby_cta_replay svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 6px;
+    vertical-align: middle;
+    fill: currentColor;
+  }
+
+  .sby_cta_replay span {
+    vertical-align: middle;
   }
 
   [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_btn_wrap,
   #sby_lightbox .sby_cta_item .sby_btn_wrap {
-    display: flex;
-    justify-content: center;
+    display: block;
+    text-align: center;
   }
 
   [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_btn,
   #sby_lightbox .sby_cta_item .sby_btn {
-    align-self: center;
+    display: inline-block;
   }
 
-  @media all and (min-width: 481px) {
+  /* SMASH-1400: no viewport media query here on purpose - CTA sizing keys on
+     the actual player width via this @container query (last in the CTA section
+     so its small-player values win the cascade over the base rules above). */
+  @container (max-width: 479px) {
     .sby_cta_wrap {
-      padding: 12px 16px 16px;
-      bottom: 49px;
+      --sby-cta-bar: 2.75rem;
+      padding: 16px 0 0;
+    }
+
+    .sby_cta_inner_wrap {
+      grid-template-columns: 1fr;
+      max-width: 360px;
+      grid-gap: 8px;
+      gap: 8px;
+    }
+
+    [id^="sb_youtube_"].sb_youtube .sby_cta_item .sby_cta_title,
+    #sby_lightbox .sby_cta_item .sby_cta_title {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.3;
+      max-height: 1.3em;
+      -webkit-line-clamp: 1;
+    }
+
+    .sby_cta_replay {
+      margin: 0.75rem auto 0.5rem;
+      padding: 0.35em 1em;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .sby_cta_replay svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
     }
   }
 

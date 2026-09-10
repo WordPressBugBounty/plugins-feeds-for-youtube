@@ -1444,12 +1444,17 @@ class Customize_Tab extends Tab {
 			'label' 	=> __( 'Call to Action', 'feeds-for-youtube' ),
 			'class'		=> 'sbc_hide_toggle',
 			'icon'        => 'calltoaction',
-			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() && in_array('call_to_actions', $this->license_tier_features) ? false : 'call_to_action',
+			// Gate the whole section on Pro only: free sees the upgrade popup and the
+			// section is disabled. Every Pro tier (Basic included) gets the section
+			// with Related Videos; the "Custom Link" option inside stays gated to the
+			// call_to_actions feature (Plus/Elite), see Styling_Tab::call_to_action.
+			// false != undefined, so shouldShowOverlay still dims it for free.
+			'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'call_to_action',
 			'section' 	=> [
 				'id' 				=> 'lightbox_call_to_action',
 				'separator'			=> 'none',
 				'heading' 			=> __( 'Call to Action', 'feeds-for-youtube' ),
-				'description' 		=> __( 'Add a call to action when a user pauses a video or if the video finishes', 'feeds-for-youtube' ),
+				'description' 		=> __( 'Add a call to action when the video ends', 'feeds-for-youtube' ),
 				'controls'			=> Styling_Tab::call_to_action( $this->feed_id ),
 			]
 		);

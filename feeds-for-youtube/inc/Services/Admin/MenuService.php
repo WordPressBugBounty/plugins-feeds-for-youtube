@@ -56,9 +56,9 @@ class MenuService extends ServiceProvider {
 			add_submenu_page(
 				SBY_MENU_SLUG,
 				__( 'Upgrade to Pro', 'feeds-for-youtube' ),
-				__( '<span class="sby_get_pro">Try the Pro Demo</span>', 'feeds-for-youtube' ),
+				__( '<span class="sby_get_pro">Upgrade to Pro</span>', 'feeds-for-youtube' ),
 				$cap,
-				'https://smashballoon.com/youtube-feed/demo/?utm_campaign=youtube-free&utm_source=menu-link&utm_medium=upgrade-link',
+				'https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?utm_campaign=youtube-free&utm_source=menu-link&utm_medium=upgrade-link&utm_content=UpgradeToPro',
 				''
 			);
 		}
