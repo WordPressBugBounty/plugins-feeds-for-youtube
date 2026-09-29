@@ -8,9 +8,16 @@ class AboutPage extends BaseSettingPage {
 	protected $menu_slug = 'about';
 	protected $menu_title = 'About Us';
 	protected $page_title = 'About Us';
-	protected $has_menu = true;
+	// The About Us menu is now owned by the shared AboutUs package
+	// (AboutUsManager). This page is still registered for its pluginInfo
+	// localisation and addon install/activate ajax handlers, but must not
+	// render its own duplicate menu item.
+	protected $has_menu = false;
 	protected $template_file = 'settings.index';
-	protected $has_assets = true;
+	// AboutUsManager now renders this page, so the legacy settings bundle has
+	// nothing to mount into here. Keeping assets on would enqueue it (and run
+	// its get_settings_object() option reads) on youtube-feed-about for nothing.
+	protected $has_assets = false;
 	protected $menu_position = 4;
 	protected $menu_position_free_version = 4;
 

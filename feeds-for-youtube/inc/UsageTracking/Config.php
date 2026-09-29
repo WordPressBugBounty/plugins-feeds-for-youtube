@@ -108,6 +108,18 @@ class Config {
 	 * @return bool
 	 */
 	public static function is_enabled() {
+		// Data Sharing Consent master kill-switch. When the sb-common Consent
+		// package is present and DSC is off, no telemetry is sent or scheduled,
+		// regardless of the per-plugin usagetracking toggle. WP.org review flags
+		// scheduled hooks that hit external URLs without consent, so this gates
+		// send, scheduling and script enqueue at their single chokepoint.
+		if (
+			class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager' )
+			&& ! \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager::is_dsc_enabled()
+		) {
+			return false;
+		}
+
 		$sby_settings = get_option( 'sby_settings', array() );
 		if ( is_array( $sby_settings ) && array_key_exists( 'usagetracking', $sby_settings ) ) {
 			return (bool) $sby_settings['usagetracking'];

@@ -18,22 +18,31 @@ class Feed_Locator
     {
         global $wpdb;
         $feed_locator_table_name = $wpdb->prefix . $this->table;
+        // Resolve group_by against an allow-list of real columns; an unknown
+        // value yields no GROUP BY. Identifiers cannot be bound as placeholders.
         $group_by = '';
         if (isset($args['group_by'])) {
-            $group_by = 'GROUP BY ' . esc_sql($args['group_by']);
+            $allowed_group_by = array('shortcode_atts', 'post_id', 'feed_id', 'html_location');
+            if (in_array($args['group_by'], $allowed_group_by, \true)) {
+                $group_by = 'GROUP BY ' . $args['group_by'];
+            }
         }
         $location_string = 'content';
-        $by_feed_id = '';
-        $by_shortcode_atts = '';
         if (isset($args['html_location'])) {
             $locations = array_map('esc_sql', $args['html_location']);
             $location_string = implode("', '", $locations);
         }
-        if (isset($args['feed_id'])) {
-            $by_feed_id = sprintf("AND feed_id = '%s'", $args['feed_id']);
-        }
+        // Bind the shortcode_atts / feed_id predicate as %s, like count() and
+        // feed_locator_query() do. shortcode_atts wins when both are present,
+        // preserving the previous behaviour.
+        $predicate = '';
+        $predicate_value = null;
         if (isset($args['shortcode_atts'])) {
-            $by_feed_id = sprintf("AND shortcode_atts = '%s'", $args['shortcode_atts']);
+            $predicate = 'AND shortcode_atts = %s';
+            $predicate_value = $args['shortcode_atts'];
+        } elseif (isset($args['feed_id'])) {
+            $predicate = 'AND feed_id = %s';
+            $predicate_value = $args['feed_id'];
         }
         $page = 0;
         if (isset($args['page'])) {
@@ -42,7 +51,16 @@ class Feed_Locator
         }
         $offset = max(0, $page * \Smashballoon\Customizer\DB::RESULTS_PER_PAGE);
         $limit = \Smashballoon\Customizer\DB::RESULTS_PER_PAGE;
-        $results = $wpdb->get_results("\r\n\t\t\tSELECT *\r\n\t\t\tFROM {$feed_locator_table_name}\r\n\t\t\tWHERE feed_id NOT LIKE '*%'\r\n\t\t  \tAND html_location IN ( '{$location_string}' )\r\n\t\t  \t{$by_feed_id}\r\n\t\t  \t{$group_by}\r\n\t\t  \tLIMIT {$limit}\r\n\t\t\tOFFSET {$offset};", \ARRAY_A);
+        // The NOT LIKE '*%' literal is escaped as '*%%' so prepare() does not
+        // read %' as a malformed placeholder specifier.
+        $sql = "\r\n\t\t\tSELECT *\r\n\t\t\tFROM {$feed_locator_table_name}\r\n\t\t\tWHERE feed_id NOT LIKE '*%%'\r\n\t\t  \tAND html_location IN ( '{$location_string}' )\r\n\t\t  \t{$predicate}\r\n\t\t  \t{$group_by}\r\n\t\t  \tLIMIT %d\r\n\t\t\tOFFSET %d;";
+        $prepare_args = array();
+        if (null !== $predicate_value) {
+            $prepare_args[] = $predicate_value;
+        }
+        $prepare_args[] = $limit;
+        $prepare_args[] = $offset;
+        $results = $wpdb->get_results($wpdb->prepare($sql, $prepare_args), \ARRAY_A);
         return $results;
     }
     public function count($args)

@@ -388,7 +388,9 @@ class YouTubeFreeReporter implements ReporterInterface {
 
 		foreach ( $all_feed_data as $row ) {
 			$s = $row['settings'];
-			// Feed types: channel | playlist | favorites | search | live | single.
+			// Feed types: channel | playlist | favorites | search | live | single | shorts.
+			// The bucket is keyed off whatever the row says, so a new type needs
+			// no change here — this list is documentation, not a filter.
 			$type   = isset( $s['type'] ) && '' !== $s['type'] ? (string) $s['type'] : 'channel';
 			$layout = isset( $s['layout'] ) && '' !== $s['layout'] ? (string) $s['layout'] : 'grid';
 

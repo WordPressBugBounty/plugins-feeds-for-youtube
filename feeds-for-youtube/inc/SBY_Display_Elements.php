@@ -1123,6 +1123,50 @@ class SBY_Display_Elements
 		}
 	}
 
+	/**
+	 * A RAW count for a data attribute, with "absent" kept distinct from "zero".
+	 *
+	 * SBY_Parse::get_like_count() and its siblings return '' when the statistic is
+	 * genuinely unavailable -- a video whose owner hid its like count, a feed built
+	 * before the statistic was cached -- and a number otherwise. Those are two
+	 * different facts and the swipe viewer renders them differently: an absent
+	 * count shows NO readout at all, while a real 0 shows "0". A hidden like count
+	 * displayed as "0 likes" is a statement about the video that is not true.
+	 *
+	 * intval() destroys that distinction, because intval( '' ) is 0. The raw
+	 * attributes added for the viewer's rail went out doing exactly that, with a
+	 * comment claiming the opposite -- that passing "a clean integer" preserved the
+	 * difference on the JS side. It did not: absent and zero both arrived as "0",
+	 * and the viewer's parseCount(), which does distinguish them, never saw an
+	 * absent value to distinguish.
+	 *
+	 * So: '' stays '', and anything else becomes an integer. The empty string is
+	 * what the reader wants rather than omitting the attribute entirely, because
+	 * parseCount() already maps '' and a missing attribute to the same null -- and
+	 * an attribute that is always present, sometimes empty, keeps the markup shape
+	 * stable for anything else reading these tiles.
+	 *
+	 * Negative values are passed through as-is rather than clamped. They should not
+	 * occur, the viewer already discards them, and inventing a clamp here would
+	 * hide a data problem in the layer least able to explain it.
+	 *
+	 * @param mixed $count Raw count from an SBY_Parse::get_*_count() call.
+	 *
+	 * @return int|string An integer, or '' when the statistic is absent.
+	 *
+	 * @since 2.1.2
+	 */
+	public static function raw_count_att_value( $count ) {
+		if ( $count === '' || $count === null || is_array( $count ) ) {
+			return '';
+		}
+		if ( ! is_numeric( $count ) ) {
+			return '';
+		}
+
+		return intval( $count );
+	}
+
 	public static function escaped_data_att_string( $atts ) {
 		if ( empty( $atts ) ) {
 			return '';

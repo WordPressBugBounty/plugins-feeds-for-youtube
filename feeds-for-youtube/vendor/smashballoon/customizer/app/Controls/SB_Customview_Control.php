@@ -112,6 +112,22 @@ class SB_Customview_Control extends \Smashballoon\Customizer\Controls\SB_Control
 				</div>
 			</div>
 
+			<!-- For Shorts feed type -->
+			<div class="sbc-control-feedtype-source sbc-fs" v-if="control.viewId == 'feedtype' && customizerFeedData.settings.type == 'shorts'">
+				<div class="sbc-feedtype-label-wrap">
+					<strong>{{genericText.channelOrUsername}}</strong>
+					<div class="sb-control-elem-tltp" @mouseover.prevent.default="toggleElementTooltip(tooltipContent[customizerFeedData.settings.type], 'show', 'left' )" @mouseleave.prevent.default="toggleElementTooltip('', 'hide')">
+						<div class="sb-control-elem-tltp-icon" v-html="svgIcons['info']"></div>
+					</div>
+				</div>
+				<div class="sb-control-feedtype-source-input cff-fb-fs">
+					<input class="sb-control-input" type="text" v-model="customizerFeedData.settings.shorts">
+					<button class="sb-control-action-button sbc-btn sbc-btn-default" @click.prevent.default="customizerControlAjaxAction('feedHandleFlyPreview')">
+						<span>{{genericText.update}}</span>
+					</button>
+				</div>
+			</div>
+
 			<!-- For Search feed type -->
 			<div class="sbc-control-feedtype-source sbc-fs" v-if="control.viewId == 'feedtype' && customizerFeedData.settings.type == 'search'">
 				<div class="sbc-feedtype-label-wrap">

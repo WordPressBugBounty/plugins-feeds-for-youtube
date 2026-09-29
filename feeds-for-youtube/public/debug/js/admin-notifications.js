@@ -201,26 +201,6 @@ module.exports = {
 
 /***/ },
 
-/***/ "./node_modules/core-js/internals/array-method-is-strict.js"
-/*!******************************************************************!*\
-  !*** ./node_modules/core-js/internals/array-method-is-strict.js ***!
-  \******************************************************************/
-(module, __unused_webpack_exports, __webpack_require__) {
-
-
-var fails = __webpack_require__(/*! ../internals/fails */ "./node_modules/core-js/internals/fails.js");
-
-module.exports = function (METHOD_NAME, argument) {
-  var method = [][METHOD_NAME];
-  return !!method && fails(function () {
-    // eslint-disable-next-line no-useless-call -- required for testing
-    method.call(null, argument || function () { return 1; }, 1);
-  });
-};
-
-
-/***/ },
-
 /***/ "./node_modules/core-js/internals/array-species-constructor.js"
 /*!*********************************************************************!*\
   !*** ./node_modules/core-js/internals/array-species-constructor.js ***!
@@ -2344,39 +2324,6 @@ addToUnscopables(FIND);
 
 /***/ },
 
-/***/ "./node_modules/core-js/modules/es.array.index-of.js"
-/*!***********************************************************!*\
-  !*** ./node_modules/core-js/modules/es.array.index-of.js ***!
-  \***********************************************************/
-(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-
-/* eslint-disable es/no-array-prototype-indexof -- required for testing */
-var $ = __webpack_require__(/*! ../internals/export */ "./node_modules/core-js/internals/export.js");
-var uncurryThis = __webpack_require__(/*! ../internals/function-uncurry-this-clause */ "./node_modules/core-js/internals/function-uncurry-this-clause.js");
-var $indexOf = (__webpack_require__(/*! ../internals/array-includes */ "./node_modules/core-js/internals/array-includes.js").indexOf);
-var arrayMethodIsStrict = __webpack_require__(/*! ../internals/array-method-is-strict */ "./node_modules/core-js/internals/array-method-is-strict.js");
-
-var nativeIndexOf = uncurryThis([].indexOf);
-
-var NEGATIVE_ZERO = !!nativeIndexOf && 1 / nativeIndexOf([1], 1, -0) < 0;
-var FORCED = NEGATIVE_ZERO || !arrayMethodIsStrict('indexOf');
-
-// `Array.prototype.indexOf` method
-// https://tc39.es/ecma262/#sec-array.prototype.indexof
-$({ target: 'Array', proto: true, forced: FORCED }, {
-  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
-    var fromIndex = arguments.length > 1 ? arguments[1] : undefined;
-    return NEGATIVE_ZERO
-      // convert -0 to +0
-      ? nativeIndexOf(this, searchElement, fromIndex) || 0
-      : $indexOf(this, searchElement, fromIndex);
-  }
-});
-
-
-/***/ },
-
 /***/ "./node_modules/core-js/modules/es.object.to-string.js"
 /*!*************************************************************!*\
   !*** ./node_modules/core-js/modules/es.object.to-string.js ***!
@@ -2499,18 +2446,15 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_array_find_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.find.js */ "./node_modules/core-js/modules/es.array.find.js");
 /* harmony import */ var core_js_modules_es_array_find_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_find_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es_array_index_of_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.index-of.js */ "./node_modules/core-js/modules/es.array.index-of.js");
-/* harmony import */ var core_js_modules_es_array_index_of_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_index_of_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
-/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.parse-int.js */ "./node_modules/core-js/modules/es.parse-int.js");
-/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.parse-int.js */ "./node_modules/core-js/modules/es.parse-int.js");
+/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_2__);
 /**
  * SBY Admin Notifications.
  *
  * @since 2.18
  */
-
 
 
 
@@ -2547,19 +2491,14 @@ var SBYAdminNotifications = window.SBYAdminNotifications || function (document, 
      * @since 2.18
      */
     init: function init() {
-      //Re-init elements to get a fresh copy of those in memory for the React app.
-      el = {
-        $notifications: $('#sby-notifications'),
-        $nextButton: $('#sby-notifications .navigation .next'),
-        $prevButton: $('#sby-notifications .navigation .prev'),
-        $adminBarCounter: $('#wp-admin-bar-wpforms-menu .sby-menu-notification-counter'),
-        $adminBarMenuItem: $('#wp-admin-bar-sby-notifications')
-      };
-      el.$notifications.find('.messages a').each(function () {
-        if ($(this).attr('href').indexOf('dismiss=') > -1) {
-          $(this).addClass('button-dismiss');
-        }
-      });
+      // Handlers are delegated from document and bound once, so they work
+      // no matter when the React settings app (re)renders #sby-notifications
+      // relative to this call, and repeat init() calls (this file plus
+      // GlobalNotifications.js) don't stack duplicate handlers.
+      if (app.bound) {
+        return;
+      }
+      app.bound = true;
 
       // a11y (SMASH-1381): the hrefless dismiss + prev/next controls carry
       // role="button" tabindex="0"; make Enter/Space activate them like
@@ -2572,7 +2511,25 @@ var SBYAdminNotifications = window.SBYAdminNotifications || function (document, 
       });
       $(app.ready);
     },
+    /**
+     * Re-query the elements so handlers act on the node currently in the DOM.
+     */
+    refresh: function refresh() {
+      el = {
+        $notifications: $('#sby-notifications'),
+        $nextButton: $('#sby-notifications .navigation .next'),
+        $prevButton: $('#sby-notifications .navigation .prev'),
+        $adminBarCounter: $('#wp-admin-bar-wpforms-menu .sby-menu-notification-counter'),
+        $adminBarMenuItem: $('#wp-admin-bar-sby-notifications')
+      };
+      app.updateNavigation();
+    },
     jqueryInit: function jqueryInit($) {
+      // Called from this file and GlobalNotifications.js; bind once.
+      if (app.jqueryBound) {
+        return;
+      }
+      app.jqueryBound = true;
       $(document).on('click', '#renew-modal-btn', function () {
         $('.sby-sb-modal').show();
       });
@@ -2680,7 +2637,7 @@ var SBYAdminNotifications = window.SBYAdminNotifications || function (document, 
      * @since 2.18
      */
     ready: function ready() {
-      app.updateNavigation();
+      app.refresh();
       app.events();
     },
     /**
@@ -2689,7 +2646,13 @@ var SBYAdminNotifications = window.SBYAdminNotifications || function (document, 
      * @since 2.18
      */
     events: function events() {
-      el.$notifications.on('click', '.dismiss', app.dismiss).on('click', '.button-dismiss', app.buttonDismiss).on('click', '.next', app.navNext).on('click', '.prev', app.navPrev);
+      var withFreshElements = function withFreshElements(handler) {
+        return function (event) {
+          app.refresh();
+          handler(event);
+        };
+      };
+      $(document).on('click', '#sby-notifications .dismiss', withFreshElements(app.dismiss)).on('click', '#sby-notifications .button-dismiss, #sby-notifications .messages a[href*="dismiss="]', withFreshElements(app.buttonDismiss)).on('click', '#sby-notifications .next', withFreshElements(app.navNext)).on('click', '#sby-notifications .prev', withFreshElements(app.navPrev));
     },
     /**
      * Click on a dismiss button.

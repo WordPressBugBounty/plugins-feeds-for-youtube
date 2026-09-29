@@ -297,6 +297,11 @@ class SBY_Feed_Saver_Manager
 		$feed_data['channel'] = $model['channel'];
 		$feed_data['playlist'] = $model['playlist'];
 		$feed_data['favorites'] = $model['favorites'];
+		// Carried through like every other slug. Without this the channel
+		// filter_feed_model_data() just resolved never reaches the saved
+		// settings, and a Shorts feed would quietly fall back to the first
+		// connected account instead of the channel the user typed (SMASH-1910).
+		$feed_data['shorts'] = isset($model['shorts']) ? $model['shorts'] : '';
 		$feed_data['search'] = $model['search'];
 		$feed_data['live'] = $model['live'];
 		$feed_data['single'] = $model['single'];
@@ -521,6 +526,19 @@ class SBY_Feed_Saver_Manager
 	{
 		if ($feedtype == 'channel') {
 			$channel = $feed_data['channel'];
+		} elseif ($feedtype == 'shorts') {
+			// $feed_data here is the builder's selectedFeedModel, which is keyed
+			// BY TYPE SLUG -- every type reads its own key, exactly as favorites
+			// reads $feed_data['favorites'] below. Reading 'channel' instead
+			// would resolve a different input than the one the Shorts screen
+			// writes to, so the typed channel would be silently dropped on save
+			// (SMASH-1910).
+			//
+			// Guarded because this method is also reached from the preview AJAX
+			// path with SAVED settings rather than the builder model, and a feed
+			// saved before this type existed has no 'shorts' key. The sibling
+			// branches are left unguarded so their behaviour is unchanged.
+			$channel = isset($feed_data['shorts']) ? $feed_data['shorts'] : '';
 		} elseif ($feedtype == 'favorites') {
 			$channel = $feed_data['favorites'];
 		} elseif ($feedtype == 'live') {
@@ -547,6 +565,8 @@ class SBY_Feed_Saver_Manager
 
 		if ($feedtype == 'channel') {
 			$feed_data['channel'] = $channel_id;
+		} elseif ($feedtype == 'shorts') {
+			$feed_data['shorts'] = $channel_id;
 		} elseif ($feedtype == 'favorites') {
 			$feed_data['favorites'] = $channel_id;
 		} elseif ($feedtype == 'live') {

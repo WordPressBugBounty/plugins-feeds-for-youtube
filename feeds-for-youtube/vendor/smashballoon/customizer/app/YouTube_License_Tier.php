@@ -71,7 +71,21 @@ class YouTube_License_Tier extends License_Tier
      */
     public function features_list()
     {
-        $features_list = ['free' => ['channel_feeds'], 'basic' => ['channel_feeds', 'favorites_feeds', 'carousel_feeds', 'combine_feeds', 'performance_optimization', 'downtime_prevention_system', 'gbpr_compliant', 'playlist_feeds', 'single_feeds'], 'plus' => ['call_to_actions', 'search_feeds', 'feeds_templates', 'convert_videos_to_cpt'], 'elite' => ['live_feeds', 'video_filtering', 'feed_themes']];
+        $features_list = ['free' => ['channel_feeds'], 'basic' => [
+            'channel_feeds',
+            'favorites_feeds',
+            // Shorts is pro-only with no differentiation between the pro tiers, so it
+            // is declared once on 'basic' and inherited upward: tier_features() gives
+            // plus basic+plus, and elite / all-access the flattened list (SMASH-1910).
+            'shorts_feeds',
+            'carousel_feeds',
+            'combine_feeds',
+            'performance_optimization',
+            'downtime_prevention_system',
+            'gbpr_compliant',
+            'playlist_feeds',
+            'single_feeds',
+        ], 'plus' => ['call_to_actions', 'search_feeds', 'feeds_templates', 'convert_videos_to_cpt'], 'elite' => ['live_feeds', 'video_filtering', 'feed_themes']];
         $this->plugin_features = $features_list;
     }
     /**
@@ -85,6 +99,10 @@ class YouTube_License_Tier extends License_Tier
             // List of features for personal tier.
             'channel_feeds',
             'favorites_feeds',
+            // Grandfathered pro licences carry every other pro feed type, so omitting
+            // shorts here would deny it to legacy pro customers only -- exactly the
+            // tier differentiation this feature is meant not to have (SMASH-1910).
+            'shorts_feeds',
             'playlist_feeds',
             'carousel_feeds',
             'combine_feeds',

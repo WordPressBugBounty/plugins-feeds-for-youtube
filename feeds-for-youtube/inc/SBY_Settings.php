@@ -245,6 +245,7 @@ class SBY_Settings {
 				'live',
 				'playlist',
 				'favorites',
+				'shorts',
 				'single',
 				// customizer preview plumbing, see Feed_Builder::add_customizer_att()
 				'customizer',

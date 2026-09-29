@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 2.9.0
+Stable tag: 2.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,13 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.10.0 =
+* New: The setup wizard now asks whether you'd like to share usage data and receive notifications, and a new Data Sharing settings tab lets you change your choice at any time. Usage data is only sent when you have given consent.
+* New: Redesigned the About Us page.
+* Fix: Dismissed in-plugin notifications now stay dismissed, and notifications respect your Data Sharing and notification settings.
+* Fix: The deactivation feedback form now works correctly when other Smash Balloon plugins are active.
+* Fix: Plugin security hardening.
 
 = 2.9.0 =
 * Tweak: The upgrade link in the plugin's admin menu now reads "Upgrade to Pro" and opens the YouTube Feed upgrade page.

@@ -3,11 +3,13 @@
 Plugin Name: Smash Balloon YouTube Feed
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.9.0
+Version: 2.10.0
 Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
 Text Domain: feeds-for-youtube
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 /*
@@ -53,7 +55,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.9.0' );
+    define( 'SBYVER', '2.10.0' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.3' );
@@ -260,6 +262,9 @@ if ( ! function_exists( 'sby_init' ) ) {
     add_action( 'plugins_loaded', function() {
         sby_init();
         sby_run();
+
+        // Initialize the shared Consent (data-sharing / notifications) manager.
+        sby_init_consent_manager();
     }, 10 );
 
     /**
@@ -311,7 +316,7 @@ if ( ! function_exists( 'sby_init' ) ) {
             $timestamp    = $timestamp + ( 3600 * 24 * 7 );
             $six_am_local = $timestamp + sby_get_utc_offset() + ( 6 * 60 * 60 );
 
-            wp_schedule_event( $six_am_local, 'sbyweekly', 'sby_notification_update' );
+            // SMASH-1245: legacy notification cron removed (notifications refresh on the render path, consent-gated).
         }
         $sby_settings = get_option( 'sby_settings', array() );
         if ( isset( $sby_settings['caching_type'] ) && $sby_settings['caching_type'] === 'background' ) {
@@ -450,7 +455,7 @@ if ( ! function_exists( 'sby_init' ) ) {
                 $timestamp    = $timestamp + ( 3600 * 24 * 7 );
                 $six_am_local = $timestamp + sby_get_utc_offset() + ( 6 * 60 * 60 );
 
-                wp_schedule_event( $six_am_local, 'sbyweekly', 'sby_notification_update' );
+                // SMASH-1245: legacy notification cron removed (notifications refresh on the render path, consent-gated).
             }
         }
 

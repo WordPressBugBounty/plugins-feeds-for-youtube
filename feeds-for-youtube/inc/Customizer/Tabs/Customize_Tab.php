@@ -148,6 +148,49 @@ class Customize_Tab extends Tab {
 						'checkExtension' => sby_is_pro() && !sby_license_notices_active() ? false : 'feedLayout',
 						'label' => __( 'Carousel', 'feeds-for-youtube' ),
 					),
+					/*
+					 * Swipe View -- the FIFTH value on this toggleset (§10.6,
+					 * ratified 2026-09-01). PROTOTYPE WIRE (SMASH-2021): the value
+					 * and its Pro lock, nothing else.
+					 *
+					 * `checkExtension => 'swipeView'` mirrors how `carousel` above
+					 * carries `'feedLayout'`, which is what earns this route §10.1
+					 * step 4's reuse: a per-option toggleset lock inherits the
+					 * plugin's full state-aware upsell registry (hero art, demo
+					 * link, licence-state-aware Upgrade/Activate/Renew headings).
+					 *
+					 * THREE things §10.6 requires that this prototype does NOT do,
+					 * listed here so nobody reads the option's presence as the
+					 * mechanism being finished:
+					 *
+					 *   1. No `activeExtensions` key and no get_extensions_popup()
+					 *      entry, so the lock currently renders without its upsell
+					 *      content.
+					 *   2. No `swipe_view` tier slug in YouTube_License_Tier.
+					 *      Feed-type entitlement resolves BY NAMING CONVENTION, so
+					 *      that slug is load-bearing rather than cosmetic.
+					 *   3. No eligibility condition hiding the option on
+					 *      non-Shorts feeds. A toggleset's per-option gate is not
+					 *      the control-level `condition`/`conditionHide` pair that
+					 *      `showpast` uses (Settings_Tab.php:73-79), so wiring it
+					 *      is real work rather than one array key.
+					 *
+					 * Point 3 is safe to defer specifically because eligibility is
+					 * enforced at RUNTIME and not here: selecting `swipe` on a
+					 * channel feed emits no `shortsFeed` flag, so the viewer never
+					 * binds and the feed renders its tiles unchanged. §10.4 already
+					 * names that outcome -- "selecting the option on a template the
+					 * viewer is not wired into is a no-visible-change, not an
+					 * error" -- and it belongs in the QA notes rather than being
+					 * treated as a defect. It is still a worse SETTINGS experience
+					 * than the production ticket should ship.
+					 */
+					array(
+						'value' => 'swipe',
+						'icon'  => 'gallery',
+						'checkExtension' => sby_is_pro() && !sby_license_notices_active() ? false : 'swipeView',
+						'label' => __( 'Swipe View', 'feeds-for-youtube' ),
+					),
 				),
 			),
 
@@ -539,7 +582,7 @@ class Customize_Tab extends Tab {
 			array(
 				'type' 				=> 'separator',
 				'condition'			=> ['showheader' => [true]],
-				'condition' 		=> 	['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites']],
+				'condition' 		=> 	['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites', 'shorts']],
 				'conditionHide'	=> true,
 				'top' 				=> 15,
 				'bottom' 			=> 15,
@@ -550,7 +593,7 @@ class Customize_Tab extends Tab {
 				'label'   => __( 'Channel Descriptions', 'feeds-for-youtube' ),
 				'reverse' => 'true',
 				'stacked' => 'true',
-				'condition' => ['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites']],
+				'condition' => ['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites', 'shorts']],
 				'conditionHide'	=> true,
 				'options' => array(
 					'enabled'  => true,
@@ -559,7 +602,7 @@ class Customize_Tab extends Tab {
 			),
 			array(
 				'type'   => 'separator',
-				'condition' => ['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites']],
+				'condition' => ['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites', 'shorts']],
 				'conditionHide'	=> true,
 				'top'    => 15,
 				'bottom' => 15,
@@ -570,7 +613,7 @@ class Customize_Tab extends Tab {
 				'label'   => __( 'Subscribers', 'feeds-for-youtube' ),
 				'reverse' => 'true',
 				'stacked' => 'true',
-				'condition' => ['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites']],
+				'condition' => ['showheader' => [true], 'headerstyle' => ['standard'], 'type' => ['channel', 'favorites', 'shorts']],
 				'conditionHide'	=> true,
 				'checkExtensionPopup' => sby_is_pro() && !sby_license_notices_active() ? false : 'subscribersCount',
 				'options' => array(

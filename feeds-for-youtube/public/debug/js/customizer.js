@@ -7261,6 +7261,12 @@ SB_Customizer.initPromise = new Promise(function (resolve) {
       channel: sbc_builder.prefilledChannelId,
       playlist: '',
       favorites: sbc_builder.prefilledChannelId,
+      // Seeded even though it starts empty-ish: Vue 2 cannot make a
+      // property reactive after init, so a key missing here would leave
+      // the Shorts source input unbound and the typed channel would never
+      // reach selectedFeedModel on save. Channel-scoped like channel and
+      // favorites, so it takes the same prefill (SMASH-1910).
+      shorts: sbc_builder.prefilledChannelId,
       search: '',
       live: sbc_builder.prefilledChannelId,
       single: '',

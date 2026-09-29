@@ -11698,6 +11698,10 @@ if (!sby_js_exists) {
             checkWPPosts: flags.indexOf('checkWPPosts') > -1,
             singleCheckPosts: flags.indexOf('singleCheckPosts') > -1,
             narrowPlayer: flags.indexOf('narrowPlayer') > -1,
+            // Shorts viewer eligibility (SMASH-1840). Read per feed
+            // element, so two feeds on one page resolve independently.
+            // Eligibility only -- never treat this as "viewer is on".
+            shortsFeed: flags.indexOf('shortsFeed') > -1,
             gdpr: flags.indexOf('gdpr') > -1,
             consentGiven: flags.indexOf('gdpr') === -1,
             noCDN: flags.indexOf('disablecdn') > -1,

@@ -85,6 +85,10 @@ class SBY_Notifications {
 
 		// on cron. Once a week?
 		add_action( 'sby_notification_update', array( $this, 'update' ) );
+		// SMASH-1245: clear legacy notification cron — notifications now refresh on the render path (consent-gated), no background cron.
+		if ( wp_next_scheduled( 'sby_notification_update' ) ) {
+			wp_clear_scheduled_hook( 'sby_notification_update' );
+		}
 
 		add_action( 'wp_ajax_sby_dashboard_notification_dismiss', array( $this, 'dismiss' ) );
 	}
@@ -334,15 +338,41 @@ class SBY_Notifications {
 			return array();
 		}
 
+		// Honour the consent source switch so local <-> remote is an exclusive
+		// swap rather than additive (mirrors instagram-feed). 'none' hides
+		// everything; 'local' serves the Consent package's bundled fallback;
+		// 'remote' uses the fetched feed as before.
+		$source = class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager' )
+			? \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager::notification_source()
+			: 'remote';
+
+		if ( 'none' === $source ) {
+			return array();
+		}
+
 		$option = $this->get_option();
 
-		// Update notifications using async task.
-		if ( empty( $option['update'] ) || sby_get_current_time() > $option['update'] + DAY_IN_SECONDS ) {
-			$this->update();
+		if ( 'local' === $source ) {
+			// Not re-run through verify_active() on purpose. load_local_fallback()
+			// already routes the bundled cards through the Consent package's own
+			// verify() (end-date expiry, WP/PHP version, free/pro license and
+			// dismissal). The extra gates verify_active() adds — start date,
+			// SBYVER min/maxver, statuscheck and recently_installed() — key off
+			// the remote feed schema and this plugin's lifecycle, none of which
+			// the curated local.json carries; applying recently_installed() in
+			// particular would wrongly hide the fallback on installs < 1 week old.
+			$feed = class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentNotifications' )
+				? \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentNotifications::load_local_fallback( self::PLUGIN, sby_is_pro_version() )
+				: array();
+		} else {
+			// Update notifications using async task.
+			if ( empty( $option['update'] ) || sby_get_current_time() > $option['update'] + DAY_IN_SECONDS ) {
+				$this->update();
+			}
+			$feed = ! empty( $option['feed'] ) ? $this->verify_active( $option['feed'] ) : array();
 		}
 
 		$events = ! empty( $option['events'] ) ? $this->verify_active( $option['events'] ) : array();
-		$feed   = ! empty( $option['feed'] ) ? $this->verify_active( $option['feed'] ) : array();
 
 		// If there is a new user notification, add it to the beginning of the notification list
 		$sby_newuser = new SBY_New_User();
@@ -409,6 +439,17 @@ class SBY_Notifications {
 	 * @since 2.6/5.9
 	 */
 	public function update() {
+		// The Consent package owns the source-switch + local-fallback path. Only
+		// fire the remote fetch when consent resolves to 'remote'; 'local' and
+		// 'none' are no-ops here (mirrors instagram-feed).
+		$source = class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager' )
+			? \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager::notification_source()
+			: 'remote';
+
+		if ( 'remote' !== $source ) {
+			return;
+		}
+
 		$feed   = $this->fetch_feed();
 		$option = $this->get_option();
 
@@ -507,6 +548,13 @@ class SBY_Notifications {
 		}
 
 		$notifications = $this->get();
+
+		// Keep the persisted marketing store in sync with the active consent
+		// source — an empty/none result clears it — so notices from a previous
+		// source can't linger (mirrors instagram-feed).
+		if ( class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentNotifications' ) ) {
+			\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentNotifications::reconcile_from_notifications( 'feeds-for-youtube', $notifications );
+		}
 
 		if ( empty( $notifications ) ) {
 			return;

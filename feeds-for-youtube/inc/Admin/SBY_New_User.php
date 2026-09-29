@@ -151,6 +151,20 @@ class SBY_New_User extends SBY_Notifications {
 			return array();
 		}
 
+		// SMASH-1245: new-user notices come from the remote newuser.json feed
+		// (update() only fetches on 'remote'), so they may surface only when
+		// consent resolves to 'remote'. On 'none' nothing shows. On 'local' the
+		// parent owns the bundled fallback, so this child must contribute nothing:
+		// returning empty lets the parent's local fallback through instead of
+		// short-circuiting it with stale cached remote content. output() calls
+		// this directly on admin_notices, outside the parent's gated get().
+		$source = class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager' )
+			? \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager::notification_source()
+			: 'remote';
+		if ( 'remote' !== $source ) {
+			return array();
+		}
+
 		$option = $this->get_option();
 
 		// Only update if does not exist.
@@ -207,6 +221,16 @@ class SBY_New_User extends SBY_Notifications {
 	 * @since 2.18
 	 */
 	public function update() {
+		// SMASH-1245: gate remote new-user feed fetch on consent. notification_source()
+		// reflects the per-edition default (Pro on by default, Free off until opt-in),
+		// so the remote request only fires once the user has consented.
+		$source = class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager' )
+			? \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager::notification_source()
+			: 'remote';
+		if ( 'remote' !== $source ) {
+			return;
+		}
+
 		$feed   = $this->fetch_feed();
 		$option = $this->get_option();
 

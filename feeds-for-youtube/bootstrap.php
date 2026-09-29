@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // composer autoload
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -82,3 +86,35 @@ if (class_exists('\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packag
         ],
     ]);
 }
+
+// Initialize the shared About Us page. Deferred to plugins_loaded because
+// bootstrap.php is required before the entry file defines SBY_PRO / SBYVER,
+// so reading them at include time would misidentify a Pro install as Free and
+// send an empty version. Runs at priority 20 (after sby_init() at priority 10)
+// so SBY_MENU_SLUG is also defined by the time menu_parent is read below.
+add_action( 'plugins_loaded', function () {
+    if ( class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\AboutUs\AboutUsManager' ) ) {
+        $sby_is_pro = defined('SBY_PRO') && SBY_PRO;
+        // Resolve the About Us menu capability the same way every other YouTube
+        // Feed admin page does (sby-functions.php), so manage_youtube_feed_options
+        // and the sby_settings_pages_capability filter govern About Us too.
+        $sby_about_capability = current_user_can( 'manage_youtube_feed_options' ) ? 'manage_youtube_feed_options' : 'manage_options';
+        $sby_about_capability = apply_filters( 'sby_settings_pages_capability', $sby_about_capability );
+        \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\AboutUs\AboutUsManager::init([
+            'plugin_slug'    => $sby_is_pro ? 'youtube-feed-pro' : 'feeds-for-youtube',
+            'plugin_name'    => $sby_is_pro ? 'Feeds for YouTube Pro' : 'Feeds for YouTube',
+            'plugin_version' => defined('SBYVER') ? SBYVER : '',
+            'plugin_file'    => SBY_PLUGIN_DIR . ( $sby_is_pro ? 'youtube-feed-pro.php' : 'youtube-feed.php' ),
+            'menu_parent'    => defined('SBY_MENU_SLUG') ? SBY_MENU_SLUG : 'sby-feed-builder',
+            'page_slug'      => 'youtube-feed-about',
+            'menu_position'  => 4,
+            'capability'     => $sby_about_capability,
+            'is_pro'         => $sby_is_pro,
+        ]);
+    } elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+        // Framework package missing: the About Us menu will not register and no
+        // fallback page exists, so surface it in debug builds instead of failing
+        // silently.
+        error_log( 'YouTube Feed: AboutUsManager not found, About Us page not registered.' );
+    }
+}, 20 );

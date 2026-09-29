@@ -53,13 +53,15 @@ class SetupPage extends BaseSettingPage
 	{
 		$settings['onboardWizardYoutubeAccountConnectURL'] =  Feed_Builder::oauth_connet_url(admin_url('admin.php?page=youtube-feed-setup&step=2'));
 
-		$wpconsent_file = 'wpconsent-cookies-banner-privacy-suite/wpconsent.php';
-		$settings['wpconsentScreen'] = [
-			'isPluginInstalled' => file_exists( WP_PLUGIN_DIR . '/' . $wpconsent_file ),
-			'isPluginActive'    => is_plugin_active( $wpconsent_file ),
-			'pluginFile'        => $wpconsent_file,
-			'downloadUrl'       => 'https://downloads.wordpress.org/plugin/wpconsent-cookies-banner-privacy-suite.zip',
-		];
+		// Expose the shared Consent flags + onboarding legal links so the React
+		// onboarding wizard (Success step) can render the consent checkbox.
+		// Persistence is handled by the Consent package (window.sbcConsent).
+		// Shared with the Settings page via the base class.
+		$settings = array_merge( $settings, $this->consent_settings( 'onboarding' ) );
+		// Skip the consent box when data sharing is already on (accepted in any Smash Balloon plugin).
+		$settings['consentGiven'] = class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager' )
+			&& \SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager::is_dsc_enabled();
+
 		$settings['activeGdprPlugin'] = SBY_GDPR_Integrations::gdpr_plugins_active();
 
 		return $settings;

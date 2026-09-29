@@ -300,6 +300,31 @@ class SBY_Feed
 	}
 
 	/**
+	 * Whether the last fetch attempt FAILED, as opposed to succeeding and finding nothing.
+	 *
+	 * Deliberately not should_use_backup(): that accessor ORs in `empty( $this->post_data )`,
+	 * so it is unconditionally true whenever a feed has no posts and therefore cannot tell a
+	 * failed fetch from an empty-but-successful one. successful_video_api_request_made() is
+	 * no good either -- it is only assigned inside `isset( $data['items'][0] )`, so a genuine
+	 * 200-with-zero-items leaves it false.
+	 *
+	 * The raw flag is the one signal that separates them: add_remote_posts() sets it only when
+	 * no connection succeeded (or every request was delayed and nothing came back), and it
+	 * sets $one_successful_connection BEFORE testing for items -- so a successful response
+	 * carrying an empty items[] leaves this false.
+	 *
+	 * Used by SBY_Feed_Pro to decide whether an empty Shorts feed may claim the channel has
+	 * no Shorts, or whether the honest answer is that we could not check (SMASH-1910).
+	 *
+	 * @return bool
+	 *
+	 * @since 2.8.4 SMASH-1910
+	 */
+	public function api_fetch_failed() {
+		return $this->should_use_backup;
+	}
+
+	/**
 	 * The header is only displayed when the setting is enabled and
 	 * an account has been connected
 	 *
@@ -956,7 +981,7 @@ class SBY_Feed
 		if ( $type == 'single' ) {
 			return $posts;
 		}
-		if ( $type == 'channels' ||  $type == 'playlist' ) {
+		if ( $type == 'channels' ||  $type == 'playlist' || $type == 'shorts' ) {
 			foreach( $posts[0] as $post ) {
 				$videos_id[] = $post['snippet']['resourceId']['videoId'];
 			}
@@ -1365,9 +1390,27 @@ class SBY_Feed
 	 *
 	 * @since 1.0
 	 */
+	/**
+	 * Whether the generic "Error: No videos found." report belongs on this empty feed.
+	 *
+	 * Always true here, so behaviour is unchanged for every type this edition knows about.
+	 * It exists as a seam because the message carries advice -- "Make sure this is a valid
+	 * channel ID" -- that is actively wrong for a feed type which can legitimately resolve a
+	 * valid channel and still find nothing. SBY_Feed_Pro overrides it for exactly that case.
+	 *
+	 * @param array $settings Resolved feed settings.
+	 *
+	 * @return bool
+	 *
+	 * @since 2.8.4 SMASH-1910
+	 */
+	protected function should_report_no_posts_error( $settings ) {
+		return true;
+	}
+
 	public function get_the_feed_html( $settings, $atts, $feed_types_and_terms, $connected_accounts_for_feed ) {
 		global $sby_posts_manager;
-		if ( empty( $this->post_data ) && ! empty( $connected_accounts_for_feed ) ) {
+		if ( empty( $this->post_data ) && ! empty( $connected_accounts_for_feed ) && $this->should_report_no_posts_error( $settings ) ) {
 
 			$error_template = "<p><b>%s</b><p>%s</p>";
 			$error_title = __( 'Error: No videos found.', 'feeds-for-youtube' );
@@ -1497,6 +1540,13 @@ class SBY_Feed
 			$flags[] = 'allowcookies';
 		}
 
+		// Shorts viewer ELIGIBILITY (SMASH-1840). Feed-level, and deliberately
+		// only eligibility: the viewer binds on three independent conditions --
+		// this flag, the enablement layout, and consent -- see is_shorts_feed().
+		if ( self::is_shorts_feed( $settings, sby_is_pro() ) ) {
+			$flags[] = 'shortsFeed';
+		}
+
 		if ( ! empty( $flags ) ) {
 			if ( sby_doing_customizer( $settings ) ) {
 				$other_atts .= ' :data-sby-flags="$parent.getFlagsAttr()"';
@@ -1520,6 +1570,146 @@ class SBY_Feed
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Whether the feed being rendered is a Shorts feed -- i.e. whether the
+	 * Shorts swipe viewer is ELIGIBLE to bind to it.
+	 *
+	 * Feed-level, not per-item, and that is a property of the data rather than a
+	 * shortcut. SMASH-1910 made the Shorts type a whole-feed contract:
+	 * apply_shorts_provenance() (inc/Pro/SBY_Feed_Pro.php:418) DROPS every post
+	 * it cannot vouch for instead of stamping it false, so a rendered
+	 * type=shorts feed contains Shorts and nothing else. There is no mixed feed
+	 * for a per-item signal to disambiguate. When one exists, the seam is the
+	 * already-present-but-unhooked sby_item_additional_data_atts filter
+	 * (templates/item.php:60) -- deliberately out of scope here.
+	 *
+	 * Eligibility only. The viewer's bind is three independent conditions:
+	 *   1. eligibility -- this flag (type === 'shorts')
+	 *   2. enablement  -- layout === 'swipe', a separate setting
+	 *   3. consent     -- the existing gdpr/consentGiven flag pair
+	 * Keeping them separate is why this predicate reads 'type' and nothing else:
+	 * it must not start meaning "the viewer is on".
+	 *
+	 * $is_pro is a parameter rather than an internal sby_is_pro() call so the
+	 * predicate stays pure and both editions are testable in one process. The
+	 * check is not ceremony: 'type' is an allowed shortcode attribute in BOTH
+	 * editions (SBY_Settings::get_public_db_settings_keys() ships 'type' =>
+	 * 'channel' and the Pro class does not override it), yet only Pro registers
+	 * the shorts type and its provenance filtering. Pasting
+	 * [youtube-feed type="shorts"] onto a Free site therefore renders an
+	 * ordinary, UNFILTERED channel feed -- Free's set_feed_type_and_terms()
+	 * (inc/SBY_Settings.php:639) only ever builds a 'channels' set and never
+	 * branches on type. Emitting the flag there would advertise a Shorts-only
+	 * feed whose contents are nothing of the kind.
+	 *
+	 * @param array $settings Resolved feed settings.
+	 * @param bool  $is_pro   Whether the Pro edition is active.
+	 *
+	 * @return bool
+	 *
+	 * @since 2.8.4 SMASH-1840
+	 */
+	public static function is_shorts_feed( $settings, $is_pro ) {
+		if ( ! $is_pro ) {
+			return false;
+		}
+
+		if ( ! is_array( $settings ) ) {
+			return false;
+		}
+
+		// isset() is load-bearing. The shortcode path merges atts over the
+		// global settings (SBY_Settings::__construct() -> wp_parse_args), and
+		// sby_settings_defaults() carries no 'type' of its own, so a shortcode
+		// with no type attribute leaves the key absent entirely. Same guard
+		// shape as the hashtag check at SBY_Feed.php:188.
+		return isset( $settings['type'] ) && $settings['type'] === 'shorts';
+	}
+
+	/**
+	 * The value of the `layout` setting that selects the Swipe View experience.
+	 *
+	 * §10.6 records this as a **fifth value of the existing per-feed `layout`
+	 * toggleset**, not a new boolean beside it -- a new value on a
+	 * mutually-exclusive control cannot contradict its siblings, where a new
+	 * boolean can.
+	 *
+	 * Named as a constant because the same literal has to agree across a repo
+	 * boundary: PHP writes it into the container class
+	 * (SBY_Display_Elements::get_feed_container_css_classes() interpolates
+	 * 'sby_layout_' . $settings['layout']), the customizer offers it as a
+	 * toggleset option, and js/sby-swipeview.js reads it back as
+	 * `.sby_layout_swipe`. The spec's own open-items list flags exactly this:
+	 * "the cross-repo 'swipe' string has no shared constant -- a rename or typo
+	 * on either side fails silently into the previous player experience rather
+	 * than erroring". This constant is the PHP half of closing that; the JS half
+	 * is pinned by a test that reads this file.
+	 *
+	 * @since 2.8.4 SMASH-2021
+	 */
+	const SWIPE_VIEW_LAYOUT = 'swipe';
+
+	/**
+	 * Whether the Swipe View viewer's assets should be enqueued for this feed.
+	 *
+	 * This is the SERVER-SIDE half of a decision the client completes. It answers
+	 * "could the viewer possibly bind on this page", which is the only question an
+	 * enqueue can answer, and it deliberately does NOT answer "will it bind":
+	 *
+	 *   - ELIGIBILITY (is_shorts_feed) and ENABLEMENT (the layout value) are
+	 *     server-side facts, known at render, and both are checked here.
+	 *   - CONSENT is not. `consentGiven` is derived client-side from the absence
+	 *     of the `gdpr` flag and then RE-RESOLVED by checkConsent()
+	 *     (js/sb-youtube.js:1686) against the live cookie state, so it can flip
+	 *     after a consent-banner interaction. A server-side consent check would
+	 *     therefore be wrong in both directions -- it would strand a visitor who
+	 *     consents after page load, and it would be stale for one who withdraws.
+	 *     The viewer reads consent at BIND TIME instead (see
+	 *     shouldBindShortsViewer() in js/sby-swipeview.js).
+	 *
+	 * So the asset may legitimately load for a feed the viewer then declines to
+	 * bind. That is the correct trade: the alternative is either an unconditional
+	 * enqueue on every page, or a consent decision made in the wrong place.
+	 *
+	 * The Pro gate is a RUNTIME check, not a build filter, and that distinction is
+	 * load-bearing: `build/feeds-for-youtube/filter` strips `inc/Pro` from the Free
+	 * build but does NOT strip `js/`, so this file's Free counterpart still ships
+	 * the viewer's JS. The lightbox has the same shape at js/sb-youtube.js:1383.
+	 *
+	 * @param array $settings Resolved feed settings.
+	 * @param bool  $is_pro   Whether the Pro edition is active.
+	 *
+	 * @return bool
+	 *
+	 * @since 2.8.4 SMASH-2021
+	 */
+	public static function should_enqueue_swipe_view( $settings, $is_pro ) {
+		// A global kill switch, and it is a kill switch ONLY (§10.6): an override
+		// that can disable, never the mechanism that turns the feature on.
+		// Enablement stays per-feed.
+		//
+		// Read via a filter rather than a registered option ON PURPOSE for the
+		// prototype. §10.6 records that defaults registration in this plugin is
+		// triplicated across three registries and a new global key must be added
+		// to all three or it silently reads as unset -- which is exactly the sort
+		// of half-wired setting a prototype should not demo. A filter has no
+		// registry to forget, defaults to "not killed", and gives release safety a
+		// real one-line escape hatch today. Promoting it to a stored global option
+		// is production-ticket work.
+		if ( apply_filters( 'sby_swipeview_disabled', false, $settings ) ) {
+			return false;
+		}
+
+		if ( ! self::is_shorts_feed( $settings, $is_pro ) ) {
+			return false;
+		}
+
+		// isset() for the same reason is_shorts_feed() needs it on 'type': the
+		// shortcode path merges atts over the global settings, so a key absent from
+		// both leaves a bare comparison warning on an undefined index.
+		return isset( $settings['layout'] ) && $settings['layout'] === self::SWIPE_VIEW_LAYOUT;
 	}
 
 	/**

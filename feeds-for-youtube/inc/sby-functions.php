@@ -1276,3 +1276,41 @@ if ( ! function_exists( 'sby_neutralize_vue_delimiters' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'sby_init_consent_manager' ) ) {
+	/**
+	 * Initialize the shared Consent (data-sharing / notifications) manager.
+	 *
+	 * Defined once here and called from both the Free (youtube-feed.php) and
+	 * Pro (youtube-feed-pro.php) entry points so the init array is not repeated
+	 * verbatim in both bootstrap files.
+	 */
+	function sby_init_consent_manager() {
+		if ( ! class_exists( '\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager' ) ) {
+			return;
+		}
+
+		$sby_pro = function_exists( 'sby_is_pro' ) && sby_is_pro();
+		\SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Consent\ConsentManager::init( array(
+			'plugin_slug'         => 'feeds-for-youtube',
+			'plugin_name'         => $sby_pro ? 'Feeds for YouTube Pro' : 'Feeds for YouTube',
+			'utm_slug'            => 'youtube',
+			'legacy_class'        => 'SBY_Consent',
+			'is_pro'              => $sby_pro,
+			'pro_init_option'     => $sby_pro ? 'sby_pro_consent_initialized' : null,
+			'show_reprompt_modal' => $sby_pro ? false : function ( $show ) {
+				// The filter is shared by every Smash Balloon plugin, so only gate on
+				// our own pages or a pending wizard hides the modal for all of them.
+				$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( 0 !== strpos( $page, 'sby-' ) && 0 !== strpos( $page, 'youtube-feed' ) ) {
+					return $show;
+				}
+				$cls = '\SmashBalloon\YouTubeFeed\Services\Admin\Settings\SetupPage';
+				if ( class_exists( $cls ) && method_exists( $cls, 'should_init_wizard' ) && $cls::should_init_wizard() ) {
+					return false;
+				}
+				return $show;
+			},
+		) );
+	}
+}

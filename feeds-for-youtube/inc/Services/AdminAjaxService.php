@@ -374,9 +374,16 @@ class AdminAjaxService extends ServiceProvider {
 			// the payload to the keys that resolve the feed's type/terms plus the ones baked
 			// into the transient name (includewords/excludewords/num), so the derived name still
 			// matches what the rendered shortcode produced (SMASH-1799).
+			//
+			// 'shorts' is here for exactly the reason 'favorites' is: it is a channel-scoped
+			// type that names its own slug, so SBY_Settings_Pro resolves the feed's terms from
+			// $settings['shorts']. Strip it and resolution falls through to 'channel' or the
+			// first connected account, the derived transient name stops matching the caller's,
+			// hash_equals() below returns 403 and sby_videos post caching silently stops for
+			// that feed (SMASH-1910).
 			$atts = array_intersect_key(
 				$atts,
-				array_flip( array( 'feed', 'channel', 'playlist', 'search', 'customsearch', 'usecustomsearch', 'live', 'favorites', 'single', 'id', 'type', 'includewords', 'excludewords', 'num' ) )
+				array_flip( array( 'feed', 'channel', 'playlist', 'search', 'customsearch', 'usecustomsearch', 'live', 'favorites', 'shorts', 'single', 'id', 'type', 'includewords', 'excludewords', 'num' ) )
 			);
 		} else {
 			$atts = array();

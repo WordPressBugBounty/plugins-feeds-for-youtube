@@ -7,12 +7,12 @@
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/laravel\/serializable-closure.git",
-                "reference": "8be68b9a31863c40ccccac14f7e885e274b8ea62"
+                "reference": "38c220b38bacdb9f83eb5d60de07908a9553ebc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/laravel\/serializable-closure\/zipball\/8be68b9a31863c40ccccac14f7e885e274b8ea62",
-                "reference": "8be68b9a31863c40ccccac14f7e885e274b8ea62",
+                "url": "https:\/\/api.github.com\/repos\/laravel\/serializable-closure\/zipball\/38c220b38bacdb9f83eb5d60de07908a9553ebc4",
+                "reference": "38c220b38bacdb9f83eb5d60de07908a9553ebc4",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,7 @@
                 "phpstan\/phpstan": "^1.8.2",
                 "symfony\/var-dumper": "^5.4.11|^6.2.0|^7.0.0"
             },
-            "time": "2024-11-19T20:48:19+00:00",
+            "time": "2026-06-03T15:28:10+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -225,12 +225,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:awesomemotive\/sb-customizer.git",
-                "reference": "e2becad4be20fda50ea9ac76c569bf0a996aed57"
+                "reference": "637433e30c8fc98b1331163be12bc44e9d374a00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-customizer\/zipball\/e2becad4be20fda50ea9ac76c569bf0a996aed57",
-                "reference": "e2becad4be20fda50ea9ac76c569bf0a996aed57",
+                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-customizer\/zipball\/637433e30c8fc98b1331163be12bc44e9d374a00",
+                "reference": "637433e30c8fc98b1331163be12bc44e9d374a00",
                 "shasum": ""
             },
             "require": {
@@ -241,7 +241,7 @@
             "require-dev": {
                 "vlucas\/phpdotenv": "^4.0"
             },
-            "time": "2026-09-10T09:30:04+00:00",
+            "time": "2026-09-29T11:27:46+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -257,6 +257,9 @@
                 }
             ],
             "description": "The SmashBalloon customizer library.",
+            "support": {
+                "source": "https:\/\/github.com\/awesomemotive\/sb-customizer\/tree\/master"
+            },
             "install-path": "..\/smashballoon\/customizer"
         },
         {
@@ -266,12 +269,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:awesomemotive\/sb-common.git",
-                "reference": "3c53a9a74cc5bbdb4df2cfec13007f4793404e0f"
+                "reference": "f2be3967ae18217f44786be26637eb145083e694"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-common\/zipball\/3c53a9a74cc5bbdb4df2cfec13007f4793404e0f",
-                "reference": "3c53a9a74cc5bbdb4df2cfec13007f4793404e0f",
+                "url": "https:\/\/api.github.com\/repos\/awesomemotive\/sb-common\/zipball\/f2be3967ae18217f44786be26637eb145083e694",
+                "reference": "f2be3967ae18217f44786be26637eb145083e694",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +291,7 @@
                 "phpcompatibility\/php-compatibility": "^9.3",
                 "squizlabs\/php_codesniffer": "^3.7"
             },
-            "time": "2026-06-11T09:56:01+00:00",
+            "time": "2026-09-29T15:47:11+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -349,10 +352,6 @@
                 }
             ],
             "description": "Shared common stubs.",
-            "support": {
-                "source": "https:\/\/github.com\/awesomemotive\/sb-stubs\/tree\/1.0.0",
-                "issues": "https:\/\/github.com\/awesomemotive\/sb-stubs\/issues"
-            },
             "install-path": "..\/smashballoon\/stubs"
         }
     ],

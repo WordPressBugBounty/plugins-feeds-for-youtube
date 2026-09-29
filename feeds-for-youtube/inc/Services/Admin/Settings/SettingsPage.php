@@ -185,19 +185,18 @@ class SettingsPage extends BaseSettingPage {
 	public function filter_settings_object( $settings ) {
 		$settings['settings'] = $this->settings->get_settings();
 		$settings['sources']  = $this->feed_saver->get_source_list();
-		$settings['sbyIsPro'] = \sby_is_pro() ? true : false;
+		$settings['sbyIsPro'] = (bool) \sby_is_pro();
 		$settings['user_can_unfiltered_html'] = \current_user_can( 'unfiltered_html' ) ? true : false;
 		$settings['feeds']  = Container::getInstance()->get(Feed_Builder::class)->get_feed_list();
 		$settings['next_cron'] = $this->get_next_cron_schedule();
 		$settings['connect_site_parameters'] = sby_builder_pro()->oauth_connet_parameters();
 
-		$wpconsent_file = 'wpconsent-cookies-banner-privacy-suite/wpconsent.php';
-		$settings['wpconsentScreen'] = [
-			'isPluginInstalled' => file_exists( WP_PLUGIN_DIR . '/' . $wpconsent_file ),
-			'isPluginActive'    => is_plugin_active( $wpconsent_file ),
-			'pluginFile'        => $wpconsent_file,
-			'downloadUrl'       => 'https://downloads.wordpress.org/plugin/wpconsent-cookies-banner-privacy-suite.zip',
-		];
+		// Expose the shared Consent (data-sharing / notifications) flags + links
+		// so the React Data Controls tab can seed its initial state. Persistence
+		// itself is handled by the Consent package (window.sbcConsent), not
+		// sby_settings. Shared with the onboarding Setup page via the base class.
+		$settings = array_merge( $settings, $this->consent_settings( 'settings', true ) );
+
 		$settings['activeGdprPlugin'] = SBY_GDPR_Integrations::gdpr_plugins_active();
 
 		return $settings;

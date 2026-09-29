@@ -20,7 +20,7 @@ class AssetsService extends ServiceProvider {
 		}
 		wp_enqueue_script(
 			'feed-builder-vue',
-			'https://cdn.jsdelivr.net/npm/vue@2.6.12',
+			SBY_PLUGIN_URL . 'public/libs/js/vue.min.js',
 			null,
 			'2.6.12',
 			true
@@ -37,7 +37,7 @@ class AssetsService extends ServiceProvider {
 			return;
 		}
 		wp_enqueue_style( 'sb_font_awesome',
-			'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' );
+			SBY_PLUGIN_URL . 'public/libs/css/font-awesome.min.css', array(), '4.7.0' );
 		wp_enqueue_style( 'wp-color-picker' );
 	}
 
