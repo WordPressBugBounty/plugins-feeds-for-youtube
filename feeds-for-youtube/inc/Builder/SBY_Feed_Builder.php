@@ -504,20 +504,38 @@ class SBY_Feed_Builder
 			'allFeedTypes'                      => __('All Feed Types: Photos, Albums, Events and more', 'feeds-for-youtube'),
 			'abilityToLoad'                     => __('Ability to “Load More” posts', 'feeds-for-youtube'),
 			'andMuchMore'                       => __('And Much More!', 'feeds-for-youtube'),
-			'sbiFreeCTAFeatures'                => array(
-				__('Filter posts', 'feeds-for-youtube'),
-				__( 'Popup photo/video lightbox', 'feeds-for-youtube' ),
-				__('30 day money back guarantee', 'feeds-for-youtube'),
-				__('Multiple post layout options', 'feeds-for-youtube'),
-				__('Video player (HD, 360, Live)', 'feeds-for-youtube'),
-				__('Fast, friendly and effective support', 'feeds-for-youtube'),
-			),
+			'sbiFreeCTAFeatures'                => array_values(self::get_free_cta_features()),
 			'ctaShowFeatures'                   => __('Show Features', 'feeds-for-youtube'),
 			'ctaHideFeatures'                   => __('Hide Features', 'feeds-for-youtube'),
 			'redirectLoading'                   => array(
 				'heading'     => __('Redirecting to connect.smashballoon.com', 'feeds-for-youtube'),
 				'description' => __('You will be redirected to our app so you can connect your account in 5 seconds', 'feeds-for-youtube'),
 			),
+		);
+	}
+
+	/**
+	 * The Pro-upgrade bullet list shown by the free edition's upgrade CTA, keyed
+	 * by a stable id.
+	 *
+	 * Single source for both the CTA (`sbiFreeCTAFeatures`, via array_values())
+	 * and the free Abilities API's Pro upsell (SBY_Pro_Upsell, AgDR-9006), so the
+	 * copy can never drift between the two. Ids `guarantee` and `support` are
+	 * perks, not features; SBY_Pro_Upsell::PERK_IDS filters them out.
+	 *
+	 * @return array<string, string> id => translated label.
+	 *
+	 * @since SBY_ABILITIES_SINCE
+	 */
+	public static function get_free_cta_features()
+	{
+		return array(
+			'filter'      => __('Filter posts', 'feeds-for-youtube'),
+			'lightbox'    => __('Popup photo/video lightbox', 'feeds-for-youtube'),
+			'guarantee'   => __('30 day money back guarantee', 'feeds-for-youtube'),
+			'layouts'     => __('Multiple post layout options', 'feeds-for-youtube'),
+			'videoplayer' => __('Video player (HD, 360, Live)', 'feeds-for-youtube'),
+			'support'     => __('Fast, friendly and effective support', 'feeds-for-youtube'),
 		);
 	}
 

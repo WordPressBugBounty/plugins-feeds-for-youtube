@@ -1,4 +1,12 @@
-<?php // phpcs:disable Generic.ControlStructures.InlineControlStructure.NotAllowed,PSR12.Classes.OpeningBraceSpace.Found,PSR12.Files.ImportStatement.LeadingSlash,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.ClassComment.WrongStyle,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+<?php
+
+// phpcs:disable Generic.ControlStructures.InlineControlStructure.NotAllowed,PSR12.Classes.OpeningBraceSpace.Found
+// phpcs:disable PSR12.Files.ImportStatement.LeadingSlash,PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+// phpcs:disable PSR2.Classes.ClassDeclaration.OpenBraceNewLine,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:disable Squiz.Commenting.ClassComment.WrongStyle,Squiz.Commenting.FunctionComment.Missing
+// phpcs:disable Squiz.Commenting.InlineComment.InvalidEndChar
+// phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 
 namespace SmashBalloon\YouTubeFeed\Services\Integrations\Elementor;
 

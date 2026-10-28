@@ -43,7 +43,7 @@ class ShortcodeService extends ServiceProvider {
 		if ( empty( $database_settings['connected_accounts'] ) && empty( $database_settings['api_key'] ) ) {
 			$style = current_user_can( 'manage_youtube_feed_options' ) ? ' style="display: block;"' : '';
 			ob_start(); ?>
-			<div id="sbi_mod_error" <?php echo $style; ?>>
+			<div id="sby_mod_error" <?php echo $style; ?>>
 				<span><?php _e('This error message is only visible to WordPress admins', 'feeds-for-youtube' ); ?></span><br />
 				<p><b><?php _e( 'Error: No connected account.', 'feeds-for-youtube' ); ?></b>
 				<p><?php _e( 'Please go to the YouTube Feeds settings page to connect an account.', 'feeds-for-youtube' ); ?></p>
@@ -51,6 +51,26 @@ class ShortcodeService extends ServiceProvider {
 			<?php
 			$html = ob_get_contents();
 			ob_get_clean();
+
+			// SBR-500: this guard always returned a bare string, but the
+			// customizer/Feed Builder preview path (ShortcodePreviewProvider,
+			// consumed by vendor Feed_Builder::builder_enqueue_admin_scripts()
+			// and Feed_Saver_Manager::feed_customizer_fly_preview()) treats
+			// $settings['customizer'] === true as a contract that this filter
+			// returns an array shaped { header, feedInitOutput } -- see the
+			// identical branch a few lines below. A site with zero connected
+			// accounts and no API key (the state every sourceless feed --
+			// abilities-created or a native feed whose only account was later
+			// disconnected -- forces this guard into) broke that contract for
+			// every feed, fatal-ing the builder before it could ever show the
+			// friendly message above. Match the shape the caller expects.
+			if ( isset( $settings['customizer'] ) && $settings['customizer'] ) {
+				return array(
+					'header'         => false,
+					'feedInitOutput' => $html,
+				);
+			}
+
 			return $html;
 		}
 

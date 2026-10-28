@@ -6,7 +6,7 @@ Tags: YouTube, YouTube feed, YouTube widget, YouTube channel, YouTube gallery
 Requires at least: 4.1
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 2.10.0
+Stable tag: 2.11.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,12 @@ By default, the plugin retrieves new videos for your YouTube gallery once every 
 6. Embed your YouTube feed using a shortcode you can copy and paste after you are done creating
 
 == Changelog ==
+
+= 2.11.0 =
+* New: Ask AI agents to check and manage your YouTube feeds and settings through the WordPress Abilities API (WordPress 6.9 or later). Agents can only make changes after you turn on the new MCP Write Access setting in Settings > General, and deleting a feed or connecting an account always needs your confirmation in the browser. [See what YouTube Feed Pro adds](https://smashballoon.com/youtube-feed/youtube-lite-upgrade/?utm_source=changelog&utm_medium=aiagents&utm_campaign=youtube-free-readme)
+* Fix: If a security scanner on your host quarantines one of the plugin's files, including the Elementor widget files, the plugin now turns itself off and shows an admin notice listing the missing files instead of breaking your site.
+* Fix: Feeds no longer fail with an error when YouTube returns a consent or CAPTCHA page instead of feed data. The plugin records a connection error and tries again later.
+* Fix: The "No connected account" message, which is meant for site admins only, is no longer shown to visitors.
 
 = 2.10.0 =
 * New: The setup wizard now asks whether you'd like to share usage data and receive notifications, and a new Data Sharing settings tab lets you change your choice at any time. Usage data is only sent when you have given consent.

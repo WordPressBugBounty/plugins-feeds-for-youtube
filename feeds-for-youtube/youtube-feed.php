@@ -3,7 +3,7 @@
 Plugin Name: Smash Balloon YouTube Feed
 Plugin URI: https://smashballoon.com/youtube-feed
 Description: The Feeds for YouTube plugin allows you to display customizable YouTube feeds from any YouTube channel.
-Version: 2.10.0
+Version: 2.11.0
 Requires PHP: 7.4
 Author: Smash Balloon YouTube Team
 Author URI: https://smashballoon.com/
@@ -39,6 +39,13 @@ use SmashBalloon\YouTubeFeed\SBY_Posts_Manager;
 use SmashBalloon\YouTubeFeed\Services\ActivationService;
 use SmashBalloon\YouTubeFeed\Services\Admin\AdminServiceContainer;
 
+// Stop loading, instead of a fatal on every request, when a host scanner has
+// quarantined plugin files (SMASH-2242).
+require_once __DIR__ . '/inc/sby-integrity-guard.php';
+if (sby_integrity_check()) {
+	return;
+}
+
 require_once trailingslashit(plugin_dir_path(__FILE__)) . 'activation.php';
 require_once trailingslashit(plugin_dir_path(__FILE__)) . 'bootstrap.php';
 
@@ -55,7 +62,7 @@ if ( ! defined( 'SBY_PLUGIN_EDD_NAME' ) ) {
     define( 'SBY_PLUGIN_EDD_NAME', 'YouTube Feed Pro Personal' );
 }
 if ( ! defined( 'SBYVER' ) ) {
-    define( 'SBYVER', '2.10.0' );
+    define( 'SBYVER', '2.11.0' );
 }
 if ( ! defined( 'SBY_DBVERSION' ) ) {
     define( 'SBY_DBVERSION', '2.3' );
@@ -192,6 +199,17 @@ if ( ! function_exists( 'sby_init' ) ) {
      * @return void
      */
     function sby_init_components() {
+		sby_integrity_run('sby_init_components_inner');
+	}
+
+	/**
+	 * Component initialization. Called through sby_init_components() so a
+	 * missing class file degrades to an admin notice instead of a fatal.
+	 *
+	 * @return void
+	 */
+	function sby_init_components_inner()
+	{
         $container = new \SmashBalloon\YouTubeFeed\Services\ServiceContainer();
         $container->register();
 
@@ -220,6 +238,11 @@ if ( ! function_exists( 'sby_init' ) ) {
 
         \Smashballoon\Customizer\Feed_Builder::instance();
         sby_builder_pro();
+
+        // WordPress Abilities API (SBR-578). The class guards against a second
+        // instantiation itself, so this and the Pro bootstrap's copy can never
+        // double-register even if both files are ever loaded.
+        $sby_abilities = new \SmashBalloon\YouTubeFeed\Abilities\SBY_Abilities();
 
         // Include upgrader hooks
         $sby_upgrader = new \SmashBalloon\YouTubeFeed\Admin\SBY_Upgrader();
@@ -260,11 +283,13 @@ if ( ! function_exists( 'sby_init' ) ) {
     // Initialize the plugin on plugins_loaded to ensure WordPress is ready
     // Priority 10 ensures WordPress core and other plugins are initialized
     add_action( 'plugins_loaded', function() {
-        sby_init();
-        sby_run();
+		sby_integrity_run(function () {
+			sby_init();
+			sby_run();
 
-        // Initialize the shared Consent (data-sharing / notifications) manager.
-        sby_init_consent_manager();
+			// Initialize the shared Consent (data-sharing / notifications) manager.
+			sby_init_consent_manager();
+		});
     }, 10 );
 
     /**
@@ -572,6 +597,9 @@ if ( ! function_exists( 'sby_init' ) ) {
             'gdpr'                     => 'auto',
             'disablecdn'               => false,
             'allowcookies'             => false,
+            // Abilities API write gate (AgDR-0503) — off by default; deliberately
+            // fails CLOSED, a stale settings model without this key keeps AI writes off.
+            'sby_ai_write_enabled'     => false,
 
             // pro only
             'usecustomsearch'          => false,

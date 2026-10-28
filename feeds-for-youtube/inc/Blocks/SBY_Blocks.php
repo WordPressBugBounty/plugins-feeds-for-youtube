@@ -1,4 +1,21 @@
-<?php // phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact,PSR12.Classes.OpeningBraceSpace.Found,PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace,PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace,PSR12.Operators.OperatorSpacing.NoSpaceAfter,PSR12.Operators.OperatorSpacing.NoSpaceBefore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.CloseBraceAfterBody,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Methods.FunctionCallSignature.Indent,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,PSR2.Methods.FunctionClosingBrace.SpacingBeforeClose,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.FunctionComment.MissingParamTag,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Commenting.VariableComment.Missing,Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine,Squiz.WhiteSpace.SuperfluousWhitespace.EndLine
+<?php
+
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact,PSR12.Classes.OpeningBraceSpace.Found
+// phpcs:disable PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace
+// phpcs:disable PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter,PSR12.Operators.OperatorSpacing.NoSpaceBefore
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.CloseBraceAfterBody
+// phpcs:disable PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Methods.FunctionCallSignature.Indent
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket
+// phpcs:disable PSR2.Methods.FunctionClosingBrace.SpacingBeforeClose,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:disable Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.FunctionComment.MissingParamTag
+// phpcs:disable Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Commenting.VariableComment.Missing
+// phpcs:disable Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword
+// phpcs:disable Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen
+// phpcs:disable Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose
+// phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+// phpcs:disable Squiz.WhiteSpace.SuperfluousWhitespace.EndLine
 
 namespace SmashBalloon\YouTubeFeed\Blocks;
 

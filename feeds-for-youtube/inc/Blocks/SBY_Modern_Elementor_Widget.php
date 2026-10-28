@@ -1,4 +1,13 @@
-<?php // phpcs:disable PSR12.Classes.OpeningBraceSpace.Found,PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace,PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FunctionComment.Missing,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+<?php
+
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
+// phpcs:disable PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace
+// phpcs:disable PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:disable Squiz.Commenting.FunctionComment.Missing,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 
 namespace SmashBalloon\YouTubeFeed\Blocks;
 

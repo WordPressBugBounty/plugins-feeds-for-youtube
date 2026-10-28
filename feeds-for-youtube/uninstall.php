@@ -20,6 +20,8 @@ if ( ! $sby_preserve_settings ) {
 	delete_option( 'sby_license_data' );
 	delete_option( 'sby_license_status' );
 	delete_option( 'sby_settings' );
+	// After the settings delete: with the plugin's gate hooks live, deleting sby_settings records an epoch.
+	delete_option( 'sb_abilities_sby_gate_epoch' );
 	delete_option( 'sby_cron_report' );
 	delete_option( 'sby_errors' );
 	delete_option( 'sby_ajax_status' );
@@ -218,4 +220,11 @@ if ( ! $sby_preserve_settings ) {
 	}
 }
 
-
+// Abilities API state tokens + slots (SBY_State_Token::PREFIX). Short-lived
+// credentials, so removed even when the user preserves their settings. They do
+// not start with `sby_`, so the wipe patterns above do not reach them; remove
+// the transient and its timeout row explicitly.
+global $wpdb;
+$sby_options_table = $wpdb->prefix . 'options';
+$wpdb->query( "DELETE FROM $sby_options_table WHERE `option_name` LIKE ('\_transient\_sb\_abilities\_sby\_state\_%')" );
+$wpdb->query( "DELETE FROM $sby_options_table WHERE `option_name` LIKE ('\_transient\_timeout\_sb\_abilities\_sby\_state\_%')" );

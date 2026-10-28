@@ -61,20 +61,32 @@ class SBY_RSS_Connect
 			return array();
 		}
 
-		if ( wp_remote_retrieve_response_code( wp_remote_get( $this->url ) ) === 404 ) {
-			$error_message = '<p><b>'. __( 'Cannot collect videos from this channel. Please make sure this is a valid channel ID.', 'feeds-for-youtube' ) .'</b></p>';
+		// One request only: SimpleXMLElement( $url, null, true ) used to fetch the
+		// feed a second time, and that response was never status-checked.
+		$response = wp_remote_get( $this->url );
+		$code     = wp_remote_retrieve_response_code( $response );
 
-			global $sby_posts_manager;
-
-			$sby_posts_manager->add_frontend_error( 'api', $error_message );
-			$sby_posts_manager->add_error( 'api', array( 'Error connecting', $error_message ) );
-
-			$sby_posts_manager->add_api_request_delay( 300 );
-
-			return array();
+		if ( 404 === $code ) {
+			return $this->fail( __( 'Cannot collect videos from this channel. Please make sure this is a valid channel ID.', 'feeds-for-youtube' ) );
 		}
 
-		$parsed_obj = new \SimpleXMLElement( $this->url, null, true );
+		$parsed_obj = false;
+		if ( 200 === $code ) {
+			// YouTube can answer 200 with HTML (consent, CAPTCHA, bot checks), so the body must parse too.
+			$previous = libxml_use_internal_errors( true );
+			try {
+				$parsed_obj = new \SimpleXMLElement( wp_remote_retrieve_body( $response ) );
+			} catch ( \Exception $e ) {
+				$parsed_obj = false;
+			}
+			libxml_clear_errors();
+			libxml_use_internal_errors( $previous );
+		}
+
+		// Well-formed HTML also parses, so require the Atom root.
+		if ( ! $parsed_obj || 'feed' !== $parsed_obj->getName() ) {
+			return $this->fail( __( 'Unable to retrieve new videos from YouTube. Please try again later.', 'feeds-for-youtube' ) );
+		}
 
 		$items_array = array();
 		if ( isset( $parsed_obj->entry ) ) {
@@ -125,6 +137,24 @@ class SBY_RSS_Connect
 
 		$this->response = $items_array;
 
+	}
+
+	/**
+	 * Records a connection error and backs off so failing requests are not repeated on every page load.
+	 *
+	 * @param string $message Error message.
+	 *
+	 * @return array
+	 */
+	private function fail( $message ) {
+		global $sby_posts_manager;
+
+		$error_message = '<p><b>' . $message . '</b></p>';
+		$sby_posts_manager->add_frontend_error( 'api', $error_message );
+		$sby_posts_manager->add_error( 'api', array( 'Error connecting', $error_message ) );
+		$sby_posts_manager->add_api_request_delay( 300 );
+
+		return array();
 	}
 
 	protected function set_url( $endpoint_slug, $params ) {

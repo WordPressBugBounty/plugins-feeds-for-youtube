@@ -119,8 +119,12 @@ class AboutPage extends BaseSettingPage {
 			include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader-skin.php';
 		}
 
-		// Create the plugin upgrader with our custom skin.
-		$installer = new \Plugin_Upgrader( new \WP_Upgrader_Skin() );
+		require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/PluginSilentUpgrader.php';
+		require_once trailingslashit( SBY_PLUGIN_DIR ) . 'inc/PluginSilentUpgraderSkin.php';
+		require_once SBY_PLUGIN_DIR . 'inc/class-install-skin.php';
+
+		// Create the plugin upgrader with our silent skin, so no upgrader output precedes the JSON response.
+		$installer = new \SmashBalloon\YouTubeFeed\PluginSilentUpgrader( new \SmashBalloon\YouTubeFeed\SBY_Install_Skin() );
 
 		// Error check.
 		if ( empty( $_POST['plugin'] ) ) {

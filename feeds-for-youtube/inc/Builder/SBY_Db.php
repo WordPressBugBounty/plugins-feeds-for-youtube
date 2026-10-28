@@ -1,4 +1,21 @@
-<?php // phpcs:disable PSR12.Classes.OpeningBraceSpace.Found,PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace,PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FileComment.MissingPackageTag,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.FunctionComment.MissingParamComment,Squiz.Commenting.FunctionComment.MissingParamTag,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Commenting.InlineComment.NoSpaceBefore,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen,Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine,Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen,Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose,WordPress.DB.PreparedSQL.NotPrepared,WordPress.WP.AlternativeFunctions.json_encode_json_encode,WordPress.WP.AlternativeFunctions.unlink_unlink
+<?php
+
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
+// phpcs:disable PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace
+// phpcs:disable PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:disable Squiz.Commenting.FileComment.MissingPackageTag,Squiz.Commenting.FunctionComment.Missing
+// phpcs:disable Squiz.Commenting.FunctionComment.MissingParamComment,Squiz.Commenting.FunctionComment.MissingParamTag
+// phpcs:disable Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Commenting.InlineComment.NoSpaceBefore
+// phpcs:disable Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen
+// phpcs:disable Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose
+// phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+// phpcs:disable Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen
+// phpcs:disable Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose,WordPress.DB.PreparedSQL.NotPrepared
+// phpcs:disable WordPress.WP.AlternativeFunctions.json_encode_json_encode
+// phpcs:disable WordPress.WP.AlternativeFunctions.unlink_unlink
 /**
  * YouTube Feeds Database
  *

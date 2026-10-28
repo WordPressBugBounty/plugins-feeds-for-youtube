@@ -11422,6 +11422,7 @@ if (!sby_js_exists) {
               }, b.prototype.enable = function () {
                 var b = this;
                 a("body").on("click", "a[data-sby-lightbox]", function (c) {
+                  if (sbySwipeViewClaimed(c)) return;
                   return b.start(a(c.currentTarget)), !1;
                 });
               }, b.prototype.build = function () {
@@ -11429,6 +11430,7 @@ if (!sby_js_exists) {
                 a("" + lbBuilder.template()).appendTo(a("body")), this.$lightbox = a("#sby_lightbox"), this.$overlay = a("#sby_lightboxOverlay"), this.$outerContainer = this.$lightbox.find(".sby_lb-outerContainer"), this.$container = this.$lightbox.find(".sby_lb-container"), this.containerTopPadding = parseInt(this.$container.css("padding-top"), 10), this.containerRightPadding = parseInt(this.$container.css("padding-right"), 10), this.containerBottomPadding = parseInt(this.$container.css("padding-bottom"), 10), this.containerLeftPadding = parseInt(this.$container.css("padding-left"), 10), this.$overlay.hide().on("click", function () {
                   return b.end(), !1;
                 }), jQuery(document).on('click', function (event, b, c) {
+                  if (sbySwipeViewClaimed(event)) return;
                   //Fade out the lightbox if click anywhere outside of the two elements defined below
                   if (!jQuery(event.target).closest('.sby_lb-outerContainer').length) {
                     if (!jQuery(event.target).closest('.sby_lb-dataContainer').length) {
@@ -12122,6 +12124,9 @@ if (!sby_js_exists) {
           });
           //init click
           $self.find('.sby_video_thumbnail').on('click', function (event) {
+            if (sbySwipeViewClaimed(event)) {
+              return;
+            }
             if ((!feed.settings.lightboxEnabled || feed.settings.lightboxEnabled && feed.settings.noCDN) && (feed.settings.noCDN || !feed.settings.consentGiven)) {
               if ($(this).closest('.sby_item').length && typeof $(this).closest('.sby_item').attr('data-video-id') !== 'undefined') {
                 $(this).attr('href', 'https://www.youtube.com/watch?v=' + $(this).closest('.sby_item').attr('data-video-id'));
@@ -13153,6 +13158,9 @@ if (!sby_js_exists) {
           //Click function
           $item.find('.sby_expand a').off('click').on('click', function (e) {
             e.preventDefault();
+            if (sbySwipeViewClaimed(e)) {
+              return;
+            }
             var $expand = jQuery(this);
             // a11y (F1): keep the toggle's accessible name and
             // expanded state in sync (template ships aria-expanded
@@ -14358,6 +14366,24 @@ function LightboxColorScheme(colorScheme, flag) {
     commentWrap.addClass(colorSchemeClassName);
     return false;
   }
+}
+
+/**
+ * Whether the Swipe View viewer (js/sby-swipeview.js) has claimed this click (SMASH-2232).
+ *
+ * The viewer opens on a capture-phase document listener. It used to stop the click there,
+ * which also silenced every listener outside this plugin, Feed Analytics' click counter on
+ * `.sby_item` among them. It now marks the event instead, and this plugin's own click
+ * owners on a tile return early on a marked click, so the viewer stays the only thing that
+ * reacts to it. The key must match CLAIMED_CLICK_KEY in js/sby-swipeview.js.
+ *
+ * @param {Event|jQuery.Event} event
+ *
+ * @returns {boolean}
+ */
+function sbySwipeViewClaimed(event) {
+  var nativeEvent = event && event.originalEvent ? event.originalEvent : event;
+  return !!(nativeEvent && nativeEvent.sbySwipeViewClaimed);
 }
 
 /**

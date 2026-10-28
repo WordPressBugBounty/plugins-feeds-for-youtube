@@ -11,6 +11,7 @@
 
 namespace SmashBalloon\YouTubeFeed\UsageTracking\YouTube;
 
+use SmashBalloon\YouTubeFeed\SBY_Feed;
 use SmashBalloon\YouTubeFeed\UsageTracking\Config;
 use SmashBalloon\YouTubeFeed\UsageTracking\EventRecorder;
 use SmashBalloon\YouTubeFeed\UsageTracking\ReporterInterface;
@@ -78,7 +79,7 @@ class YouTubeFreeReporter implements ReporterInterface {
 			// from configuration_snapshot.feed_types, so the same map is emitted
 			// at the top level rather than only nested under feeds.by_type.
 			'feed_types'       => $feeds_summary['by_type'],
-			'features_enabled' => $this->get_features_enabled( $all_feed_data, $global_settings ),
+			'features_enabled' => $this->get_features_enabled( $all_feed_data, $global_settings, sby_is_pro() ),
 			'version'          => defined( 'SBYVER' ) ? SBYVER : '',
 			'license_tier'     => $this->get_license_tier(),
 			'license_status'   => $this->get_license_status(),
@@ -412,11 +413,16 @@ class YouTubeFreeReporter implements ReporterInterface {
 	 *
 	 * A flag is true when ANY feed uses the feature.
 	 *
+	 * $is_pro is a parameter rather than an internal sby_is_pro() call so both
+	 * editions are testable in one process — the same shape as
+	 * SBY_Feed::should_enqueue_swipe_view().
+	 *
 	 * @param array[] $all_feed_data   From get_all_feed_data().
 	 * @param array   $global_settings From get_global_settings().
+	 * @param bool    $is_pro          Whether the Pro edition is active.
 	 * @return array<string,bool>
 	 */
-	private function get_features_enabled( array $all_feed_data, array $global_settings ) {
+	private function get_features_enabled( array $all_feed_data, array $global_settings, $is_pro ) {
 		$feed_flags = array(
 			'carousel_layout'   => false,
 			'gallery_layout'    => false,
@@ -434,6 +440,13 @@ class YouTubeFreeReporter implements ReporterInterface {
 			'gdpr'              => false,
 		);
 
+		// Swipe View is Pro-only, so Free omits the key entirely rather than
+		// reporting false — false would read as "available but unused" on an
+		// edition that doesn't have the feature (SMASH-2231).
+		if ( $is_pro ) {
+			$feed_flags['swipe_view'] = false;
+		}
+
 		foreach ( $all_feed_data as $row ) {
 			$s = $row['settings'];
 
@@ -442,6 +455,13 @@ class YouTubeFreeReporter implements ReporterInterface {
 			}
 			if ( ! $feed_flags['gallery_layout'] && isset( $s['layout'] ) && 'gallery' === $s['layout'] ) {
 				$feed_flags['gallery_layout'] = true;
+			}
+			// The same predicate that decides whether the viewer loads for visitors
+			// (kill switch, Shorts type, swipe layout), so the report can't disagree
+			// with it. It reads the SAVED feed settings, so a shortcode attribute
+			// that overrides type or layout at render time isn't reflected.
+			if ( $is_pro && ! $feed_flags['swipe_view'] && SBY_Feed::should_enqueue_swipe_view( $s, $is_pro ) ) {
+				$feed_flags['swipe_view'] = true;
 			}
 			if ( ! $feed_flags['carousel_autoplay'] && ! empty( $s['carouselautoplay'] ) ) {
 				$feed_flags['carousel_autoplay'] = true;

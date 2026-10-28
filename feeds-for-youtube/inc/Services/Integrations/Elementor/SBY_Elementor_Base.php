@@ -1,4 +1,11 @@
-<?php // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.CloseBraceAfterBody,PSR2.Files.EndFileNewline.TooMany,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.Commenting.VariableComment.Missing,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine,Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction
+<?php
+
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.CloseBraceAfterBody
+// phpcs:disable PSR2.Files.EndFileNewline.TooMany,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:disable Squiz.Commenting.FunctionComment.Missing,Squiz.Commenting.InlineComment.InvalidEndChar
+// phpcs:disable Squiz.Commenting.VariableComment.Missing,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+// phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction
 
 namespace SmashBalloon\YouTubeFeed\Services\Integrations\Elementor;
 

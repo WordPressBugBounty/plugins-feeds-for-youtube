@@ -5,7 +5,12 @@ namespace SmashBalloon\YouTubeFeed\Blocks;
 use SmashBalloon\YoutubeFeed\Vendor\Smashballoon\Framework\Packages\Blocks\SB_Feed_Block;
 use SmashBalloon\YouTubeFeed\Builder\SBY_Db;
 
-// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found,PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR2.Classes.ClassDeclaration.OpenBraceNewLine,PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket,PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket,Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FunctionComment.Missing,Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found,PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+// phpcs:disable PSR2.Classes.ClassDeclaration.OpenBraceNewLine
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket
+// phpcs:disable PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps,Squiz.Commenting.FunctionComment.Missing
+// phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
 class SBY_Modern_Feed_Block extends SB_Feed_Block {
 
 	const EDITOR_ASSETS_PRIORITY = 25;
